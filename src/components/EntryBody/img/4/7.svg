@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>首页 copy 18</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FDB370" stop-opacity="0.495442708" offset="0%"></stop>
+            <stop stop-color="#FB7C3D" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="首页" transform="translate(-1686.000000, -680.000000)" fill="url(#linearGradient-1)">
+            <g id="Group-27" transform="translate(1686.000000, 680.000000)">
+                <g id="Group-24" transform="translate(8.000000, 5.000000)">
+                    <polygon id="Polygon" points="17.5 0 35 10.25 35 30.75 17.5 41 -1.234568e-13 30.75 -1.34559031e-13 10.25"></polygon>
+                    <polygon id="Polygon-Copy" points="17.5 8 28 14.25 28 26.75 17.5 33 7 26.75 7 14.25"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

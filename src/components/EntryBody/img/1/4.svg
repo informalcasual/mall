@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#Combined-Shape_1_);}
+	.st1{fill:url(#Rectangle-2-Copy-21_1_);}
+</style>
+<title>首页 copy 11</title>
+<desc>Created with Sketch.</desc>
+<g id="Group-5" transform="translate(860.000000, 700.000000) rotate(-30.000000) translate(-860.000000, -700.000000) translate(840.000000, 681.000000)">
+	
+		<linearGradient id="Combined-Shape_1_" gradientUnits="userSpaceOnUse" x1="-743.457" y1="-884.3148" x2="-743.457" y2="-885.3148" gradientTransform="matrix(17.5135 18.5595 10.1114 -32.146 21593.543 -15632.8975)">
+		<stop  offset="0" style="stop-color:#68C4B2;stop-opacity:0.5425"/>
+		<stop  offset="1" style="stop-color:#6AC5B3"/>
+	</linearGradient>
+	<path id="Combined-Shape" class="st0" d="M-374.8-999.6h12.2c2.2,0,4,1.8,4,4v20.4c0,2.2-1.8,4-4,4h-12.2c-2.2,0-4-1.8-4-4v-20.4
+		C-378.8-997.8-377-999.6-374.8-999.6z M-377.1-1003.9h16.8c1,0,1.7,0.8,1.7,1.7s-0.8,1.7-1.7,1.7h-16.8c-1,0-1.7-0.8-1.7-1.7
+		S-378-1003.9-377.1-1003.9z M-377.1-970.2h16.8c1,0,1.7,0.8,1.7,1.7s-0.8,1.7-1.7,1.7h-16.8c-1,0-1.7-0.8-1.7-1.7
+		S-378-970.2-377.1-970.2z"/>
+	
+		<linearGradient id="Rectangle-2-Copy-21_1_" gradientUnits="userSpaceOnUse" x1="-731.0627" y1="-910.3567" x2="-731.0627" y2="-911.3567" gradientTransform="matrix(34.3265 4.6076 19.8184 -7.9806 42777.6445 -4886.2915)">
+		<stop  offset="0" style="stop-color:#68C4B2;stop-opacity:0.5425"/>
+		<stop  offset="1" style="stop-color:#6AC5B3"/>
+	</linearGradient>
+	<path id="Rectangle-2-Copy-21" class="st1" d="M-376.8-989.5h35.6c1.1,0,2,0.9,2,2v5.2c0,1.1-0.9,2-2,2h-35.6c-1.1,0-2-0.9-2-2
+		v-5.2C-378.8-988.6-377.9-989.5-376.8-989.5z"/>
+</g>
+</svg>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#Rectangle-2-Copy-22_1_);}
+	.st1{fill:url(#Rectangle-2-Copy-23_1_);}
+	.st2{fill:#5777E5;}
+	.st3{fill:#FFFFFF;}
+</style>
+<title>首页 copy 2</title>
+<desc>Created with Sketch.</desc>
+<linearGradient id="Rectangle-2-Copy-22_1_" gradientUnits="userSpaceOnUse" x1="-257.5" y1="296.7678" x2="-257.5" y2="295.7678" gradientTransform="matrix(17.6777 -17.6777 -21.2132 -21.2132 10862.2881 1755.7883)">
+	<stop  offset="0" style="stop-color:#69ACF2;stop-opacity:0.4713"/>
+	<stop  offset="1" style="stop-color:#68ACF2"/>
+</linearGradient>
+<polygon id="Rectangle-2-Copy-22" class="st0" points="6.1,21.2 23.7,3.6 44.9,24.8 27.3,42.4 "/>
+<g id="Group-15" transform="translate(943.000000, 570.000000)">
+	
+		<linearGradient id="Rectangle-2-Copy-23_1_" gradientUnits="userSpaceOnUse" x1="-1194.3572" y1="-270.6255" x2="-1194.3572" y2="-271.591" gradientTransform="matrix(42 0 0 -27 49245 -7859.8901)">
+		<stop  offset="0" style="stop-color:#69ACF2;stop-opacity:0.4713"/>
+		<stop  offset="1" style="stop-color:#75B1FF"/>
+	</linearGradient>
+	<path id="Rectangle-2-Copy-23" class="st1" d="M-935-553h34c2.2,0,4,1.8,4,4v19c0,2.2-1.8,4-4,4h-34c-2.2,0-4-1.8-4-4v-19
+		C-939-551.2-937.2-553-935-553z"/>
+	<path id="Rectangle-4" class="st2" d="M-913-545h11c2.8,0,5,2.2,5,5l0,0c0,2.8-2.2,5-5,5h-11c-2.8,0-5-2.2-5-5l0,0
+		C-918-542.8-915.8-545-913-545z"/>
+	<circle id="Oval-5" class="st3" cx="-912" cy="-540" r="3"/>
+</g>
+</svg>

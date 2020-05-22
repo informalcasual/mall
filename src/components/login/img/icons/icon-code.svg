@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>二维码</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="03登录_账号密码登录" transform="translate(-1347.000000, -364.000000)">
+            <g id="二维码" transform="translate(1347.000000, 364.000000)">
+                <rect id="Rectangle-path" fill="#000000" fill-rule="nonzero" opacity="0" x="0" y="0" width="24" height="24"></rect>
+                <path d="M16.5,9.49999999 L16.5,3.49999999 L22.5,3.49999999 L22.5,9.49999999 L16.5,9.49999999 Z M3.49999999,16.5 L9.49999999,16.5 L9.49999999,22.5 L3.49999999,22.5 L3.49999999,16.5 Z M3.49999999,3.49999999 L9.49999999,3.49999999 L9.49999999,9.49999999 L3.49999999,9.49999999 L3.49999999,3.49999999 Z" id="Shape" fill="#000000" fill-rule="nonzero" opacity="0.2"></path>
+                <path d="M13,11 L13,0 L24,0 L24,11 L13,11 Z M22.5,1.5 L14.5,1.5 L14.5,9.49999999 L22.5,9.49999999 L22.5,1.5 Z M20,7.00000001 L17,7.00000001 L17,4.00000001 L20,4.00000001 L20,7.00000001 Z M0,13 L11,13 L11,24 L0,24 L0,13 Z M1.5,22.5 L9.49999999,22.5 L9.49999999,14.5 L1.5,14.5 L1.5,22.5 Z M4.00000001,17 L7.00000001,17 L7.00000001,20 L4.00000001,20 L4.00000001,17 Z M0,0 L11,0 L11,11 L0,11 L0,0 Z M1.5,9.49999999 L9.49999999,9.49999999 L9.49999999,1.5 L1.5,1.5 L1.5,9.49999999 Z M4.00000001,4.00000001 L7.00000001,4.00000001 L7.00000001,7.00000001 L4.00000001,7.00000001 L4.00000001,4.00000001 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path>
+                <path d="M21,24 L21,18.5 L24,18.5 L24,24 L21,24 Z M21,13 L24,13 L24,16 L21,16 L21,13 Z M17,17 L13,17 L13,13 L17,13 L17,15.5 L20,15.5 L20,18.5 L17,18.5 L17,17 Z M18.5,24 L13,24 L13,21 L18.5,21 L18.5,24 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path>
+                <polygon id="Rectangle-7" fill="#FFFFFF" transform="translate(12.000000, 12.000000) scale(-1, -1) translate(-12.000000, -12.000000) " points="0 0 24 0 24 24"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

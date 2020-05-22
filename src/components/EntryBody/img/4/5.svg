@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#Rectangle-6_1_);}
+	.st1{fill:url(#Shape_4_);}
+	.st2{fill:#FFFFFF;}
+</style>
+<title>首页 copy 16</title>
+<desc>Created with Sketch.</desc>
+<linearGradient id="Rectangle-6_1_" gradientUnits="userSpaceOnUse" x1="-248.2679" y1="301.3859" x2="-248.2679" y2="300.3859" gradientTransform="matrix(28 0 0 -34 6972 10256.6201)">
+	<stop  offset="0" style="stop-color:#FF2040;stop-opacity:0.2232"/>
+	<stop  offset="1" style="stop-color:#FF1F1F;stop-opacity:0.7246"/>
+</linearGradient>
+<path id="Rectangle-6" class="st0" d="M10.5,9.5h20c2.2,0,4,1.8,4,4v26c0,2.2-1.8,4-4,4h-20c-2.2,0-4-1.8-4-4v-26
+	C6.5,11.3,8.3,9.5,10.5,9.5z"/>
+<g id="Group-18" transform="translate(1379.000000, 688.000000)">
+	<g id="文章组件">
+		
+			<linearGradient id="Shape_4_" gradientUnits="userSpaceOnUse" x1="-1627.8833" y1="-386.8427" x2="-1627.8833" y2="-387.8427" gradientTransform="matrix(30 0 0 -33 47486 -13447.3096)">
+			<stop  offset="0" style="stop-color:#FF2040;stop-opacity:0.2232"/>
+			<stop  offset="1" style="stop-color:#FF1F1F;stop-opacity:0.7246"/>
+		</linearGradient>
+		<path id="Shape" class="st1" d="M-1338-681.5h-25c-1.4,0-2.5,1.1-2.5,2.5v27.9c0,1.4,1.1,2.5,2.5,2.5h25c1.4,0,2.5-1.1,2.5-2.5
+			V-679C-1335.5-680.4-1336.6-681.5-1338-681.5z M-1341.8-653.6c-2.1,0-3.8-1.7-3.8-3.8c0-2.1,1.7-3.8,3.8-3.8s3.8,1.7,3.8,3.8
+			C-1338-655.3-1339.7-653.6-1341.8-653.6z"/>
+	</g>
+</g>
+<path id="Shape_1_" class="st2" d="M37.3,17.5H17.7c-0.7,0-1.2-0.4-1.2-1s0.5-1,1.2-1h19.6c0.7,0,1.2,0.4,1.2,1S38,17.5,37.3,17.5z"
+	/>
+<path id="Shape_2_" class="st2" d="M31.2,25.5H17.8c-0.7,0-1.3-0.4-1.3-1s0.6-1,1.3-1h13.3c0.7,0,1.3,0.4,1.3,1S31.9,25.5,31.2,25.5
+	z"/>
+<path id="Shape_3_" class="st2" d="M25.3,32.5h-7.5c-0.7,0-1.3-0.4-1.3-1s0.6-1,1.3-1h7.5c0.7,0,1.3,0.4,1.3,1S25.9,32.5,25.3,32.5z
+	"/>
+</svg>
