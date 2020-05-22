@@ -1,7 +1,7 @@
 <template>
   <div class="spread">
     <div class="min-box">
-      <div class="title">订单结算</div>
+      <div class="page-title">订单结算</div>
       <div class="pay-box">
         <address />
         <div class="pay-detail">
@@ -13,7 +13,6 @@
           </div>
           <div class="product" v-for="(item, index) in carts" :key="index">
             <div class="detail">
-              <div class="select pointer" @click.stop="select(index)" :class="{'selected': selectedList.includes(index)}"></div>
               <router-link to="/" target="_blank" 
               class="pro-img"
               :style="{'background-color': `url()`}"
@@ -31,6 +30,9 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="pay-line">
+
     </div>
   </div>
 </template>
@@ -52,58 +54,40 @@ export default {
    background-color: #fff;
 }
 .pay-detail{
-  padding-bottom: 104px;
+  padding: 31px 69px 73px;
+  border-top: 1px solid #EDEDED;
   .head{
     background-color: #fff;
-    padding: 25px 25px 15px;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #EDEDED;
+    padding-bottom: 25px;
     .title1, .title2{
       text-align: left;
-      padding-left: 14px;
+      padding-right: 14px;
       font-size:14px;
       color:rgba(102,102,102,1);
       line-height:20px;
     }
     .title1{
      flex-grow: 0;
-     width: 345px;
-     padding-left: 44px;
+     width: 379px;
      padding-right: 10px;
     }
     .title2{
-      width: 20%;
+      width: 100px;
       flex-grow: 1;
     }
   }
   .product{
-    background-color: #fff;
-    border-bottom: 1px solid #EDEDED; 
-    padding: 24px 25px;
     display: flex;
     align-items: center;
+    padding-bottom: 30px;
     .detail{
       flex-grow: 0;
       width: 379px;
       padding-right: 10px;
       display: flex;
       align-items: center;
-      .select{
-        flex-grow: 0;
-        width:19px;
-        height:19px;
-        border-radius:50%;
-        border:1px solid rgba(151,151,151,1);
-      }
-      .selected{
-        background-image: url('./img/right.svg');
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: 12px;
-        background-color: #702A2A;
-        border-color: #702A2A;
-      }
       .pro-img{
         flex-grow: 0;
         width: 80px;
@@ -111,7 +95,6 @@ export default {
         background-color: #eee; 
         border-radius:6px;
         display: block;
-        margin-left: 24px;
       }
       .pro-info{
         margin-left: 18px;
@@ -140,30 +123,24 @@ export default {
       }
     }
     .price, .num, .total{
-      width: 20%;
+      width: 100px;
       flex-grow: 1;
       font-size:14px;
       color:rgba(0,0,0,1);
       line-height:20px;
+      padding-right: 14px;
+      padding-bottom: 35px;
     }
     .num{
-      flex-grow: 0;
-      height: 26px;
-      display: flex;
-      align-items: center;
-      img{
-        height: 100%;
-        cursor: pointer;
-      }
-      .number{
-        width: 32px;
-        display: inline-block;
-        font-size:16px;
-        color:rgba(0,0,0,1);
-        line-height: 26px;
-        text-align: center;
-      }
+      font-size:16px;
+      color:rgba(0,0,0,1);
+      line-height: 26px;
     }
   }
+}
+.pay-line{
+  width: 100%;
+  height:80px;
+  background:rgba(255,255,255,1);
 }
 </style>
