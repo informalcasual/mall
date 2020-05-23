@@ -41,7 +41,27 @@ let router = new Router({
       name: 'news',
       component: () => import('@/pages/news/news')
     },
-   
+    {
+      path: '/serviceDetail/:id',
+      name: 'service',
+      component: () => import('@/pages/service-detail/index')
+    },
+    {
+      path: '/culturaltrade',
+      name: 'trade',
+      component: () => import('@/pages/culturalTrade/index'),
+      children: [{
+        path: 'product',
+        name: 'culturalproduct',
+        component: () => import('@/pages/culturalTrade/components/culturalProduct'),
+      },
+      {
+        path: 'service',
+        name: 'culturalservice',
+        component: () => import('@/pages/culturalTrade/components/culturalService'),
+      }
+      ]
+    },
     {
       // 404页面
       path: '*',

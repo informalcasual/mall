@@ -44,7 +44,7 @@
         <div class="bill-num">已选<span>{{selectedList.length}}</span>个商品</div>
         <div class="bill-total"><span>总价：</span>
           <span class="total">￥{{total}}</span></div>
-        <div class="carts pointer">立即下单</div>
+        <div class="carts pointer main-brown">立即下单</div>
       </div>
     </div>
   </div>

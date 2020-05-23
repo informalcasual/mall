@@ -3,7 +3,7 @@
     <div class="min-box">
       <div class="page-title">订单结算</div>
       <div class="pay-box">
-        <address />
+        <selfaddress @addAddress="addAddress" :phone="phone" address="address" :name="name" :ifHave="ifaddress"></selfaddress>
         <div class="pay-detail">
           <div class="head">
             <div class="title1">商品详情</div>
@@ -31,22 +31,52 @@
         </div>
       </div>
     </div>
-    <div class="pay-line">
-
+    <div class="pay-line" :style="{'bottom':  windowHeight - scroll > 240 ? '240px' : '0px'}">
+      <div class="min-box">
+         <div class="product-num">共<span>4</span>个商品</div>
+         <div class="total">总价：<span>￥1255</span></div>
+         <div class="pay-btn">立即付款</div>
+      </div>
+     
     </div>
+    <ADDaddress @getAddress="getAddress"/>
   </div>
 </template>
 <script>
-import address from './component/address'
+import selfaddress from './component/address'
+import ADDaddress from './component/add-dress'
+import { mapState } from 'vuex'
 export default {
   data: ()=>({
     carts: [{
-      name: 1
-    }]
+      name: 1,
+    }],
+    name: '',
+    phone: '',
+    address: '',
+    ifaddress: false,
+    windowHeight: document.documentElement.clientHeight || document.body.clientHeight,
   }),
+  methods: {
+    addAddress(){
+      this.$bus.emit('showAddress', true)
+    },
+    getAddress(item){
+      this.name = item.name
+      this.phone = item.phone
+      this.address = item.address
+      this.ifaddress = true
+    }
+  },
   components: {
-    address
-  }
+    selfaddress,
+    ADDaddress
+  },
+  computed: {
+    ...mapState({
+      scroll: state => state.scrolltop.scroll_top_score
+    }),
+  },
 }
 </script>
 <style lang="scss" scoped>
@@ -141,6 +171,49 @@ export default {
 .pay-line{
   width: 100%;
   height:80px;
+  position: fixed;
+  left: 0;
   background:rgba(255,255,255,1);
+  .min-box{
+    height: 100%;;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .product-num{
+    font-size:14px;
+    color:rgba(0,0,0,1);
+    line-height:20px;
+    span{
+      font-weight: 500;
+      padding: 0 3px;
+    }
+    margin-right: 61px;
+  }
+  .total{
+    height: 33px;
+    span{
+      font-size:24px;
+      font-weight:600;
+      color:rgba(230,7,7,1);
+      line-height:33px;
+      vertical-align: top;
+    }
+    font-size:14px;
+    color:rgba(0,0,0,1);
+    line-height:33px;
+  }
+  .pay-btn{
+    width:208px;
+    height:50px;
+    background:rgba(112,42,42,1);
+    text-align: center;
+    font-size:14px;
+    font-weight:500;
+    color:rgba(255,255,255,1);
+    line-height:50px;
+    border-radius: 4px;
+    margin-left: 41px;
+  }
 }
 </style>

@@ -39,7 +39,9 @@
         <div class="service-box">
           <div class="service-item" v-for="(item, index) in service" :key="index">
             <router-link to="/" target="_self">
-              <div class="show" :style="{'background-image': `url('')`}"></div>
+              <div class="show" :style="{'background-image': `url('')`}">
+                <div class="item-title">3343434</div>
+              </div>
             </router-link>
             <div class="advisory pointer">立即咨询</div>
           </div>
@@ -77,9 +79,7 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
-.content-body{
 
-}
 .display{
   width: 100%;
   .display-cont{
@@ -180,15 +180,27 @@ export default {
     flex-grow: 0;
     .show{
       height: 216px;
-      background-color: #eee;
+      background-color: #000;
+      position: relative;
+      &:hover{
+        opacity: 0.8;
+      }
+      .item-title{
+        position: absolute;
+        bottom: 15px;
+        left: 21px;
+        font-size:16px;
+        font-weight:400;
+        color:rgba(255,255,255,1);
+        line-height:22px;
+      }
     }
     .advisory{
-      margin-top: 32px;
       width:132px;
       height:44px;
       background:#f96925;
       border-radius:22px;
-      margin: 0 auto;
+      margin: 32px auto 0;
       font-size:14px;
       font-weight:500;
       text-align: center;
