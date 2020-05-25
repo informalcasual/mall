@@ -13,7 +13,7 @@
           <div class="advisory pointer">
             <img :src="require('./img/advisory.svg')"  wisth="18" alt="">
           咨询客服</div>
-          <div @click.stop="addCart()" class="addCart pointer">加入购物车</div>
+          <div @click.stop="addCart()" class="addCart pointer">留下联系方式</div>
         </div>
       </div>
     </div>
@@ -126,6 +126,9 @@ export default {
       display: inline-block;
     }
     .advisory{
+      img{
+        vertical-align: middle;
+      }
       background-color: #702A2A;
     }
     .addCart{
