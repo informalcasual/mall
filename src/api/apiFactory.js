@@ -1,25 +1,31 @@
 import UserApi from './path/userApi'
 import CommonApi from './path/commonApi'
-import SellApi from './path/sellApi'
 import OrderApi from './path/orderApi'
 import InvoiceApi from './path/invoiceApi'
 import TrademarkApi from './path/trademarkApi'
 import Qiniu from './path/qiniu'
 import Upload from './path/upload'
 import LoginApi from './path/login'
-
+import pageModelApi from './path/pageModel'
 export default class ApiFactory {
   constructor() {
     this.userApi = null
     this.orderApi = null
-    this.sellApi = null
     this.commonApi = null
     this.invoiceApi = null
     this.trademarkApi = null
     this.qiniu = null
     this.upload = null
     this.LoginApi = null
+    this.pageModelApi = null
   }
+
+  getpageModel(){
+    if (this.pageModelApi === null) {
+      this.pageModelApi = new pageModelApi()
+    }
+    return this.pageModelApi
+  } 
 
   getQiniu() {
     if (this.qiniu === null) {
@@ -47,14 +53,6 @@ export default class ApiFactory {
       this.commonApi = new CommonApi()
     }
     return this.commonApi
-  }
-
-  getSellApi() {
-    if (this.sellApi === null) {
-      this.sellApi = new SellApi()
-    }
-
-    return this.sellApi
   }
 
   getOrderApi() {

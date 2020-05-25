@@ -1,39 +1,15 @@
-import { axiosBase } from '../axiosBaseConfig'
+import { axiosBase, axiosGet } from '../axiosBaseConfig'
 
 export default class TrademarkApi {
-  add(data) {
-    // trademark_id
-    let url = 'trademark/add'
-    return axiosBase(url, data, {})
+  // 商品列表 1实体 2文化
+  getProduct(type, data){
+    let url = `product/type/${type}?page=${data.page}&size=${data.size}&sort=createdAt,desc`
+    return axiosGet(url)
+  }
+  // 商品详情
+  ProductDetail(id){
+    let url = `product/${id}`
+    return axiosGet(url)
   }
 
-  createOrder(data) {
-    // trademark_id
-    let url = 'trademark/create_order'
-    return axiosBase(url, data, {})
-  }
-
-  mod(data) {
-    // trademark_id
-    let url = 'trademark/mod'
-    return axiosBase(url, data, {})
-  }
-
-  del(data) {
-    // trademark_id
-    let url = 'trademark/del'
-    return axiosBase(url, data, {})
-  }
-
-  item(data) {
-    // trademark_id
-    let url = 'trademark/item'
-    return axiosBase(url, data, {})
-  }
-
-  list(data) {
-    // trademark_id
-    let url = 'trademark/list'
-    return axiosBase(url, data, {})
-  }
 }

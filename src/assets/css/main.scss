@@ -81,6 +81,7 @@ input[type='number']::-webkit-outer-spin-button {
  }
 
  .spread{
+   overflow: hidden;
    min-height: calc(100% - 306px);
  }
 
@@ -117,5 +118,39 @@ input[type='number']::-webkit-outer-spin-button {
      font-weight:500;
      color:rgba(0,0,0,1);
      line-height:25px;
+   }
+ }
+ 
+ .box-pop1{
+   text-align: center;
+   padding-top: 57px;
+   .pop-title1{
+      font-size:24px;
+      font-weight:500;
+      color:rgba(0,0,0,1);
+      line-height:33px;
+    img{
+      vertical-align: middle;
+      padding-right: 12px;
+    }
+   }
+   .pop-info1{
+     padding: 25px 0 56px;
+     font-size:14px;
+     color:rgba(0,0,0,1);
+     line-height:20px;
+   }
+   .pop-btn{
+     cursor: pointer;
+     width:160px;
+     height:50px;
+     background:rgba(238,238,238,1);
+     border-radius:4px;
+     margin: 0 auto;
+     text-align: center;
+     font-size:14px;
+     font-weight:500;
+     color:rgba(102,102,102,1);
+     line-height:50px
    }
  }

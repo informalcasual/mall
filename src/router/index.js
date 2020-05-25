@@ -17,6 +17,21 @@ let router = new Router({
       component: () => import('@/pages/shopCart/index')
     },
     {
+      path: '/detail/:id',
+      name: 'detail',
+      component: () => import('@/pages/shopCart/index')
+    },
+    {
+      path: '/statistics',
+      name: 'statistics',
+      component: () => import('@/pages/statistics/index')
+    },
+    {
+      path: '/placeWindow',
+      name: 'placeWindow',
+      component: () => import('@/pages/placeWindow/placeWindow')
+    },
+    {
       path: '/pay/:id',
       name: 'pay',
       component: () => import('@/pages/pay/index')
@@ -61,7 +76,7 @@ let router = new Router({
         component: () => import('@/pages/culturalTrade/components/culturalService'),
       }
       ]
-    },
+    },,
     {
       // 404页面
       path: '*',

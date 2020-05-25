@@ -2,9 +2,9 @@
   <div class="product min-box">
     <div class="title-tip "><router-link to="/product" class="tip-link pointer" target="_blank">文化贸易</router-link>>文化产品</div>
     <div class="product-show">
-      <div class="img"></div>
+      <div class="img" :style="{'background-image': `url(${img})`}"></div>
       <div class="select-buy">
-        <div class="title">sd</div>
+        <div class="title">{{product.name}}</div>
         <div class="peice">售价：<span>￥{{price.toFixed(2)}}</span></div>
         <div class="chose">
           <div 
@@ -13,7 +13,7 @@
           :key="index"
           :class="{'act': actIndex === index}"
           @click.stop="selectType(index)"
-          >{{item}}</div>
+          >{{item.specs}}</div>
         </div>
         <div class="number">
           <div class="num-chose">数量:</div>
@@ -25,17 +25,16 @@
           <div class="tip">7天无理由退货</div>
         </div>
         <div class="btns">
-          <div class="buy pointer">立即购买</div>
-          <div @click.stop="addCart()" class="addCart pointer">加入购物车</div>
+          <div class="buy pointer" @click.stop="toBuy()" >立即购买</div><!-- 
+          --><div @click.stop="addCart()" class="addCart pointer">加入购物车</div>
         </div>
       </div>
     </div>
     <div class="product-info min-box">
       <div class="compony-info">
-        <div class="title">sdf</div>
-        <div class="phone">电话：0510-29383849</div>
-        <div class="detail"><p>地址：</p><p class="address">江苏省无锡市宜兴市金融一街
-         紫砂壶二厂</p>
+        <div class="title">{{company.name}}</div>
+        <div class="phone">电话：{{company.phone}}</div>
+        <div class="detail"><p>地址：</p><p class="address">{{company.address}}</p>
          </div>
         <div class="advisory pointer">
           <img :src="require('./img/advisory.svg')"  wisth="18" alt="">
@@ -44,7 +43,7 @@
       </div>
       <div class="product-box">
         <div class="title">商品详情</div>
-        <img src="" class="info" alt="">
+        <div v-html="product.desc"></div>
       </div>
     </div>
   </div>
@@ -52,29 +51,58 @@
 <script>
 export default {
   data: () => ({
-    price: 289,
+    price: 0,
     num: 1,
+    img: '',
+    total: 1,
     actIndex: 0,
-    priceList: ['套餐一：龙凤款红礼盒','套餐一：龙凤款红礼盒','套餐一：龙凤款红礼盒','套餐一：龙凤款红礼盒']
+    product: {},
+    priceList: [],
+    company: {}
   }),
   methods:{
     choseNum(num) {
-      if(num > 0) {
+      if(num > 0 && num <= this.total) {
         this.num++
       } else if(num > 1){
         this.num--
       }
     },
-    addCart() {
+    async addCart() {
+        let res = await this.$apiFactory.getOrderApi().addCart({
+          count: this.num,
+          productSkuId: this.priceList[this.actIndex].id
+        })
         return this.$notify({
           title: '提示',
-          message: '已加入购物车',
+          message: res.status == 200 ? '已加入购物车' : '添加失败，请重新添加',
           type: 'succes'
         })
     },
     selectType(i){
       this.actIndex = i
+      this.price = this.priceList[i].price
+      this.img = this.priceList[i].pic
+      this.total = this.priceList[i].stock
+      this.num = 1
+    },
+    async getDetail(){
+     let productId = this.$route.params.id
+     let res = await this.$apiFactory.getTrademarkApi().ProductDetail(productId)
+     if(res.status == 200) {
+       this.product.id = res.data.product.id
+       this.product.desc = res.data.product.desc
+       this.product.name = res.data.product.name
+       this.company = res.data.shop
+       this.priceList = res.data.productSku
+       this.price = this.priceList[0].price
+       this.img = this.priceList[0].pic
+       this.total = this.priceList[0].stock
+     }
     }
+  },
+  created(){
+    this.getDetail()
   }
 }
 </script>
@@ -104,9 +132,10 @@ export default {
     background-color: #eee;
     background-position: center;
     background-repeat: no-repeat;
+    background-size: contain;
   }
   .select-buy{
-    padding-left: 45px;
+    padding-left: 31px;
     padding-right: 33px;
     width: 50%;
   }
@@ -117,9 +146,10 @@ export default {
     font-size:26px;
     color:rgba(0,0,0,1);
     line-height:37px;
+    padding-left: 14px;
   }
   .peice{
-    padding: 19px 0 29px;
+    padding: 19px 14px 29px;
     font-size:14px;
     color:rgba(102,102,102,1);
     line-height:20px;
@@ -132,7 +162,7 @@ export default {
   .chose{
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: left;
     flex-wrap: wrap;
     .chose-item{
       padding: 12px 34px;
@@ -142,6 +172,7 @@ export default {
       font-size:14px;
       color:rgba(0,0,0,1);
       line-height:20px;
+      margin-left: 14px;
     }
     .act{
       border-color: #702A2A;
@@ -151,6 +182,7 @@ export default {
   }
   .number{
     display: flex;
+    padding-left: 14px;
     align-items: center;
     .num-chose{
       flex-grow: 0;
@@ -184,6 +216,7 @@ export default {
     }
   }
   .btns{
+    padding-left: 14px;
     margin-top: 35px;
     .buy,.addCart{
       width:208px;

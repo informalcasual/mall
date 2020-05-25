@@ -21,9 +21,15 @@
         >
           <img :src="require('./imgs/cart.svg')" alt="">
         </div>
-        <div class="userItem" v-if="loginUser.id">
-          <img class="avatar pointer" :src="loginUser.avatar || require('./imgs/avatar.svg')" alt="">
-          <userNav />
+        <div class="userItem"
+           v-if="loginUser.id" 
+           @mouseenter.stop="showNav = true"
+           @mouseleave.stop="showNav = false">
+          <img class="avatar pointer" 
+          
+           :src="loginUser.avatar || require('./imgs/avatar.svg')" 
+           alt="">
+          <userNav v-show="showNav" />
         </div>
         <div class="userItem" v-else>        
            <div class="register" ><span @click.stop="register">注册</span>/<span  @click.stop="login">登录</span></div>
@@ -44,7 +50,7 @@ export default {
      link: '/news',
      title: '最新动态', 
     },{
-     link: '/culturalTrade',
+     link: '/culturalTrade/product',
      title: '文化贸易', 
     },{
      link: '/placeWindow',
@@ -52,7 +58,8 @@ export default {
     },{
      link: '/statistics',
      title: '统计查询', 
-    }]
+    }],
+    showNav: false,
   }),
   methods: {
     toLiink(url){
@@ -81,6 +88,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 2000;
 }
 .topBox{
   height: 100%;

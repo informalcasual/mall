@@ -26,9 +26,9 @@
           <div class="pro-info">
             <div class="price-box">
               <div class="title">{{item.name}}</div>
-              <div class="price">售价：<span>￥{{item.price}}</span></div>
+              <div class="price">售价：<span>￥{{item.initialSale.toFixed(2)}}</span></div>
             </div>
-            <div class="pro-btn pointer">购买</div>
+            <div class="pro-btn pointer" @click.stop="toBuy(item.id)">购买</div>
           </div>
         </div>
       </div>
@@ -40,10 +40,10 @@
           <div class="service-item" v-for="(item, index) in service" :key="index">
             <router-link to="/" target="_self">
               <div class="show" :style="{'background-image': `url('')`}">
-                <div class="item-title">3343434</div>
+                <div class="item-title">{{item.name}}</div>
               </div>
             </router-link>
-            <div class="advisory pointer">立即咨询</div>
+            <div class="advisory pointer" @click.stop="toService(item.id)" >立即咨询</div>
           </div>
         </div>
       </div>
@@ -72,6 +72,36 @@ export default {
     service: [],
     display: ['着重文化产业创新发展', '推动文化产业综合实力', '提升国际影响力和聚合力', '将中国文化产品推向世界']
   }),
+  methods: {
+    async getProduct(){
+      let res = await this.$apiFactory.getTrademarkApi().getProduct(1, {
+        page: 0,
+        size: 8,
+      })
+      if(res.status == 200) {
+        this.products = res.data.content
+      }
+    },
+    async getService(){
+      let res = await this.$apiFactory.getTrademarkApi().getProduct(2, {
+        page: 0,
+        size: 8,
+      })
+      if(res.status == 200) {
+        this.service = res.data.content
+      }
+    },
+    toBuy(id){
+      window.open(`/product/${id}`, '_blank')
+    },
+    toService(id){
+      window.open(`/serviceDetail/${id}`, '_blank')
+    }
+  },
+  created(){
+    this.getProduct()//产品
+    this.getService()//文化
+  },
   components: {
     banner,
     contNav
@@ -173,7 +203,7 @@ export default {
   .service-box{
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
   }
   .service-item{
     width: 227px;

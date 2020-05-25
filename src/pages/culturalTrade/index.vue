@@ -31,7 +31,16 @@ export default {
       this.$router.push({
         name: name
       })
-    }
+    },
+    async getProduct(){
+      let res = await this.$apiFactory.getTrademarkApi().getProduct({
+        page: 0,
+        size: 8,
+      })
+      if(res.status == 200) {
+        this.products = res.data.content
+      }
+    },
   },
   components: {
     crumbs

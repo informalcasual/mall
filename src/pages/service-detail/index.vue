@@ -10,7 +10,7 @@
         <div class="service-tip">服务时间：<span></span></div>
         <div class="service-tip">详细地址：<span></span></div>
         <div class="btns">
-          <div class="advisory pointer">
+          <div class="advisory pointer" @click.stop="addAdvisory()">
             <img :src="require('./img/advisory.svg')"  wisth="18" alt="">
           咨询客服</div>
           <div @click.stop="addCart()" class="addCart pointer">留下联系方式</div>
@@ -48,12 +48,8 @@ export default {
         this.num--
       }
     },
-    addCart() {
-        return this.$notify({
-          title: '提示',
-          message: '已加入购物车',
-          type: 'succes'
-        })
+    addAdvisory(){
+      this.$bus.emit('showAdvisory', true)
     },
     selectType(i){
       this.actIndex = i

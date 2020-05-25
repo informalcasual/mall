@@ -10,6 +10,7 @@
     <login />
     <signup />
     <fullPhone />
+    <advisory />
     <!-- <backTop v-if='scroll > 1000'/> -->
       <bottom/>
   </div>
@@ -26,6 +27,7 @@ import signup from '@/components/login/signup'
 import fullPhone from '@/components/bindPhone/bindPhone'
 import { mapState } from 'vuex'
 import queryString from 'query-string'
+import advisory from '@/components/advisory/index'
 export default {
   name: 'App',
   methods: {
@@ -76,7 +78,8 @@ export default {
     contact,
     login,
     signup,
-    fullPhone
+    fullPhone,
+    advisory
   },
   computed: {
     ...mapState({
@@ -90,6 +93,7 @@ export default {
 <style>
 #app {
   width: 100%;
+  height: 100%;
   background-color: #F4F6F9;
 }
 </style>

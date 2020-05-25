@@ -3,7 +3,14 @@ import utilHelper from '@/utils/utils.js'
 
 const { cookie } = utilHelper
 
-const baseURL = '//api2.paixin.com/'
+// const getUrl = () => {
+//   let obj = {}
+//     obj.Url = 'http://192.168.1.246:8082/'
+//     obj._loginUrl = '//api0.paixin.com/'
+//   return obj
+// }
+// const baseUrl = getUrl()
+const baseURL = 'http://192.168.1.246:8082/'
 axios.interceptors.request.use(
   config => {
     const pToken = cookie('p-token')
@@ -19,6 +26,7 @@ axios.interceptors.request.use(
 
 // http response 拦截器
 axios.interceptors.response.use(
+
   response => {
     const uid = response.data && response.data.data && response.data.data['id']
     if (uid) {
@@ -64,7 +72,6 @@ export const axiosBase = (url, data = {}, params = {}, method = 'POST') => {
     withCredentials: true,
     responseType: 'text'
   }
-
   config.url = url
   config.data = deleteEmptyProperty(data)
   config.params = deleteEmptyProperty(params)
@@ -84,8 +91,8 @@ export const axiosGet = (url, data = {}, params = {}, method = 'GET') => {
   config.url = url
   config.data = deleteEmptyProperty(data)
   config.params = deleteEmptyProperty(params)
-
   return axios(config)
+
 }
 
 export const axiosPut = (url, data = {}, params = {}, method = 'PUT') => {
