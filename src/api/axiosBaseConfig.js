@@ -75,7 +75,6 @@ export const axiosBase = (url, data = {}, params = {}, method = 'POST') => {
   config.url = url
   config.data = deleteEmptyProperty(data)
   config.params = deleteEmptyProperty(params)
-
   return axios(config)
 }
 
@@ -111,3 +110,18 @@ export const axiosPut = (url, data = {}, params = {}, method = 'PUT') => {
   return axios(config)
 }
 
+export const axiosDelete = (url, data = {}, params = {}, method = 'DELETE') => {
+  let config = {
+    baseURL: baseURL,
+    method: method,
+    headers: { 'Content-Type': 'application/json' },
+    withCredentials: true,
+    responseType: 'text'
+  }
+
+  config.url = url
+  config.data = deleteEmptyProperty(data)
+  config.params = deleteEmptyProperty(params)
+
+  return axios(config)
+}

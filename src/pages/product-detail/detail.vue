@@ -61,6 +61,7 @@ export default {
     company: {}
   }),
   methods:{
+    // 数量
     choseNum(num) {
       if(num > 0 && num <= this.total) {
         this.num++
@@ -68,6 +69,7 @@ export default {
         this.num--
       }
     },
+    // 加入购物车
     async addCart() {
         let res = await this.$apiFactory.getOrderApi().addCart({
           count: this.num,
@@ -79,12 +81,20 @@ export default {
           type: 'succes'
         })
     },
+    // 选择样式
     selectType(i){
       this.actIndex = i
       this.price = this.priceList[i].price
       this.img = this.priceList[i].pic
       this.total = this.priceList[i].stock
       this.num = 1
+    },
+    // 买
+    async toBuy(){
+      let res = await this.$apiFactory.getOrderApi().addCart({
+        count: this.num,
+        productSkuId: this.priceList[this.actIndex].id
+      })
     },
     async getDetail(){
      let productId = this.$route.params.id
@@ -102,7 +112,7 @@ export default {
     }
   },
   created(){
-    this.getDetail()
+    this.getDetail()//商品详情
   }
 }
 </script>

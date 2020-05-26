@@ -17,17 +17,17 @@
           :style="{'background-color': `url()`}"
           ></router-link>
           <div class="pro-info">
-            <div class="name"></div>
-            <div class="type"></div>
+            <div class="name">{{item.name}}</div>
+            <div class="type">{{item.specs}}</div>
           </div>
         </div>
-        <div class="price">￥</div>
+        <div class="price">￥{{item.price}}</div>
         <div class="num">
           <img  @click.stop="choseNum(index, -1)" :src="require('@/assets/img/reduce.svg')" alt="">
-          <div   class="number">{{item.num}}</div>
+          <div   class="number">{{item.count}}</div>
           <img  @click.stop="choseNum(index, 1)" :src="require('@/assets/img/plus.svg')" alt="">
         </div>
-        <div class="total">￥</div>
+        <div class="total">￥{{(item.count*item.price).toFixed(2)}}</div>
       </div>
     </div>
   </div>
@@ -38,13 +38,13 @@
           <div class="select" :class="{'selected': selectedAll}"></div>
           全选
         </div>
-        <div class="cancle pointer">删除选种商品</div>
+        <div class="cancle pointer" @click.stop="cancle()">删除选种商品</div>
       </div>
       <div class="bill">
         <div class="bill-num">已选<span>{{selectedList.length}}</span>个商品</div>
         <div class="bill-total"><span>总价：</span>
-          <span class="total">￥{{total}}</span></div>
-        <div class="carts pointer main-brown">立即下单</div>
+          <span class="total">￥{{total.toFixed(2)}}</span></div>
+        <div class="carts pointer main-brown" @click.stop="toBuy()">立即下单</div>
       </div>
     </div>
   </div>
@@ -57,22 +57,29 @@ export default {
   data: () => ({
     selectedList: [],
     selectedAll: false,
-    carts:[{
-      num:2,
-    },{
-      num:33
-    }],
+    carts:[],
     total: 0,
     windowHeight: document.documentElement.clientHeight || document.body.clientHeight,
   }),
   methods: {
-    choseNum(index, num){
-      if(num > 0) {
-        this.carts[index].num++
-      } else if(num > 1){
-        this.carts[index].num--
+    async getList() {
+      let res = await this.$apiFactory.getOrderApi().cartShop()
+      if(res.status == 200) {
+        this.carts = res.data.content
       }
     },
+    //修改数量
+    async choseNum(index, num){
+      if(num > 0) {
+        this.carts[index].count++
+      } else if(num < 0 && this.carts[index].count > 1){
+        this.carts[index].count--
+      }
+      let count = this.carts[index].count,
+          id = this.carts[index].id
+      let res = await this.$apiFactory.getOrderApi().changeNum({count: count, id: id})
+    },
+    // 全选
     selectAll(){
       this.selectedList = []
       this.total = 0
@@ -85,13 +92,16 @@ export default {
           this.total += element.num* element.price
         });
       }
+      this.totalNum()
     },
+    // 结算总价
     totalNum(){
       this.total = 0
       this.selectedList.forEach(ele=>{
-        this.total += this.carts[ele].num * this.carts.price
+        this.total += this.carts[ele].count * this.carts[ele].price
       })
     },
+    // 选择
     select(index){
       let length = this.selectedList.length
       let flag = true
@@ -107,7 +117,27 @@ export default {
         this.selectedList.push(index)
       }
       this.totalNum()
+    },
+    // 删除
+    async cancle(){
+      let res = await this.$apiFactory.getOrderApi().cancleCart({cartIds: this.selectedList})
+      if(res.status == 200) {
+        this.selectedList = []
+        this.total = 0
+        this.selectedAll = false,
+        this.getList()
+      }
+    },
+    // 结算
+    async toBuy(){
+      let res = await this.$apiFactory.getOrderApi().placeorder({cartIds: this.selectedList})
+      if(res.status == 200) {
+        
+      }
     }
+  },
+  created(){
+    this.getList()
   },
   computed: {
     ...mapState({
