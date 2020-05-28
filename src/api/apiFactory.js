@@ -7,6 +7,7 @@ import Qiniu from './path/qiniu'
 import Upload from './path/upload'
 import LoginApi from './path/login'
 import pageModelApi from './path/pageModel'
+import addressApi from './path/addressApi'
 export default class ApiFactory {
   constructor() {
     this.userApi = null
@@ -18,7 +19,15 @@ export default class ApiFactory {
     this.upload = null
     this.LoginApi = null
     this.pageModelApi = null
+    this.addressApi = null
   }
+
+  getaddressApi(){
+    if (this.addressApi === null) {
+      this.addressApi = new addressApi()
+    }
+    return this.addressApi
+  } 
 
   getpageModel(){
     if (this.pageModelApi === null) {

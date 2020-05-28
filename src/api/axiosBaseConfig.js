@@ -107,6 +107,7 @@ export const axiosPut = (url, data = {}, params = {}, method = 'PUT') => {
   config.data = deleteEmptyProperty(data)
   config.params = deleteEmptyProperty(params)
 
+
   return axios(config)
 }
 

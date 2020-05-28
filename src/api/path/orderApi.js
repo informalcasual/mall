@@ -27,4 +27,9 @@ export default class OrderApi {
     let url = `order/cart`
     return axiosBase(url, data)
   }
+  // 下单预览
+  previewCart(data){
+    let url = `cart/preview`
+    return axiosBase(url, data)
+  }
 }

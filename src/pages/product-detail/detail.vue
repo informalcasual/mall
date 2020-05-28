@@ -91,10 +91,11 @@ export default {
     },
     // 买
     async toBuy(){
-      let res = await this.$apiFactory.getOrderApi().addCart({
-        count: this.num,
-        productSkuId: this.priceList[this.actIndex].id
-      })
+      window.open('/pay?pcn='+this.priceList[this.actIndex].id+',0,'+this.num, '_self')
+      // let res = await this.$apiFactory.getOrderApi().addCart({
+      //   count: this.num,
+      //   productSkuId: this.priceList[this.actIndex].id
+      // })
     },
     async getDetail(){
      let productId = this.$route.params.id

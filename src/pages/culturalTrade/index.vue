@@ -32,7 +32,7 @@ export default {
         name: name
       })
     },
-    async getProduct(){
+    async getProduct() {
       let res = await this.$apiFactory.getTrademarkApi().getProduct({
         page: 0,
         size: 8,

@@ -1,6 +1,6 @@
 <template>
   <div class="spread">
-    <div class="min-box">
+    <div class="min-box mb92">
       <div class="page-title">订单结算</div>
       <div class="pay-box">
         <selfaddress @addAddress="addAddress" :phone="phone" address="address" :name="name" :ifHave="ifaddress"></selfaddress>
@@ -13,20 +13,20 @@
           </div>
           <div class="product" v-for="(item, index) in carts" :key="index">
             <div class="detail">
-              <router-link to="/" target="_blank" 
+              <div
               class="pro-img"
-              :style="{'background-color': `url()`}"
-              ></router-link>
+              :style="{'background-image': `url(${item.productSku.pic})`}"
+              ></div>
               <div class="pro-info">
-                <div class="name">纯手工艺品无锡惠山泥人</div>
-                <div class="type">龙凤款礼盒装</div>
+                <div class="name">{{item.name}}</div>
+                <div class="type">{{item.specs}}</div>
               </div>
             </div>
-            <div class="price">￥1255</div>
+            <div class="price">￥{{item.productSku.price}}</div>
             <div class="num">
-              x1
+              x{{item.count}}
             </div>
-            <div class="total">￥129</div>
+            <div class="total">￥{{(item.count*item.productSku.price).toFixed(2)}}</div>
           </div>
         </div>
       </div>
@@ -48,9 +48,7 @@ import ADDaddress from './component/add-dress'
 import { mapState } from 'vuex'
 export default {
   data: ()=>({
-    carts: [{
-      name: 1,
-    }],
+    carts: [],
     name: '',
     phone: '',
     address: '',
@@ -58,6 +56,34 @@ export default {
     windowHeight: document.documentElement.clientHeight || document.body.clientHeight,
   }),
   methods: {
+    // 获取商品信息
+    async getinfo() {
+      let res = null
+      let pcn = this.$route.query.pcn.split(',') //[productid, productType ,productNumber]
+      let cartsIds = pcn[0] == -1 ? this.$route.query.carts.split(',') : null //[cartsIds]
+      if(pcn[0] == -1){
+        res = await this.$apiFactory.getOrderApi().previewCart({cartIds: cartsIds})
+        if(res.status == 200) {
+          this.carts = res.data
+        }
+      } else {
+        res = await this.$apiFactory.getTrademarkApi().ProductDetail(pcn[0])
+        if(res.status == 200) {
+          let data = {
+            productSku:{
+
+            }
+          }
+          data.name = res.data.product.name
+          data.id = res.data.productSku[pcn[1]].id
+          data.specs = res.data.productSku[pcn[1]].specs
+          data.productSku.price = res.data.productSku[pcn[1]].price
+          data.count = pcn[2]
+          data.productSku.pic = res.data.productSku[pcn[1]].pic
+          this.carts.push(data)
+        }
+      }
+    },
     addAddress(){
       this.$bus.emit('showAddress', true)
     },
@@ -66,7 +92,19 @@ export default {
       this.phone = item.phone
       this.address = item.address
       this.ifaddress = true
+    },
+    // 获取已有地址
+    async originAddress() {
+      let res = await this.$apiFactory.getaddressApi().getAddress()
+      if(res.status == 200 && res.data.content.length > 1) {
+        this.ifaddress = true
+        
+      } 
     }
+  },
+  created() {
+    this.originAddress()
+    this.getinfo()
   },
   components: {
     selfaddress,
@@ -80,6 +118,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.mb92{
+  margin-bottom: 92px;
+}
 .pay-box{
    background-color: #fff;
 }

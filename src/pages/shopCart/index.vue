@@ -21,13 +21,13 @@
             <div class="type">{{item.specs}}</div>
           </div>
         </div>
-        <div class="price">￥{{item.price}}</div>
+        <div class="price">￥{{item.productSku.price}}</div>
         <div class="num">
           <img  @click.stop="choseNum(index, -1)" :src="require('@/assets/img/reduce.svg')" alt="">
           <div   class="number">{{item.count}}</div>
           <img  @click.stop="choseNum(index, 1)" :src="require('@/assets/img/plus.svg')" alt="">
         </div>
-        <div class="total">￥{{(item.count*item.price).toFixed(2)}}</div>
+        <div class="total">￥{{(item.count*item.productSku.price).toFixed(2)}}</div>
       </div>
     </div>
   </div>
@@ -89,7 +89,7 @@ export default {
         this.selectedAll = true
         this.carts.forEach((element,index) => {
           this.selectedList.push(index)
-          this.total += element.num* element.price
+          this.total += element.num* element.productSku.price
         });
       }
       this.totalNum()
@@ -98,7 +98,7 @@ export default {
     totalNum(){
       this.total = 0
       this.selectedList.forEach(ele=>{
-        this.total += this.carts[ele].count * this.carts[ele].price
+        this.total += this.carts[ele].count * this.carts[ele].productSku.price
       })
     },
     // 选择
@@ -120,7 +120,11 @@ export default {
     },
     // 删除
     async cancle(){
-      let res = await this.$apiFactory.getOrderApi().cancleCart({cartIds: this.selectedList})
+      let cartsIds = []
+      for(let item in this.selectedList){
+        cartsIds.push(this.carts[item].id)
+      }
+      let res = await this.$apiFactory.getOrderApi().cancleCart({cartIds: cartsIds})
       if(res.status == 200) {
         this.selectedList = []
         this.total = 0
@@ -129,11 +133,12 @@ export default {
       }
     },
     // 结算
-    async toBuy(){
-      let res = await this.$apiFactory.getOrderApi().placeorder({cartIds: this.selectedList})
-      if(res.status == 200) {
-        
+    toBuy(){
+      let cartsIds = []
+      for(let item in this.selectedList){
+        cartsIds.push(this.carts[item].id)
       }
+      window.open('/pay?pcn=-1,0,0&carts='+cartsIds.toString(), '_self')
     }
   },
   created(){

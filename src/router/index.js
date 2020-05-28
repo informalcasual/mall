@@ -32,7 +32,7 @@ let router = new Router({
       component: () => import('@/pages/placeWindow/placeWindow')
     },
     {
-      path: '/pay/:id',
+      path: '/pay',
       name: 'pay',
       component: () => import('@/pages/pay/index')
     },
@@ -76,7 +76,7 @@ let router = new Router({
         component: () => import('@/pages/culturalTrade/components/culturalService'),
       }
       ]
-    },,
+    },
     {
       // 404页面
       path: '*',
