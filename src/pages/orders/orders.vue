@@ -4,10 +4,10 @@
     <div class="order-box">
       <div class="order-top">
         <div class="selection pointer">
-          <div class="tit" :class="{'act-tit': index === 0}">全部订单</div>
-          <div class="tit" :class="{'act-tit': index === 1}">已支付</div>
-          <div class="tit" :class="{'act-tit': index === 2}">待收货</div>
-          <div class="tit" :class="{'act-tit': index === 3}">已完成</div>
+          <div class="tit" @click.stop="getInfo(0)" :class="{'act-tit': index === 0}">全部订单</div>
+          <div class="tit" @click.stop="getInfo(2)" :class="{'act-tit': index === 2}">已支付</div>
+          <div class="tit" @click.stop="getInfo(4)" :class="{'act-tit': index === 4}">待收货</div>
+          <div class="tit" @click.stop="getInfo(5)" :class="{'act-tit': index === 5}">已完成</div>
         </div>
         <div class="search">
           <input type="text" @keyup.enter="importkey()" v-model="key" placeholder="请输入您要搜索的商品">
@@ -25,15 +25,15 @@
           <div class="total">金额</div>
           <div class="subtotal">小计</div>
         </div>
-        <div class="order-item">
+        <div class="order-item" v-for="(item, index) in lists" :key="index">
           <div class="order-num"><span>订单编号：</span></div>
           <div class="cont">
             <div class="detail">
-               <router-link class="link" to="/" target="_self">
+               <!-- <router-link class="link" :to="''+item" target="_self"> -->
                 <div class="img" :style="{'background-img': `url()`}">
                   
                 </div>
-               </router-link>
+               <!-- </router-link> -->
                <div class="pro-info">
                  <p class="title">纯手工艺品无锡惠山泥人</p>
                  <p class="type">龙凤款礼盒装</p>
@@ -48,12 +48,12 @@
               <p>实付金额：¥28.9</p>
             </div>
             <div class="subtotal">
-              <div class="status">已支付</div>
+              <div class="status">{{item.status|status}}</div>
               <div class="btns">
                 <div class="operation pointer">
-                  <span></span>
+                  <span>{{item.status|status_btn}}</span>
                 </div>
-                <div class="more pointer">查看详情</div>
+                <div class="more pointer" @click.stop="toWindow(item.id)">查看详情</div>
               </div>
             </div>
           </div>
@@ -62,8 +62,8 @@
     </div>
     <div class="pagintaion">
       <pagintaion  
-        :page="1"
-        :total="2"
+        :page="page"
+        :total="totalPage"
         @paginationToPage="toPage"
         style="float: right"
         />
@@ -76,14 +76,61 @@ export default {
   data: () => ({
     index: 0,
     key: '',
+    lists: [],
+    page: 0,
+    totalPage: 0
   }),
   methods: {
-    toPage(){
-
+    // 分页
+    toPage(n){
+      this.page = n
+      this.getInfo(this.index)
+    },
+    toWindow(id){
+      window.open(`/order_detail/${id}`,'_self')
+    },
+    async getInfo(i){
+      this.index = i
+      let res = await this.$apiFactory.getOrdersApi().getOrders({status:this.index,page: this.page})
+      if(res.status == 200){
+        this.lists = res.data.content
+        this.page = res.data.number
+        this.totalPage = res.data.totalPages
+      }
+    },
+    async importkey() {
+      this.page = 0
+      this.lists = []
+      this.totalPage = 0
+      let res = await this.$apiFactory.getOrdersApi().getOrders({status:this.index,page: this.page, name: this.key})
+      if(res.status == 200) {
+        this.lists = res.data.content
+        this.page = res.data.number
+        this.totalPage = res.data.totalPages
+      }
+    }
+  },
+  filters: {
+    status(n){
+      return n === 1 ? '待付款': 
+             n === 2 ? '代发货':
+             n === 3 ? '已关闭':  
+             n === 4 ? '待收货': '已完成'
+      
+    },
+    status_btn(n){
+      return n === 1 ? '支付订单': 
+             n === 2 ? '取消订单':
+             n === 3 ? '已关闭':  
+             n === 4 ? '确认收货': '申请售后'
+      
     }
   },
   components: {
     pagintaion
+  },
+  created(){
+    this.getInfo(0)
   }
 }
 </script>
@@ -214,6 +261,7 @@ export default {
       .pro-info{
         flex-grow: 1;
         overflow: hidden;
+        padding-left: 25px;
         .title{
           font-size:16px;
           color:rgba(0,0,0,1);
@@ -280,6 +328,7 @@ export default {
  
 }
 .pagintaion{
+  overflow: hidden;
   padding: 23px 64px;
 }
 </style>

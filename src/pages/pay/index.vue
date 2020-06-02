@@ -3,7 +3,7 @@
     <div class="min-box mb92">
       <div class="page-title">订单结算</div>
       <div class="pay-box">
-        <selfaddress @addAddress="addAddress" :phone="phone" address="address" :name="name" :ifHave="ifaddress"></selfaddress>
+        <selfaddress @addAddress="addAddress" :phone="phone" :address="address" :name="name" :ifHave="ifaddress"></selfaddress>
         <div class="pay-detail">
           <div class="head">
             <div class="title1">商品详情</div>
@@ -31,20 +31,23 @@
         </div>
       </div>
     </div>
-    <div class="pay-line" :style="{'bottom':  windowHeight - scroll > 240 ? '240px' : '0px'}">
-      <div class="min-box">
-         <div class="product-num">共<span>4</span>个商品</div>
-         <div class="total">总价：<span>￥1255</span></div>
-         <div class="pay-btn">立即付款</div>
+    <div class="pay-line" :class="{'fixed': totalHeight - scroll < 240}">
+     
+      <div class="min-box"> 
+         <div class="product-num">共<span>{{totalCount}}</span>个商品</div>
+         <div class="total">总价：<span>￥{{totalPrice.toFixed(2)}}</span></div>
+         <div class="pay-btn pointer" @click.stop="BuyNow()">立即付款</div>
       </div>
      
     </div>
     <ADDaddress @getAddress="getAddress"/>
+    <pay />
   </div>
 </template>
 <script>
 import selfaddress from './component/address'
 import ADDaddress from './component/add-dress'
+import pay from './component/pay'
 import { mapState } from 'vuex'
 export default {
   data: ()=>({
@@ -52,7 +55,13 @@ export default {
     name: '',
     phone: '',
     address: '',
+    addressId: -1,
     ifaddress: false,
+    totalCount: 0,
+    totalPrice: 0,
+    orderId: 0,
+    flag: false,
+    totalHeight: document.body.scrollHeight || document.documentElement.scrollHeight,
     windowHeight: document.documentElement.clientHeight || document.body.clientHeight,
   }),
   methods: {
@@ -83,6 +92,13 @@ export default {
           this.carts.push(data)
         }
       }
+      this.totalCount = 0
+      this.totalPrice = 0
+      this.carts.forEach(ele => {
+        this.totalCount += parseInt(ele.count) 
+        this.totalPrice += parseFloat((ele.productSku.price*ele.count))
+      });
+
     },
     addAddress(){
       this.$bus.emit('showAddress', true)
@@ -92,14 +108,54 @@ export default {
       this.phone = item.phone
       this.address = item.address
       this.ifaddress = true
+      this.addressId = item.addressId
     },
     // 获取已有地址
     async originAddress() {
       let res = await this.$apiFactory.getaddressApi().getAddress()
-      if(res.status == 200 && res.data.content.length > 1) {
+      if(res.status == 200 && res.data.content.length >= 1) {
         this.ifaddress = true
-        
+         this.name = res.data.content[0].name
+         this.phone = res.data.content[0].phone
+         this.address = res.data.content[0].address
+         this.addressId = res.data.content[0].id
       } 
+    },
+    // 下单
+    async BuyNow(){
+      if(this.flag && this.orderId){
+        return this.$bus.emit('showPayCode', {
+          show: true,
+          orderId: this.orderId
+        })
+      }
+      let res = null
+      let pcn = this.$route.query.pcn.split(',')
+      if(pcn[0] == -1) {
+        let cartIds = []
+        this.carts.forEach(ele => {
+          cartIds.push(ele.id)
+        })
+        res = await this.$apiFactory.getpayApi().payCart({
+          cartIds: cartIds,
+          addressId: this.addressId
+        })
+      } else {
+        let data = {
+          count: this.totalCount,
+          productSkuId: this.carts[0].id,
+          addressId: this.addressId
+        }
+        res = await this.$apiFactory.getpayApi().payOrder(data)
+      }
+      if(res.status == 200) {
+        this.flag = true
+        this.orderId = res.data.id
+        return this.$bus.emit('showPayCode', {
+          show: true,
+          orderId: this.orderId
+        })
+      }
     }
   },
   created() {
@@ -108,7 +164,8 @@ export default {
   },
   components: {
     selfaddress,
-    ADDaddress
+    ADDaddress,
+    pay
   },
   computed: {
     ...mapState({
@@ -118,6 +175,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.spread{
+  position: relative;
+}
 .mb92{
   margin-bottom: 92px;
 }
@@ -209,10 +269,14 @@ export default {
     }
   }
 }
+.fixed{
+  position: fixed!important;
+}
 .pay-line{
   width: 100%;
   height:80px;
-  position: fixed;
+  position: absolute;
+  bottom: 0;
   left: 0;
   background:rgba(255,255,255,1);
   .min-box{

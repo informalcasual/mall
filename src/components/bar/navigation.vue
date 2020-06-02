@@ -67,7 +67,14 @@ export default {
     },
     toCart(){
       window.open('/shopCart', '_blank')
-    }
+    },
+    register() {
+      // window.location.href = 'https://v.paixin.com/login'
+      this.$bus.emit('showRegister', true)
+    },
+    login() {
+      this.$bus.emit('showLogin', true)
+    },
   },
   computed: {
     ...mapState({

@@ -7,6 +7,10 @@ body {
   overflow-y: scroll !important;
   overflow-x: hidden;
 }
+body,html{
+  height: 100vh;
+  background-color: #F4F6F9;
+}
 
 img {
   border-style: none;
@@ -123,6 +127,7 @@ input[type='number']::-webkit-outer-spin-button {
  
  .box-pop1{
    text-align: center;
+   background:rgba(255,255,255,1);
    padding-top: 57px;
    .pop-title1{
       font-size:24px;

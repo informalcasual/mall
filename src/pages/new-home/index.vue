@@ -15,14 +15,14 @@
       </div>
     </div>
     <div class="product box">
-      <contNav :title="'文化产品'" :btnTitle="'更多产品'" :url="'/'"/>
+      <contNav :title="'文化产品'" :btnTitle="'更多产品'" :url="'/culturaltrade/product'"/>
       <div class="product-box">
         <div 
         class="pro-item"
         v-for="(item, index) in products"
         :key="index"
         >
-          <!-- <img :src="item.img" class="pro-img" alt=""> -->
+          <img :src="item.cover" class="pro-img" alt="">
           <div class="pro-info">
             <div class="price-box">
               <div class="title">{{item.name}}</div>
@@ -35,11 +35,11 @@
     </div>
     <div class="service">
       <div class="box">
-        <contNav :title="'文化服务'" :btnTitle="'更服务产品'" :url="'/'"></contNav>
+        <contNav :title="'文化服务'" :btnTitle="'更服务产品'" :url="'/culturaltrade/service'"></contNav>
         <div class="service-box">
           <div class="service-item" v-for="(item, index) in service" :key="index">
-            <router-link to="/" target="_self">
-              <div class="show" :style="{'background-image': `url('')`}">
+            <router-link :to='`/serviceDetail/${item.id}`' target="_blank">
+              <div class="show" :style="{'background-image': `url(${item.cover})`}">
                 <div class="item-title">{{item.name}}</div>
               </div>
             </router-link>
@@ -74,7 +74,7 @@ export default {
   }),
   methods: {
     async getProduct(){
-      let res = await this.$apiFactory.getTrademarkApi().getProduct(1, {
+      let res = await this.$apiFactory.getTrademarkApi().getProduct({
         page: 0,
         size: 8,
       })
@@ -83,9 +83,9 @@ export default {
       }
     },
     async getService(){
-      let res = await this.$apiFactory.getTrademarkApi().getProduct(2, {
+      let res = await this.$apiFactory.getTrademarkApi().getService({
         page: 0,
-        size: 8,
+        size: 4,
       })
       if(res.status == 200) {
         this.service = res.data.content
@@ -144,12 +144,15 @@ export default {
   .product-box{
     display: flex;
     align-items: center;
-    justify-content: space-between;
     flex-wrap: wrap;
     margin-bottom: 37px;
     .pro-item{
       width: 23%;
       margin-bottom: 38px;
+      margin-left: 30px;
+      &:nth-child(4n+1){
+        margin-left: 0px;
+      }
       .pro-img{
         width: 100%;
         height: 225px;

@@ -5,7 +5,7 @@
       <div class="img" :style="{'background-image': `url(${img})`}"></div>
       <div class="select-buy">
         <div class="title">{{product.name}}</div>
-        <div class="peice">售价：<span>￥{{price.toFixed(2)}}</span></div>
+        <div class="peice">售价:<span>￥{{price.toFixed(2)}}</span></div>
         <div class="chose">
           <div 
           class="chose-item pointer"
@@ -58,7 +58,11 @@ export default {
     actIndex: 0,
     product: {},
     priceList: [],
-    company: {}
+    company: {
+      name: '',
+      phone: '',
+      address: ''
+    }
   }),
   methods:{
     // 数量
@@ -73,7 +77,7 @@ export default {
     async addCart() {
         let res = await this.$apiFactory.getOrderApi().addCart({
           count: this.num,
-          productSkuId: this.priceList[this.actIndex].id
+          productSkuId: this.priceList.length > 0 ? this.priceList[this.actIndex].id : this.product.id
         })
         return this.$notify({
           title: '提示',
@@ -91,7 +95,7 @@ export default {
     },
     // 买
     async toBuy(){
-      window.open('/pay?pcn='+this.priceList[this.actIndex].id+',0,'+this.num, '_self')
+      window.open('/pay?pcn='+(this.priceList.length > 0 ? this.priceList[this.actIndex].id : this.product.id)+',0,'+this.num, '_self')
       // let res = await this.$apiFactory.getOrderApi().addCart({
       //   count: this.num,
       //   productSkuId: this.priceList[this.actIndex].id
@@ -104,11 +108,11 @@ export default {
        this.product.id = res.data.product.id
        this.product.desc = res.data.product.desc
        this.product.name = res.data.product.name
-       this.company = res.data.shop
+       this.company = res.data.shop ? res.data.shop : this.company
        this.priceList = res.data.productSku
-       this.price = this.priceList[0].price
-       this.img = this.priceList[0].pic
-       this.total = this.priceList[0].stock
+       this.price = this.priceList.length > 0 ? this.priceList[0].price : res.data.product.sale
+       this.img = this.priceList.length > 0 ? this.priceList[0].pic : res.data.productResource[0].url
+       this.total = this.priceList.length > 0 ? this.priceList[0].stock : 1000
      }
     }
   },

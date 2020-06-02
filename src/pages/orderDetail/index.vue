@@ -12,7 +12,7 @@
       <div class="detail-order">
         <div class="order-number">订单编号：</div>
         <div class="order-item">
-          <router-link class="link" to="/" target="_self">
+          <router-link class="link"  target="_self">
             <div class="img" :style="{'background-img': `url()`}"></div>
           </router-link>
           <div class="oreder-detail">
@@ -43,10 +43,28 @@
     </div>
   </div>
 </template>
+<script>
+export default {
+  data: ()=> ({
+    orderId: 0
+  }),
+  methods: {
+    async getInfo(){
+      this.orderId = this.$route.params.orederId
+      let res = await this.$apiFactory.getOrdersApi().orderDetail(this.orderId)
+    }
+  },
+  created(){
+    this.getInfo()
+  }
+}
+</script>
+
 <style lang="scss" scoped>
  .detail{
     padding: 64px 50px;
     background-color: #fff;
+    margin-bottom: 48px;
     .top-bar {
       display: flex;
       align-items: center;

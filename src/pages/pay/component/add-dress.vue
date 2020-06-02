@@ -8,19 +8,19 @@
       <div class="pop-box">
         <div class="address-item">
           <p class="tit">收件人</p>
-          <div class="add-input">
-            <input type="text"  v-model="name" name="" placeholder="请输入收件人姓名">
+          <div class="add-input" :class="{'errorHover': iferror == 1}" >
+            <input type="text" v-model="name" name="" placeholder="请输入收件人姓名">
           </div>
         </div>
         <div class="address-item">
           <p class="tit">联系电话</p>
-          <div class="add-input">
+          <div class="add-input" :class="{'errorHover': iferror == 2}">
             <input type="text" v-model="phone" name="" placeholder="请输入联系电话">
           </div>
         </div>
         <div class="address-item">
           <p class="tit">详细地址</p>
-          <div class="add-input">
+          <div class="add-input" :class="{'errorHover': iferror == 3}">
             <textarea  v-model="address" placeholder="请输入详细地址"></textarea>
           </div>
         </div>
@@ -38,7 +38,8 @@ export default {
     show: false,
     phone:'',
     name: '',
-    address: ''
+    address: '',
+    iferror: 0,
   }),
   methods: {
     ifShow() {
@@ -47,16 +48,30 @@ export default {
       })
     },
     close(){
-      console.log('wewr')
       this.show = false
     },
-    getAddress(){
-      this.$emit('getAddress',{
-        name: this.name,
+    async getAddress(){
+      
+      this.iferror = !this.name ? 1 : !this.phone ? 2 : !this.address ? 3 : 0
+      if(this.iferror !== 0) {
+        return
+      }
+      let data = {
+        address: this.address,
         phone: this.phone,
-        address: this.address
-      })
-      this.close()
+        name: this.name
+      }
+      let res = await this.$apiFactory.getaddressApi().addAddress(data)
+      if(res.status == 200) {
+        this.$emit('getAddress',{
+          name: this.name,
+          phone: this.phone,
+          address: this.address,
+          addressId: res.data.id
+        })
+        this.close()
+      }
+      
     }
   },
   created(){
@@ -120,5 +135,18 @@ export default {
     text-align: center;
     margin-top: 15px;
   }
+}
+.errorHover{
+  ::-webkit-input-placeholder { /* WebKit browsers */
+    color: #fe2d44;
+  }
+  
+  ::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #fe2d44;
+  }
+  
+  :-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #fe2d44;
+  }   
 }
 </style>

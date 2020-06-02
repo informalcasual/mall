@@ -5,13 +5,13 @@
     v-for="(item, index) in products"
     :key="index"
     >
-      <img :src="item.img" class="pro-img" alt="">
+      <img :src="item.cover" class="pro-img" alt="">
       <div class="pro-info">
         <div class="price-box">
           <div class="title">{{item.name}}</div>
           <div class="price">售价：<span>￥{{item.price}}</span></div>
         </div>
-        <div class="pro-btn pointer" @click.stop="toDetail()">购买</div>
+        <div class="pro-btn pointer" @click.stop="toDetail(item.id)">购买</div>
       </div>
     </div>
   </div>
@@ -22,7 +22,21 @@ export default {
   products: []
   }),
   methods:{
-    toDetail(){}
+    toDetail(id){
+       window.open(`/product/${id}`, '_blank')
+    },
+    async getProducts() {
+      let res = await this.$apiFactory.getTrademarkApi().getProduct({
+        page: 0,
+        size: 30,
+      })
+      if(res.status == 200) {
+        this.products = res.data.content
+      }
+    }
+  },
+  created(){
+    this.getProducts()
   }
 }
 </script>
@@ -32,11 +46,14 @@ export default {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   flex-wrap: wrap;
   .pro-item{
     width: 23%;
+    margin-left: 30px;
     margin-bottom: 38px;
+    &:nth-child(4n+1){
+      margin-left: 0px;
+    }
     .pro-img{
       width: 100%;
       height: 225px;

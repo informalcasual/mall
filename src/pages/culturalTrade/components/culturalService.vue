@@ -11,28 +11,22 @@
 <script>
 export default {
   data: ()=>({
-    service: [{
-      name:1,
-    },{
-      name:1,
-    },{
-      name:1,
-    },{
-      name:1,
-    },{
-      name:1,
-    },{
-      name:1,
-    },{
-      name:1,
-    },{
-      name:1,
-    },{
-      name:1,
-    },{
-      name:1,
-    }]
-  })
+    service: []
+  }),
+  methods: {
+    async getProducts() {
+      let res = await this.$apiFactory.getTrademarkApi().getService({
+        page: 0,
+        size: 30,
+      })
+      if(res.status == 200) {
+        this.service = res.data.content
+      }
+    }
+  },
+  created(){
+    this.getProducts()
+  }
 }
 </script>
 

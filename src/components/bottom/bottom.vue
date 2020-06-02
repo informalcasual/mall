@@ -15,6 +15,7 @@
   padding: 36px 0 55px;
   background-color: #202730;
   color: #fff;
+  width: 100%;
 }
 .bottom-box{
   position: flex;

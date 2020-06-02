@@ -32,7 +32,7 @@ const actions = {
 
 // mutations
 const mutations = {
-  setUserInfo: async (state, user) => {
+  setUserInfo: (state, user) => {
     if (user) {
       let info = JSON.parse(Base64.decode(user.headers.authorization.split('.')[1]))
       let time = info.exp
@@ -49,13 +49,6 @@ const mutations = {
     if (!userDataString || userDataString == 'undefined' || userDataString == '{}') {
       return
     } else {
-      let mediaInfo = await $apiFactory.getLoginApi().newMedia()
-      if (mediaInfo.status == 200) {
-        userString.title = mediaInfo.data.title || '普通'
-        if (mediaInfo.data.title.includes('新媒体')) {
-          userString.media_id = mediaInfo.data.userXPackage.id
-        }
-      }
       localStorage.setItem('userData', JSON.stringify(userString))
     }
     state.loginUser = userString

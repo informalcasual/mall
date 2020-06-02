@@ -9,12 +9,17 @@
         <div class="title2">数量</div>
         <div class="title2">小计</div>
       </div>
-      <div class="product" v-for="(item, index) in carts" :key="index">
+      <div class="carts-empty" v-if="carts.length <= 0" >
+        <p> 
+          <img :src="require('@/assets/img/cart_empty.svg')" width="50" alt="">购物车空空如也~
+        </p>
+      </div>
+      <div  v-else class="product" v-for="(item, index) in carts" :key="index">
         <div class="detail">
           <div class="select pointer" @click.stop="select(index)" :class="{'selected': selectedList.includes(index)}"></div>
           <router-link to="/" target="_blank" 
           class="pro-img"
-          :style="{'background-color': `url()`}"
+          :style="{'background-image': `url(${item.productSku.pic})`}"
           ></router-link>
           <div class="pro-info">
             <div class="name">{{item.name}}</div>
@@ -29,6 +34,7 @@
         </div>
         <div class="total">￥{{(item.count*item.productSku.price).toFixed(2)}}</div>
       </div>
+      
     </div>
   </div>
   <div class="pay-box" :style="{'bottom':  windowHeight - scroll > 240 ? '240px' : '0px'}">
@@ -135,8 +141,16 @@ export default {
     // 结算
     toBuy(){
       let cartsIds = []
-      for(let item in this.selectedList){
+      for(let item of this.selectedList){
+
         cartsIds.push(this.carts[item].id)
+      }
+      if(cartsIds.length <= 0) {
+        return this.$notify({
+          title: '提示',
+          message: '您没选中任何产品',
+          type: 'succes'
+        })
       }
       window.open('/pay?pcn=-1,0,0&carts='+cartsIds.toString(), '_self')
     }
@@ -270,6 +284,20 @@ export default {
         color:rgba(0,0,0,1);
         line-height: 26px;
         text-align: center;
+      }
+    }
+  }
+  .carts-empty{
+    p{
+      padding-top: 98px;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 50px;
+      color: #dbdbdb;
+      text-align: center;
+      img{
+        vertical-align: middle;
+        padding-right: 10px;
       }
     }
   }

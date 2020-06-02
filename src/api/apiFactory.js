@@ -1,26 +1,36 @@
 import UserApi from './path/userApi'
-import CommonApi from './path/commonApi'
 import OrderApi from './path/orderApi'
-import InvoiceApi from './path/invoiceApi'
 import TrademarkApi from './path/trademarkApi'
-import Qiniu from './path/qiniu'
-import Upload from './path/upload'
 import LoginApi from './path/login'
 import pageModelApi from './path/pageModel'
 import addressApi from './path/addressApi'
+import payApi from './path/payApi'
+import ordersApi from './path/orders'
 export default class ApiFactory {
   constructor() {
     this.userApi = null
     this.orderApi = null
-    this.commonApi = null
-    this.invoiceApi = null
     this.trademarkApi = null
-    this.qiniu = null
-    this.upload = null
     this.LoginApi = null
     this.pageModelApi = null
     this.addressApi = null
+    this.payApi = null
+    this.ordersApi = null
   }
+
+  getOrdersApi() {
+    if(this.ordersApi == null) {
+      this.ordersApi = new ordersApi()
+    }
+    return this.ordersApi
+  }
+
+  getpayApi(){
+    if (this.payApi === null) {
+      this.payApi = new payApi()
+    }
+    return this.payApi
+  } 
 
   getaddressApi(){
     if (this.addressApi === null) {
@@ -34,20 +44,6 @@ export default class ApiFactory {
       this.pageModelApi = new pageModelApi()
     }
     return this.pageModelApi
-  } 
-
-  getQiniu() {
-    if (this.qiniu === null) {
-      this.qiniu = new Qiniu()
-    }
-    return this.qiniu
-  }
-
-  getUpload() {
-    if (this.upload === null) {
-      this.upload = new Upload()
-    }
-    return this.upload
   }
 
   getUserApi() {
@@ -57,25 +53,11 @@ export default class ApiFactory {
     return this.userApi
   }
 
-  getCommonApi() {
-    if (this.commonApi === null) {
-      this.commonApi = new CommonApi()
-    }
-    return this.commonApi
-  }
-
   getOrderApi() {
     if (this.orderApi === null) {
       this.orderApi = new OrderApi()
     }
     return this.orderApi
-  }
-
-  getInvoiceApi() {
-    if (this.invoiceApi === null) {
-      this.invoiceApi = new InvoiceApi()
-    }
-    return this.invoiceApi
   }
 
   getTrademarkApi() {
