@@ -214,6 +214,8 @@ export default {
     .show{
       height: 216px;
       background-color: #000;
+      background-position: center;
+      background-size: cover;
       position: relative;
       &:hover{
         opacity: 0.8;

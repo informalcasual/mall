@@ -1,5 +1,5 @@
 <template>
-  <div class="news min-box">
+  <div class="news box">
     <div class="bus-show">
       <div class="title"></div>
       <p class="tip"></p>

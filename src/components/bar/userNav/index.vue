@@ -1,13 +1,17 @@
 <template>
   <div class="userNav">
-    <div class="nav" @click.stop="tologin()">55</div>
+    <div class="nav" @click.stop="toOrders()">订单管理</div>
+    <div class="nav" @click.stop="loginOut()">退出</div>
   </div>
 </template>
 <script>
 export default {
   methods:{
-    tologin(){
-      this.$bus.emit('showLogin', true)
+    toOrders(){
+      window.open('/orders','_blank')
+    },
+    loginOut(){
+      this.$store.dispatch('signout')
     }
   }
 }
