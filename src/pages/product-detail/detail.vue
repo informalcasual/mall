@@ -1,6 +1,6 @@
 <template>
   <div class="product min-box">
-    <div class="title-tip "><router-link to="/product" class="tip-link pointer" target="_blank">文化贸易</router-link>>文化产品</div>
+    <div class="title-tip "><router-link to="/culturalTrade/product" class="tip-link pointer" target="_blank">文化贸易</router-link>>文化产品</div>
     <div class="product-show">
       <div class="img" :style="{'background-image': `url(${img})`}"></div>
       <div class="select-buy">
@@ -260,7 +260,7 @@ export default {
   .compony-info{
     flex-grow: 0;
     width: 221px;
-    padding: 42px 28px 0;
+    padding: 42px 28px 15px;
     background-color: #fff;
     .title{
       font-size:16px;

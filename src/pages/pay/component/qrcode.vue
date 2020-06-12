@@ -23,9 +23,9 @@ export default {
     async getVX() {
       let res
       if(this.id == 'ali'){
-        res = await this.$apiFactory.getpayApi().aliBuy({id: this.orderId})
+        res = await this.$apiFactory.getpayApi().aliBuy({orderIds: this.orderId})
       } else {
-        res = await this.$apiFactory.getpayApi().VXBuy({id: this.orderId})
+        res = await this.$apiFactory.getpayApi().VXBuy({orderIds: this.orderId})
       }
       let url = res.data.codeUrl
       this.qrcode(url)

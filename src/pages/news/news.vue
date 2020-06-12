@@ -1,8 +1,8 @@
 <template>
-  <div class="news box">
-    <div class="bus-show">
-      <div class="title"></div>
-      <p class="tip"></p>
+  <div class="news box spread">
+    <div class="bus-show" :style="{'background-image': `url(${require('./img/topBanner.png')})`}">
+      <div class="title">无锡文化出口基地</div>
+      <p class="tip">吴文化江南文化</p>
     </div>
     <div class="news-cont">
       <div class="news-tip">
@@ -10,13 +10,13 @@
         v-for="(item, i) in newsList"
         :key="i"
         :class="{'axt-tip': index === i}"
+        @click.stop="toDetail(item.id, i)"
         >
           <div class="title">{{item.title}}</div>
-          <div class="intr">{{item.intr}}</div>
         </div>
       </div>
       <div class="cont">
-        <div></div>
+        <div v-html="news"></div>
       </div>
     </div>
   </div>
@@ -25,12 +25,28 @@
 export default {
   data:()=>({
     index: 0,
-    newsList: [{
-      title:'f',
-      intr: 'rer '
-    }],
-    news:[]
-  })
+    newsList: [],
+    news:"",
+  }),
+  methods: {
+    async getList(){
+      let res = await this.$apiFactory.getpageModel().statistic()
+      if(res.status == 200) {
+        this.newsList = res.data.content
+        this.toDetail(this.newsList[0].id , 0)
+      }
+    },
+    async toDetail(id, i){
+      this.index = i
+      let res = await this.$apiFactory.getpageModel().getStatisric(id)
+      if(res.status == 200) {
+        this.news = res.data.content
+      }
+    }
+  },
+  created(){
+    this.getList()
+  }
 }
 </script>
 
@@ -89,6 +105,7 @@ export default {
   .cont{
     flex-grow: 1;
     width: 50%;
+    padding: 32px 25px;
     background-color: #fff;
   }
 }

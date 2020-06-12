@@ -6,7 +6,6 @@
     <!-- <search-confirm v-show="getDialogState" /> -->
     <!-- ======================= -->
     <toast/>
-    <contact />
     <login />
     <signup />
     <fullPhone />
@@ -21,7 +20,6 @@ import bottom from '@/components/bottom/bottom'
 import toast from '@/components/toast/index'
 import navBar from '@/components/bar/navigation.vue'
 import SearchConfirm from '@/components/search/confirm.vue'
-import contact from '@/components/contact/index.vue'
 import login from '@/components/login/login.vue'
 import signup from '@/components/login/signup'
 import fullPhone from '@/components/bindPhone/bindPhone'
@@ -75,7 +73,6 @@ export default {
     bottom,
     toast,
     SearchConfirm,
-    contact,
     login,
     signup,
     fullPhone,

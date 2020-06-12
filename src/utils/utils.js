@@ -133,6 +133,37 @@ var utilHelper = {
   time(x = 0) {
     return (Date.parse(new Date()) + x) / 1000
   },
+  // 针对safari的时间问题
+  safariTime(time){
+    let splt = time.split('.')[0]
+    let Ntime = splt.replace(/\-/g,'/').replace('T',' ')
+    let _new = new Date(Ntime)
+    return _new
+  },
+  specificTime(date, div){
+    div = div || '-'  
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    let hours = date.getHours();
+    let minutes =  date.getMinutes();
+    let second = date.getSeconds();
+    if(month < 10) {
+      month = '0' + month
+    }
+    if(day < 10) {
+      day = '0' + day
+    }
+    if(hours < 10){
+      hours = '0' + hours
+    }
+    if(minutes < 10){
+      minutes = '0' + minutes
+    }
+    if(second < 10) {
+      second = '0' + second
+    }
+    return date.getFullYear() + div + month + div + day + ' ' + hours + ':' + minutes + ':' + second;
+  },
   getQueryVariable(variable) {
     var query = window.location.search.substring(1)
     var vars = query.split('&')

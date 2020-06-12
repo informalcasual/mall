@@ -59,8 +59,9 @@ input[type='number']::-webkit-outer-spin-button {
   overflow: hidden;
 }
 
-
-
+.pointer{
+  cursor: pointer;
+}
 .flex{
   display: flex;
   align-items: center;
@@ -106,6 +107,7 @@ input[type='number']::-webkit-outer-spin-button {
    display: flex;
    justify-content: center;
    align-items: center;
+   z-index: 2000;
  }
 
  .box-pop{

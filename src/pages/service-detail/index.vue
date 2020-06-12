@@ -1,33 +1,32 @@
 <template>
   <div class="product min-box">
-    <div class="title-tip "><router-link to="/product" class="tip-link pointer" target="_blank">文化贸易</router-link>>文化产品</div>
+    <div class="title-tip "><router-link to="/culturaltrade/service" class="tip-link pointer" target="_blank">文化贸易</router-link>>文化产品</div>
     <div class="product-show">
-      <div class="img"></div>
+      <div class="img" :style="{'background-image': `url(${serviceDetail.cover})`}"></div>
       <div class="select-buy">
-        <div class="title">sd</div>
-        <div class="service-tip">服务类别：<span></span></div>
-        <div class="service-tip">所在区域：<span></span></div>
-        <div class="service-tip">服务时间：<span></span></div>
-        <div class="service-tip">详细地址：<span></span></div>
+        <div class="title">{{serviceDetail.name}}</div>
+        <div class="service-tip">服务类别：<span>{{serviceDetail.type}}</span></div>
+        <div class="service-tip">所在区域：<span>{{serviceDetail.location}}</span></div>
+        <div class="service-tip">服务时间：<span>{{serviceDetail.time}}</span></div>
+        <div class="service-tip">详细地址：<span>{{serviceDetail.address}}</span></div>
         <div class="btns">
-          <div class="advisory pointer" @click.stop="addAdvisory()">
+          <div class="advisory pointer" @click.stop="">
             <img :src="require('./img/advisory.svg')"  wisth="18" alt="">
           咨询客服</div>
-          <div @click.stop="addCart()" class="addCart pointer">留下联系方式</div>
+          <div @click.stop="addAdvisory()" class="addCart pointer">留下联系方式</div>
         </div>
       </div>
     </div>
     <div class="product-info min-box">
       <div class="compony-info">
-        <div class="title">sdf</div>
-        <div class="phone">电话：0510-29383849</div>
-        <div class="detail"><p>地址：</p><p class="address">江苏省无锡市宜兴市金融一街
-         紫砂壶二厂</p>
+        <div class="title">{{compay.name}}</div>
+        <div class="phone">电话：{{compay.phone}}</div>
+        <div class="detail"><p>地址：</p><p class="address">{{compay.address}}</p>
          </div>
       </div>
       <div class="product-box">
         <div class="title">商品详情</div>
-        <img src="" class="info" alt="">
+        <div v-html="serviceDetail.detail"></div>
       </div>
     </div>
   </div>
@@ -37,24 +36,26 @@ export default {
   data: () => ({
     price: 289,
     num: 1,
-    actIndex: 0,
-    priceList: ['套餐一：龙凤款红礼盒','套餐一：龙凤款红礼盒','套餐一：龙凤款红礼盒','套餐一：龙凤款红礼盒']
+    productId: 0,
+    serviceDetail: {},
+    compay: {},
   }),
   methods:{
-    choseNum(num) {
-      if(num > 0) {
-        this.num++
-      } else if(num > 1){
-        this.num--
-      }
-    },
     addAdvisory(){
       this.$bus.emit('showAdvisory', true)
     },
-    selectType(i){
-      this.actIndex = i
+    async getDetail(){
+     let productId = this.$route.params.id
+     let res = await this.$apiFactory.getTrademarkApi().ServiceDetail(productId)
+     if(res.status == 200) {
+       this.serviceDetail = res.data.service
+       this.compay = res.data.shop
+     }
     }
-  }
+  },
+  created(){
+    this.getDetail()//商品详情
+  },
 }
 </script>
 

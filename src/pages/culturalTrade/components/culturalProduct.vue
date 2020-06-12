@@ -19,7 +19,11 @@
 <script>
 export default {
   data: () => ({
-  products: []
+    products: [],
+    pages: 0,
+    page: 0,
+    loading: false,
+    categoryId: 0,
   }),
   methods:{
     toDetail(id){
@@ -33,10 +37,41 @@ export default {
       if(res.status == 200) {
         this.products = res.data.content
       }
+    },
+    async getSearchs(){
+      let res = await this.$apiFactory.getTrademarkApi().getProductType({
+        categoryId: this.categoryId, 
+        page: this.page,
+        size: 30,
+      })
+      if(res.status == 200) {
+        this.products = res.data.content
+        this.pages = res.data.totalPages
+      }
+    },
+    transfer() {
+      if(this.categoryId){
+        this.getSearchs()
+      } else {
+        this.getProducts()
+      }
     }
   },
   created(){
-    this.getProducts()
+    this.categoryId = this.$route.query.path ? parseInt(this.$route.query.path) : 0
+    this.page = this.$route.query.page || 0
+    this.transfer()
+  },
+  watch:{
+    $route: {
+      handler(b) {
+        this.categoryId = b.query.path ? parseInt(b.query.path) : 0
+        this.page = b.query.page || 0
+        this.transfer()
+         //深度监听，同时也可监听到param参数变化
+      },
+      deep: true,
+    }
   }
 }
 </script>

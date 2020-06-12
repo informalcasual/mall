@@ -1,31 +1,71 @@
 <template>
   <div class="service">
     <div class="service-item" v-for="(item, index) in service" :key="index">
-      <router-link to="/" target="_self">
-        <div class="show" :style="{'background-image': `url('')`}"> <div class="item-title">3343434</div></div>
+      <router-link :to="'/serviceDetail/'+item.id" target="_self">
+        <div class="show" :style="{'background-image': `url(${item.cover})`}"> <div class="item-title">{{item.name}}</div></div>
+        <div class="advisory pointer">立即咨询</div>
       </router-link>
-      <div class="advisory pointer">立即咨询</div>
     </div>
   </div>
 </template>
 <script>
 export default {
   data: ()=>({
-    service: []
+    service: [],
+    pages: 0,
+    page: 0,
+    loading: false,
+    categoryId: 0,
   }),
   methods: {
+    // 全部
     async getProducts() {
       let res = await this.$apiFactory.getTrademarkApi().getService({
-        page: 0,
+        page: this.page,
         size: 30,
       })
       if(res.status == 200) {
         this.service = res.data.content
+        this.pages = res.data.totalPages
+      }
+    },
+    // 分类
+    async getSearchs(){
+      let res = await this.$apiFactory.getTrademarkApi().getServiceType({
+        categoryId: this.categoryId, 
+        page: this.page,
+        size: 30,
+      })
+      if(res.status == 200) {
+        this.service = res.data.content
+        this.pages = res.data.totalPages
+      }
+    },
+    // 区别是否有分类
+    transfer() {
+
+      if(this.categoryId){
+        this.getSearchs()
+      } else {
+        this.getProducts()
       }
     }
   },
   created(){
-    this.getProducts()
+    this.categoryId = this.$route.query.path ? parseInt(this.$route.query.path) : 0
+    this.page = this.$route.query.page || 0
+    this.transfer()
+  },
+  watch:{
+    $route: {
+      handler(b) {
+        this.categoryId = b.query.path ? parseInt(b.query.path) : 0
+        this.page = b.query.page || 0
+        this.transfer()
+         //深度监听，同时也可监听到param参数变化
+      },
+      deep: true,
+    }
   }
 }
 </script>
@@ -45,6 +85,8 @@ export default {
       height: 216px;
       background-color: #000;
       position: relative;
+      background-position: center;
+      background-size: cover;
       &:hover{
         opacity: 0.8;
       }

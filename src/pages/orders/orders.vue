@@ -26,26 +26,27 @@
           <div class="subtotal">小计</div>
         </div>
         <div class="order-item" v-for="(item, index) in lists" :key="index">
-          <div class="order-num"><span>订单编号：</span></div>
+          <div class="order-num"><span>订单编号：{{item.id}}</span></div>
           <div class="cont">
-            <div class="detail">
+            <div class="detail-box"><div class="detail" v-for="(ele, i) in item.orderItemList" :key="i">
                <!-- <router-link class="link" :to="''+item" target="_self"> -->
-                <div class="img" :style="{'background-img': `url()`}">
+                <div class="img" :style="{'background-image': `url(${ele.cover})`}">
                   
                 </div>
                <!-- </router-link> -->
                <div class="pro-info">
-                 <p class="title">纯手工艺品无锡惠山泥人</p>
-                 <p class="type">龙凤款礼盒装</p>
+                 <p class="title">{{ele.name}}</p>
+                 <p class="type">{{ele.specs}}</p>
                </div>
-            </div>
+            </div></div>
+            
             <div class="address">
-              <p>王亮亮 <span class="phone">18832983920</span></p>
-              <p>无锡市滨湖区金融一街xxxxxx</p>
+              <p>{{item.receiver}} <span class="phone">{{item.phone}}</span></p>
+              <p>{{item.address}}</p>
             </div>
             <div class="total">
-              <p>应付金额：¥28.9</p>
-              <p>实付金额：¥28.9</p>
+              <p>应付金额：¥{{item.amount}}</p>
+              <p>实付金额：¥{{item.amount}}</p>
             </div>
             <div class="subtotal">
               <div class="status">{{item.status|status}}</div>
@@ -196,7 +197,7 @@ export default {
   margin-top: 37px;
   .cont{
     border-bottom: 1px solid #EDEDED; 
-    .detail{
+    .detail,.detail-box{
       padding-right: 10px;
       width: calc(38% - 10px);
       display: inline-block;
@@ -244,9 +245,16 @@ export default {
 .order-item{
   .cont {
     padding: 0 10px 24px 26px;
-    .detail{
-      display: inline-flex;
+    display: flex;
+    align-items: center;
+    .detail-box{
+    
+    }
+    .detail{ 
+      display: flex; 
       align-items: center;
+      width: 100%;
+      padding-bottom: 10px;
       .link{
         margin-right: 25px;
         flex-grow: 0;

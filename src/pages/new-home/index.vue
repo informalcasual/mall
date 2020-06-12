@@ -15,7 +15,10 @@
       </div>
     </div>
     <div class="product box">
-      <contNav :title="'文化产品'" :btnTitle="'更多产品'" :url="'/culturaltrade/product'"/>
+      <contNav :title="'文化产品'" :actid="productTipsId" 
+        :btnTitle="'更多产品'" :tipList="productTips" :url="'/culturaltrade/product'"
+        @typeSeach="getSearchsP"
+        />
       <div class="product-box">
         <div 
         class="pro-item"
@@ -35,7 +38,10 @@
     </div>
     <div class="service">
       <div class="box">
-        <contNav :title="'文化服务'" :btnTitle="'更服务产品'" :url="'/culturaltrade/service'"></contNav>
+        <contNav 
+        @typeSeach="getSearchsS"
+        :title="'文化服务'" :actid="serviceTipsId" 
+          :btnTitle="'更服务产品'"  :tipList="serviceTips" :url="'/culturaltrade/service'"></contNav>
         <div class="service-box">
           <div class="service-item" v-for="(item, index) in service" :key="index">
             <router-link :to='`/serviceDetail/${item.id}`' target="_blank">
@@ -70,11 +76,37 @@ export default {
   data: () => ({
     products: [],
     service: [],
+    productTips: [],
+    serviceTips: [],
+    productTipsId: 0,
+    serviceTipsId: 0,
     display: ['着重文化产业创新发展', '推动文化产业综合实力', '提升国际影响力和聚合力', '将中国文化产品推向世界']
   }),
   methods: {
     async getProduct(){
-      let res = await this.$apiFactory.getTrademarkApi().getProduct({
+      let _res = await this.$apiFactory.getTrademarkApi().getCategoray(1)
+      if(_res.status == 200){
+        this.productTips = _res.data
+        if(this.productTips.length > 0){
+          this.productTipsId = this.productTips[0].id
+          this.getSearchsP(this.productTipsId)
+        }
+      }
+    
+    },
+    async getService(){
+      let _res = await this.$apiFactory.getTrademarkApi().getCategoray(2)
+      if(_res.status == 200){
+        this.serviceTips = _res.data
+        if(this.serviceTips.length > 0){
+          this.serviceTipsId = this.serviceTips[0].id
+          this.getSearchsS(this.serviceTipsId)
+        }
+      }
+    },
+    async getSearchsP(id){
+      let res = await this.$apiFactory.getTrademarkApi().getProductType({
+        categoryId: id, 
         page: 0,
         size: 8,
       })
@@ -82,8 +114,9 @@ export default {
         this.products = res.data.content
       }
     },
-    async getService(){
-      let res = await this.$apiFactory.getTrademarkApi().getService({
+    async getSearchsS(id){
+      let res = await this.$apiFactory.getTrademarkApi().getServiceType({
+        categoryId: id, 
         page: 0,
         size: 4,
       })

@@ -5,4 +5,16 @@ export default class SellApi {
     let url = 'window'
     return axiosGet(url)
   }
+  news(id) {
+    let url = `stat/${id}`
+    return axiosGet(url)
+  }
+  statistic() {
+    let url = `article`
+    return axiosGet(url)
+  }
+  getStatisric(id) {
+    let url = `article/${id}`
+    return axiosGet(url)
+  }
 }

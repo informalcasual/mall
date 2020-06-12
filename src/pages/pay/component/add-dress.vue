@@ -50,7 +50,7 @@ export default {
     close(){
       this.show = false
     },
-    async getAddress(){
+    async getAddress() {
       
       this.iferror = !this.name ? 1 : !this.phone ? 2 : !this.address ? 3 : 0
       if(this.iferror !== 0) {
@@ -67,7 +67,7 @@ export default {
           name: this.name,
           phone: this.phone,
           address: this.address,
-          addressId: res.data.id
+          id: res.data.id
         })
         this.close()
       }

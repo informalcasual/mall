@@ -14,7 +14,6 @@ import VueAnalytics from 'vue-analytics'
 import VueBus from 'vue-bus'
 import 'babel-polyfill'
 Vue.prototype.$apiFactory = new ApiFactory()
-
 Vue.prototype.$utilHelper = utilHelper
 Vue.prototype.uploadUtils = uploadUtils
 

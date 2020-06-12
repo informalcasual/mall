@@ -66,6 +66,9 @@ export default {
        this.$router.push(url)
     },
     toCart(){
+      if(!this.loginUser.id){
+        return this.login()
+      }
       window.open('/shopCart', '_blank')
     },
     register() {

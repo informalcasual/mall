@@ -16,5 +16,25 @@ export default class TrademarkApi {
     let url = `service?page=${data.page}&size=${data.size}&sort=createdAt,desc`
     return axiosGet(url)
   }
+  // 服务详情
+  ServiceDetail(id){
+    let url = `service/${id}`
+    return axiosGet(url)
+  }
+  // 列表
+  getCategoray(type){
+    let url = `category?type=${type}`
+    return axiosGet(url)
+  }
+  // 服务分类列表
+  getServiceType(data){
+    let url = `/service/cate/${data.categoryId}?page=${data.page}&size=${data.size}&sort=createdAt,desc`
+    return axiosGet(url)
+  }
+  // 商品分类列表
+  getProductType(data){
+    let url = `/product/cate/${data.categoryId}?page=${data.page}&size=${data.size}&sort=createdAt,desc`
+    return axiosGet(url)
+  }
 
 }

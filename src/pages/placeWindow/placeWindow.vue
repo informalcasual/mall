@@ -10,6 +10,7 @@
         v-for="(item, i) in newsList"
         :key="i"
         :class="{'axt-tip': index === i}"
+        @click.stop="index = i"
         >
           <div class="title">{{item.name}}</div>
           <div class="intr">{{item.intr}}魅力主城，绽放光荣</div>
@@ -97,6 +98,7 @@ export default {
   .cont{
     flex-grow: 1;
     width: 50%;
+    padding: 32px 25px;
     background-color: #fff;
   }
 }

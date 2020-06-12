@@ -17,9 +17,18 @@ export default class ordersApi {
     }
     // 申请退款
     refundOrder(data){
-      let url = `order/redund`
+      let url = `order/refund`
       return axiosBase(url, data)
+    }
+    // 确认收货
+    sureOrder(id){
+      let url = `order/${id}`
+      return axiosPut(url)
     }
     // 退款详情
     // 取消退款
+    unrefundOrder(id){
+      let url = `order/refund/${id}`
+      return axiosBase(url)
+    }
 }

@@ -3,7 +3,7 @@
     <div class="min-box mb92">
       <div class="page-title">订单结算</div>
       <div class="pay-box">
-        <selfaddress @addAddress="addAddress" :phone="phone" :address="address" :name="name" :ifHave="ifaddress"></selfaddress>
+        <selfaddress   @selectAddress="selectAddress" :addressList="addressList" :ifHave="ifaddress"></selfaddress>
         <div class="pay-detail">
           <div class="head">
             <div class="title1">商品详情</div>
@@ -32,29 +32,23 @@
       </div>
     </div>
     <div class="pay-line" :class="{'fixed': totalHeight - scroll < 240}">
-     
       <div class="min-box"> 
          <div class="product-num">共<span>{{totalCount}}</span>个商品</div>
          <div class="total">总价：<span>￥{{totalPrice.toFixed(2)}}</span></div>
          <div class="pay-btn pointer" @click.stop="BuyNow()">立即付款</div>
       </div>
-     
     </div>
-    <ADDaddress @getAddress="getAddress"/>
     <pay />
   </div>
 </template>
 <script>
 import selfaddress from './component/address'
-import ADDaddress from './component/add-dress'
 import pay from './component/pay'
 import { mapState } from 'vuex'
 export default {
   data: ()=>({
     carts: [],
-    name: '',
-    phone: '',
-    address: '',
+    addressList: [],
     addressId: -1,
     ifaddress: false,
     totalCount: 0,
@@ -100,25 +94,16 @@ export default {
       });
 
     },
-    addAddress(){
-      this.$bus.emit('showAddress', true)
-    },
-    getAddress(item){
-      this.name = item.name
-      this.phone = item.phone
-      this.address = item.address
-      this.ifaddress = true
-      this.addressId = item.addressId
+    selectAddress(id){
+      this.addressId = id
     },
     // 获取已有地址
     async originAddress() {
       let res = await this.$apiFactory.getaddressApi().getAddress()
       if(res.status == 200 && res.data.content.length >= 1) {
         this.ifaddress = true
-         this.name = res.data.content[0].name
-         this.phone = res.data.content[0].phone
-         this.address = res.data.content[0].address
-         this.addressId = res.data.content[0].id
+        this.addressList = res.data.content 
+        this.addressId = res.data.content[0].id
       } 
     },
     // 下单
@@ -150,7 +135,10 @@ export default {
       }
       if(res.status == 200) {
         this.flag = true
-        this.orderId = res.data.id
+        this.orderId = []
+        res.data.forEach(ele => {
+          this.orderId.push(ele.id)
+        })
         return this.$bus.emit('showPayCode', {
           show: true,
           orderId: this.orderId
@@ -164,7 +152,6 @@ export default {
   },
   components: {
     selfaddress,
-    ADDaddress,
     pay
   },
   computed: {

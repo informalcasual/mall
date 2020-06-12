@@ -1,7 +1,10 @@
 <template>
-  <div class="userNav">
-    <div class="nav" @click.stop="toOrders()">订单管理</div>
-    <div class="nav" @click.stop="loginOut()">退出</div>
+  <div class="userNav pointer">
+    <div class="navBox">
+      <div class="nav" @click.stop="toOrders()">订单管理</div>
+      <div class="nav" @click.stop="loginOut()">退出</div>
+    </div>
+ 
   </div>
 </template>
 <script>
@@ -24,6 +27,7 @@ export default {
     width: 100px;
     top: 22px;
     right: 0;
+   
     &::before{
       position: absolute;
       content: ' ';
@@ -32,10 +36,17 @@ export default {
       top: 15px;
       right: 0;
     }
-  .nav{
-    padding: 10px 8px;
+  .navBox{
+    padding: 10px 5px;    
     background-color: #fff;
     box-shadow: 1px 1px 4px 0px #e0e0e0;
+  }
+  .nav{
+    padding: 10px 8px;
+    text-align: right;
+    &:hover{
+      color: #702A2A;
+    }
   }
 }
 </style>

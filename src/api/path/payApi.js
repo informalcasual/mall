@@ -13,14 +13,14 @@ export default class payApi {
   }
   // 支付宝支付
   aliBuy(data){
-    let url = `order/` + data.id + `/ali`
-    return axiosGet(url)
+    let url = `order/ali`
+    return axiosBase(url, data)
   }
 
   // 微信支付
   VXBuy(data){
-    let url = `order/` + data.id + `/wx`
-    return axiosGet(url)
+    let url = `order/wx`
+    return axiosBase(url, data)
   }
   // 核对支付
   checkBuy(data){

@@ -3,56 +3,148 @@
     <div class="page-title">订单详情</div>
     <div class="detail">
       <div class="top-bar">
-        <div class="status">订单状态：<span>已支付</span></div>
+        <div class="status">订单状态：<span>{{content.status|status}}</span></div>
         <div class="btns">
-          <div class="btn pointer main-brown">取消订单</div>
-          <div class="btn pointer grey-btn">取消订单</div>
+          <div class="btn pointer main-brown" v-if="content.status !== 5 && content.status !== 7" @click.stop="openrefund(content.status, true)">{{content.status|btnName}}</div>
+          <div class="btn pointer grey-btn" v-if="content.status == 1">取消订单</div>
+          <div class="btn pointer grey-btn" @click.stop="showsale()" v-if="content.status == 5 || content.status == 7 || content.status == 4">售后服务</div>
         </div>
       </div>
       <div class="detail-order">
-        <div class="order-number">订单编号：</div>
-        <div class="order-item">
-          <router-link class="link"  target="_self">
-            <div class="img" :style="{'background-img': `url()`}"></div>
+        <div class="order-number">订单编号：{{content.id}}</div>
+        <div class="order-item" v-for="(item, index) in content.orderItemList" :key="index">
+          <router-link class="link" :to="'/product/'+item.productId"  target="_blank">
+            <div class="img" :style="{'background-image': `url(${item.cover})`}"></div>
           </router-link>
           <div class="oreder-detail">
-            <div class="name">纯手工艺品无锡惠山泥人</div>
-            <div class="type">龙凤款礼盒装</div>
+            <div class="name">{{item.name}}</div>
+            <div class="type">{{item.specs}}</div>
           </div>
-          <div class="nmuber">x1</div>
-          <div class="total">¥28.9</div>
+          <div class="nmuber">x{{item.count}}</div>
+          <div class="total">¥{{(item.count*item.price).toFixed(2)}}</div>
+          <div class="refund-btn" v-if="item.status !== 1 && item.status !== 3 && item.status !== 5 && item.status !== 7" @click.stop="openrefund(item.status, false);itemId = item.id">{{item.status|itemBtn}}</div>
         </div>
       </div>
       <div class="user-info">
         <div class="user">
           <div class="info-tit">收货人信息</div>
-          <div class="info-detail">姓名：王亮亮</div>
-          <div class="info-detail">联系方式：18609920392</div>
-          <div class="info-detail">收货地址：无锡市滨湖区金融一街XXXXXXX</div>
+          <div class="info-detail">姓名：{{content.receiver}}</div>
+          <div class="info-detail">联系方式：{{content.phone}}</div>
+          <div class="info-detail">收货地址：{{content.address}}</div>
         </div>
-        <div class="user">
+        <div class="user" v-if="paidAt">
           <div class="info-tit">付款信息：</div>
-          <div class="info-detail">支付方式：微信支付</div>
-          <div class="info-detail">付款时间：2020-02-12 12:23:23</div>
+          <div class="info-detail">支付方式：{{content.outTradeNo|TradeNo}}支付</div>
+          <div class="info-detail">付款时间：{{paidAt}}</div>
         </div>
         <div class="user">
-          <div class="info-tit">物流信息：</div>
-          <div class="info-detail"></div>
+
         </div>
       </div>
     </div>
+    <refund @refund="refund"/>
+    <afterSale v-if="after_sale" :phone="content.shop.phone" @showSale="showsale()"/>
   </div>
 </template>
 <script>
+import afterSale from '@/components/successTip/afterSale'
+import refund from './components/refund'
 export default {
   data: ()=> ({
-    orderId: 0
+    orderId: 0,
+    content: {},
+    paidAt: null,
+    allrefund: false,
+    itemId: 0,
+    after_sale: false,
   }),
   methods: {
     async getInfo(){
       this.orderId = this.$route.params.orederId
       let res = await this.$apiFactory.getOrdersApi().orderDetail(this.orderId)
+      if(res.status == 200) {
+        this.content = res.data
+        this.paidAt = res.data.paidAt? this.$utilHelper.specificTime(this.$utilHelper.safariTime(res.data.paidAt)) : null
+     }
+    },
+    // 退款
+    openrefund(status,bol){
+      this.allrefund = bol
+      if(status == 6){
+        return
+      } else if(status == 2 || (status == 4 && !bol)) {
+        this.$bus.emit('showrefund', true)
+      } else if(status == 4){
+        this.sureOrder()
+      } else if (status == 3) {
+        this.cancleOrder()
+      } else if(status == 5){
+        this.after_sale = true
+      }
+      
+    },
+    async refund(data){
+      if(!this.allrefund) {
+        data.orderItemId = this.itemId
+        let res = await this.$apiFactory.getOrdersApi().refundOrder(data)
+      } else {
+        this.content.orderItemList.forEach(async element => {
+          data.orderItemId = element.itemId
+          let res = await this.$apiFactory.getOrdersApi().refundOrder(data)
+        });
+      }
+      this.getInfo()
+    },
+    // 确认收货
+    async sureOrder(){
+      let res = await this.$apiFactory.getOrdersApi().sureOrder(this.orderId)
+      if(res.status == 200){
+        this.getInfo()
+      }
+    },
+    // 删除订单
+    async cancleOrder(){
+      let res = await this.$apiFactory.getOrdersApi().cancleOrder(this.orderId)
+      if(res.status == 200){
+        this.$router.push('/orders')
+
+      }
+    },
+    showsale() {
+      this.after_sale = !this.after_sale
     }
+  },
+  filters: {
+    TradeNo(n){
+      if(n.includes('WP')){
+        return '微信'
+      } else {
+        return '支付宝'
+      }
+    },
+    status(m){
+      return m == 1 ? '待付款' :
+             m == 2 ? '待发货' :
+             m == 3 ? '已关闭' :
+             m == 4 ? '待收货' : 
+             m == 6 ? '待退款' : '已完成'
+    },
+    btnName(m) {
+      return m == 1 ? '订单支付' :
+             m == 2 ? '申请退款' :
+             m == 3 ? '删除订单' : '确认收货' 
+    },
+    itemBtn(m) {
+      if(m==2||m==4) {
+        return '退款'
+      } else if(m==6){
+        return '退款中'
+      }
+    }
+  },
+  components: {
+    refund,
+    afterSale
   },
   created(){
     this.getInfo()
@@ -121,14 +213,12 @@ export default {
    padding-top: 20px;
    .link{
      flex-grow: 0;
-     width:80px;
-     height:80px;
-     border-radius:6px;
      overflow: hidden;
      display: block;
      .img{
-       width: 100%;
-       height: 100%;
+       width:80px;
+       height:80px;
+       border-radius:6px;
        background-position: center;
        background-size: cover;
        background-color: #f7f7f7;
@@ -137,7 +227,7 @@ export default {
    .oreder-detail{
      padding-left: 21px;
      flex-grow: 3;
-     width: 40%;
+     width: 30%;
      .name{
       font-size:16px;
       color:rgba(0,0,0,1);
@@ -156,6 +246,13 @@ export default {
      font-size:14px;
      color:rgba(0,0,0,1);
      line-height:20px;
+   }
+   .refund-btn{
+     padding: 8px 12px;
+     border: 1px solid #eee;
+     border-radius: 4px;
+     color: #666;
+     font-size: 14px;
    }
  }
  .user-info{

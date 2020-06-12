@@ -11,19 +11,19 @@
         v-for="(item, i) in newsList"
         :key="i"
         :class="{'axt-tip': index === i}"
+        @click.stop="choseId(i)"
         >
           <div class="title">{{item.title}}</div>
           <div class="intr">{{item.intr}}</div>
         </div>
       </div>
       <div class="cont">
-        <div class="cont-box">
-          <img src="" alt="" class="logo">
+        <div class="cont-box flex"  v-for="(item, index) in news" :key="index">
+          <div class="avatar" :style="{'background-image': `url(${item.url})`}"></div>
           <div class="company-info">
-            <div class="title ell"></div>
-            <div class="area">所在区域：</div>
-            <div class="summary"></div>
-            <div class="more pointer">查看更多</div>
+            <div class="title ell">{{item.name}}</div>
+            <div class="area">所在区域：{{item.location}}</div>
+            <div class="summary">{{item.desc}}</div>
           </div>
         </div>
       </div>
@@ -35,11 +35,32 @@ export default {
   data:()=>({
     index: 0,
     newsList: [{
-      title:'f',
-      intr: 'rer '
+      title:'历年数据查询下线',
+      id: 1,
+    },{
+      title:'文化出口材料',
+      id: 2,
+    },{
+      title:'文化出口重点企业',
+      id: 3,
+    },{
+      title:'文化出口重点项目',
+      id: 4,
     }],
-    news:[]
-  })
+    news:[],
+  }),
+  methods: {
+    async choseId(index){
+      this.index = index
+      let res = await this.$apiFactory.getpageModel().news(this.newsList[index].id)
+      if(res.status == 200) {
+        this.news = res.data
+      }
+    }
+  },
+  created(){
+    this.choseId(0)
+  }
 }
 </script>
 
@@ -108,9 +129,12 @@ export default {
       flex-grow: 0;
       padding: 31px 20px 26px 17px;
       background-color: #fff;
-      .logo{
+      align-items: self-start;
+      .avatar{
+        flex-grow: 0;
         width:66px;
         height:66px;
+        margin-top: 5px;
         border-radius: 50%;
         background-color: #e5e5e5;
       }
@@ -134,13 +158,6 @@ export default {
           display: -webkit-box;
           -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
-        }
-        .more{
-          margin-top: 19px;
-          font-size:14px;
-          color:rgba(146,146,146,1);
-          line-height:20px;
-          text-align: right;
         }
       }
     }

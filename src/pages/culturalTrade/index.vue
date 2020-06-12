@@ -10,6 +10,15 @@
     <div class="selected">
       <div class="product pointer" @click.stop="chagePage('culturalproduct')" :class="{'main-brown': $route.name==='culturalproduct'}">文化产品</div><!--
    --><div class="service pointer" @click.stop="chagePage('culturalservice')" :class="{'main-brown': $route.name==='culturalservice'}">文化服务</div>
+      <div class="select-box pointer" @click.stop="show = !show">
+         {{select_name}}
+        <div class="pointer-box" v-show="show">
+          <p @click.stop="changeAttr(0)" >全部</p>
+          <p @click.stop="changeAttr(index+1)"  v-for="(item, index) in select_list" :key="index">
+            {{item.name}}
+          </p>
+        </div>
+      </div>
     </div>
     <router-view />
   </div>
@@ -24,26 +33,83 @@ export default {
     },{
       name: '文化产品',
       url: ''
-    }]
+    }],
+    select_list: [],
+    product: [],
+    service: [],
+    select_name: '全部',
+    show: false,
+    select_index: 0,
   }),
   methods:{
     chagePage(name){
       this.$router.push({
         name: name
       })
+      this.show = false
     },
-    async getProduct() {
-      let res = await this.$apiFactory.getTrademarkApi().getProduct({
-        page: 0,
-        size: 8,
-      })
-      if(res.status == 200) {
-        this.products = res.data.content
+    async getCategory() {
+      let res = await this.$apiFactory.getTrademarkApi().getCategoray(1)
+      if(res.status == 200){
+        this.product = res.data
       }
+      let _res = await this.$apiFactory.getTrademarkApi().getCategoray(2)
+      if(_res.status == 200){
+        this.service = _res.data
+      }
+      this.changeType()
+
     },
+    changeType (){
+      if(this.$route.name == 'culturalproduct') {
+        this.select_list = this.product
+      } else {
+        this.select_list = this.service
+      }
+      this.select_index = 0
+      this.select_name = '全部'
+    },
+    changeAttr(type){
+      if(type == this.select_index){
+        this.show = false
+        return
+      }
+      this.show = false
+      let name = ''
+      this.select_index = type == 0 ? 0 : type
+      if(this.$route.name == 'culturalproduct') {
+
+        name = 'culturalproduct'
+      } else {
+        name = 'culturalservice'
+      }
+      this.select_name = this.select_index == 0 ? '全部' : this.select_list[this.select_index-1].name
+     
+      if(type == 0) {
+        this.$router.push({
+          name: name
+        })
+        return
+      }
+      this.$router.push({
+        name: name,
+        query: {
+          page: 0,
+          path: this.select_list[this.select_index-1].id
+        }
+      })
+    }
   },
   components: {
     crumbs
+  },
+  watch:{
+    '$route.name'(){
+      this.changeType()
+    }
+  },
+  created(){
+    this.getCategory()
   }
 }
 </script>
@@ -92,6 +158,36 @@ export default {
     text-align: center;
     border-radius: 0;
     border:1px solid rgba(112,42,42,1);
+  }
+  .select-box{
+    width:130px;
+    height:42px;
+    border-radius:4px;
+    border:1px solid rgba(0,0,0,1);
+    font-size:14px;
+    font-weight:500;
+    color:rgba(0,0,0,1);
+    text-align: center;
+    line-height:42px;
+    display: inline-block;
+    float: right;
+    position: relative;
+    .pointer-box{
+      position: absolute;
+      padding: 12px 10px;
+      top: 48px;
+      left: -1px;
+      background-color: #f4f6f9;
+      width: calc(100% - 20px);
+      border: 1px solid;
+      border-radius: 4px;
+      p{
+        &:hover{
+          background-color: #e9f0fc;
+          color: #82adf6;
+        }
+      }
+    }
   }
 }
 </style>
