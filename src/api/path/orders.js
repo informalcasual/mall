@@ -31,4 +31,9 @@ export default class ordersApi {
       let url = `order/refund/${id}`
       return axiosBase(url)
     }
+    // 退款列表
+    getRefunds(){
+      let url = `order/refunds?page=0&size=1000&sort=createdAt,desc`
+      return axiosGet(url)
+    }
 }

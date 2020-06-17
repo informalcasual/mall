@@ -4,10 +4,11 @@
     <div class="order-box">
       <div class="order-top">
         <div class="selection pointer">
-          <div class="tit" @click.stop="getInfo(0)" :class="{'act-tit': index === 0}">全部订单</div>
-          <div class="tit" @click.stop="getInfo(2)" :class="{'act-tit': index === 2}">已支付</div>
-          <div class="tit" @click.stop="getInfo(4)" :class="{'act-tit': index === 4}">待收货</div>
-          <div class="tit" @click.stop="getInfo(5)" :class="{'act-tit': index === 5}">已完成</div>
+          <div class="tit" @click.stop="getInfo(0)" :class="{'act-tit': _index === 0}">全部订单</div>
+          <div class="tit" @click.stop="getInfo(2)" :class="{'act-tit': _index === 2}">已支付</div>
+          <div class="tit" @click.stop="getInfo(4)" :class="{'act-tit': _index === 4}">待收货</div>
+          <div class="tit" @click.stop="getInfo(5)" :class="{'act-tit': _index === 5}">已完成</div>
+          <div class="tit" @click.stop="getInfo(6)" :class="{'act-tit': _index === 6}">售后订单</div>
         </div>
         <div class="search">
           <input type="text" @keyup.enter="importkey()" v-model="key" placeholder="请输入您要搜索的商品">
@@ -26,7 +27,7 @@
           <div class="subtotal">小计</div>
         </div>
         <div class="order-item" v-for="(item, index) in lists" :key="index">
-          <div class="order-num"><span>订单编号：{{item.id}}</span></div>
+          <div class="order-num"><span>订单编号：{{item.sn}}</span></div>
           <div class="cont">
             <div class="detail-box"><div class="detail" v-for="(ele, i) in item.orderItemList" :key="i">
                <!-- <router-link class="link" :to="''+item" target="_self"> -->
@@ -51,10 +52,19 @@
             <div class="subtotal">
               <div class="status">{{item.status|status}}</div>
               <div class="btns">
-                <div class="operation pointer">
+                <div class="operation pointer"
+                @click.stop="followUP(item)"
+                 v-if="item.status != 5&&item.status != 2&& _index!=6"
+                >
                   <span>{{item.status|status_btn}}</span>
                 </div>
-                <div class="more pointer" @click.stop="toWindow(item.id)">查看详情</div>
+                <div 
+                class="operation pointer"
+                @click.stop="tofWindow(item.orderItemList[0].orderId)"
+                v-if="_index===6">
+                  查看进度
+                </div>
+                <div class="more pointer" v-if="_index!=6" @click.stop="toWindow(item.id)">查看详情</div>
               </div>
             </div>
           </div>
@@ -75,11 +85,11 @@
 import pagintaion from '@/components/pagination/index'
 export default {
   data: () => ({
-    index: 0,
     key: '',
     lists: [],
     page: 0,
-    totalPage: 0
+    totalPage: 0,
+    _index: 0,
   }),
   methods: {
     // 分页
@@ -90,9 +100,18 @@ export default {
     toWindow(id){
       window.open(`/order_detail/${id}`,'_self')
     },
+    tofWindow(id){
+      window.open(`/order_detail/${id}?fedund=true`,'_self')
+    },
     async getInfo(i){
-      this.index = i
-      let res = await this.$apiFactory.getOrdersApi().getOrders({status:this.index,page: this.page})
+      this._index = i
+      let res = null
+      if(i == 6){
+        res = await this.$apiFactory.getOrdersApi().getRefunds()
+      } else {
+        res = await this.$apiFactory.getOrdersApi().getOrders({status:this._index,page: this.page})
+      }
+      
       if(res.status == 200){
         this.lists = res.data.content
         this.page = res.data.number
@@ -108,6 +127,31 @@ export default {
         this.lists = res.data.content
         this.page = res.data.number
         this.totalPage = res.data.totalPages
+      }
+    },
+    // 删除
+    async cancleOrder(id){
+      let res = await this.$apiFactory.getOrdersApi().cancleOrder(id)
+      if(res.status == 200) {
+        this.getInfo(this.index)
+      }
+    },
+    // 确认
+    async sureOrder(id){
+      let res = await this.$apiFactory.getOrdersApi().sureOrder(id)
+      if(res.status == 200) {
+        this.getInfo(this.index)
+      }
+    },
+    followUP(item){
+      if(item.status == 1){
+        this.toWindow(item.id)
+      }
+      if(item.status == 3) {
+        this.cancleOrder(item.id)
+      }
+      if(item.status == 4) {
+        this.sureOrder(item.id)
       }
     }
   },

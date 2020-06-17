@@ -53,6 +53,7 @@ export default {
       } 
       this.$emit('refund', {remark: this.reason, type: this.retype})
       this.show = false
+      this.reason = ''
     },
     close(){
       this.show = false

@@ -10,7 +10,7 @@ const { cookie } = utilHelper
 //   return obj
 // }
 // const baseUrl = getUrl()
-const baseURL = 'http://192.168.1.245:8082/'
+const baseURL = 'http://192.168.1.247:8082/'
 axios.interceptors.request.use(
   config => {
     const pToken = cookie('p-token')

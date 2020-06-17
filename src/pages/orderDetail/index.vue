@@ -5,13 +5,15 @@
       <div class="top-bar">
         <div class="status">订单状态：<span>{{content.status|status}}</span></div>
         <div class="btns">
-          <div class="btn pointer main-brown" v-if="content.status !== 5 && content.status !== 7" @click.stop="openrefund(content.status, true)">{{content.status|btnName}}</div>
-          <div class="btn pointer grey-btn" v-if="content.status == 1">取消订单</div>
-          <div class="btn pointer grey-btn" @click.stop="showsale()" v-if="content.status == 5 || content.status == 7 || content.status == 4">售后服务</div>
+          <div class="btn pointer main-brown" v-if="content.status !== 5 && content.status !== 7" @click.stop="openrefund(content.status, true)">
+            {{content.status|btnName}}
+          </div>
+          <div class="btn pointer grey-btn" v-if="content.status == 1" @click.stop="cancleOrder()">取消订单</div>
+          <!-- <div class="btn pointer grey-btn" @click.stop="showsale()" v-if="content.status == 5 || content.status == 7 || content.status == 4">售后服务</div> -->
         </div>
       </div>
       <div class="detail-order">
-        <div class="order-number">订单编号：{{content.id}}</div>
+        <div class="order-number">订单编号：{{content.sn}}</div>
         <div class="order-item" v-for="(item, index) in content.orderItemList" :key="index">
           <router-link class="link" :to="'/product/'+item.productId"  target="_blank">
             <div class="img" :style="{'background-image': `url(${item.cover})`}"></div>
@@ -22,7 +24,7 @@
           </div>
           <div class="nmuber">x{{item.count}}</div>
           <div class="total">¥{{(item.count*item.price).toFixed(2)}}</div>
-          <div class="refund-btn" v-if="item.status !== 1 && item.status !== 3 && item.status !== 5 && item.status !== 7" @click.stop="openrefund(item.status, false);itemId = item.id">{{item.status|itemBtn}}</div>
+          <div class="refund-btn pointer" v-if="item.status !== 1 && item.status !== 3 && item.status !== 5 && item.status !== 7" @click.stop="openrefund(item.status, false);itemId = item.id">{{item.status|itemBtn}}</div>
         </div>
       </div>
       <div class="user-info">
@@ -37,18 +39,17 @@
           <div class="info-detail">支付方式：{{content.outTradeNo|TradeNo}}支付</div>
           <div class="info-detail">付款时间：{{paidAt}}</div>
         </div>
-        <div class="user">
-
-        </div>
       </div>
     </div>
     <refund @refund="refund"/>
     <afterSale v-if="after_sale" :phone="content.shop.phone" @showSale="showsale()"/>
+    <pay />
   </div>
 </template>
 <script>
 import afterSale from '@/components/successTip/afterSale'
 import refund from './components/refund'
+import pay from '@/pages/pay/component/pay'
 export default {
   data: ()=> ({
     orderId: 0,
@@ -70,8 +71,8 @@ export default {
     // 退款
     openrefund(status,bol){
       this.allrefund = bol
-      if(status == 6){
-        return
+      if(status == 6 && !bol){
+        return this.cancleRefund()
       } else if(status == 2 || (status == 4 && !bol)) {
         this.$bus.emit('showrefund', true)
       } else if(status == 4){
@@ -80,19 +81,55 @@ export default {
         this.cancleOrder()
       } else if(status == 5){
         this.after_sale = true
+      } else if (status == 1 && bol) {
+        this.payOrder()
       }
       
     },
+    // 取消退款 
+    async cancleRefund() {
+      let id = this.orderItemId
+      let res = await this.$apiFactory.getOrdersApi().getRefunds()
+      if(res.status == 200) {
+        for(let ele of res.data.content) {
+          if(ele.orderItemList[0].orderId == this.$route.params.orederId && ele.orderItemList[0].id == id) {
+            let url = await this.$apiFactory.getOrdersApi().unrefundOrder(ele.id)
+            if(url.status == 200) {
+              this.getInfo()
+            } 
+             break
+          }
+        }
+      }
+      
+    },
+    // t退款
     async refund(data){
       if(!this.allrefund) {
         data.orderItemId = this.itemId
         let res = await this.$apiFactory.getOrdersApi().refundOrder(data)
+        if(res.status == 409){
+          return this.$store.dispatch('toast', {
+            type: 'warn',
+            time: 1500,
+            msg: '已超过退款时间，无法退款，请联系商家'
+          })
+        }
+        
       } else {
         this.content.orderItemList.forEach(async element => {
           data.orderItemId = element.itemId
           let res = await this.$apiFactory.getOrdersApi().refundOrder(data)
         });
+        if(res.status == 409){
+          return this.$store.dispatch('toast', {
+            type: 'warn',
+            time: 1500,
+            msg: '已超过退款时间，无法退款，请联系商家'
+          })
+        }
       }
+    
       this.getInfo()
     },
     // 确认收货
@@ -107,8 +144,14 @@ export default {
       let res = await this.$apiFactory.getOrdersApi().cancleOrder(this.orderId)
       if(res.status == 200){
         this.$router.push('/orders')
-
       }
+    },
+    // 支付订单
+    payOrder(){
+      return this.$bus.emit('showPayCode', {
+          show: true,
+          orderId: [parseInt(this.orderId)]
+      })
     },
     showsale() {
       this.after_sale = !this.after_sale
@@ -135,15 +178,20 @@ export default {
              m == 3 ? '删除订单' : '确认收货' 
     },
     itemBtn(m) {
+      //  1待付款 2待发货 3已关闭 4待收货 5已完成 6退款相关 7结束退款（无论成功或拒绝）
       if(m==2||m==4) {
         return '退款'
       } else if(m==6){
         return '退款中'
+      } 
+      if(m == 5){
+        return '申请售后'
       }
     }
   },
   components: {
     refund,
+    pay,
     afterSale
   },
   created(){

@@ -36,5 +36,10 @@ export default class TrademarkApi {
     let url = `/product/cate/${data.categoryId}?page=${data.page}&size=${data.size}&sort=createdAt,desc`
     return axiosGet(url)
   }
+  // 服务咨询
+  putServiceContant(data){
+    let url = `service/contact`
+    return axiosBase(url, data)
+  }
 
 }

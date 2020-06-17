@@ -22,7 +22,7 @@
           <div class="address-item">
             <p class="tit">需求详情</p>
             <div class="add-input">
-              <textarea  v-model="address" placeholder="请输入详细需求，我们将第一时间联系你"></textarea>
+              <textarea  v-model="request" placeholder="请输入详细需求，我们将第一时间联系你"></textarea>
             </div>
           </div>
           <div class="address-item">
@@ -32,7 +32,7 @@
         </div>
       </template>
       <template v-else>
-        <tip :title="'填写成功'" :info="'我们将在第一时间联系您，为您服务'"  :btn="{tit: '查看订单详情', url: ''}"/>
+        <tip :title="'填写成功'" :info="'我们将在第一时间联系您，为您服务'"  />
        </template>
       
     </div>
@@ -45,7 +45,7 @@ export default {
     show: false,
     phone:'',
     name: '',
-    address: '',
+    request: '',
     success: false
   }),
   methods: {
@@ -55,7 +55,28 @@ export default {
       })
     },
     async getInfo(){
-      this.success = true
+      let data = {
+        serviceId: parseInt(this.$route.params.id),
+        name: this.name,
+        request: this.request,
+        phone: this.phone
+      }
+      let falg = true
+      for(let ele in data){
+        if(!data[ele]){
+          falg = false
+          this.$message.error("请完整填写信息");
+          break;
+        }
+      }
+      if(!falg){
+        return
+      }
+      let res = await this.$apiFactory.getTrademarkApi().putServiceContant(data)
+      if(res.status == 200) {
+        this.success = true
+      }
+      
     },
     close(){
       this.show = false

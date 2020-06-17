@@ -10,6 +10,11 @@
         <div class="address-info flex" v-for="(item, index) in addressList" :key="index">
           <span class="select pointer" @click.stop="changeAddress(index, item.id)" :class="{'act': actindex == index}"></span>
           <span>{{item.name}}</span><span>{{item.phone}}</span><span>{{item.address}}</span>
+          <div class="btns">
+            <div class="if-default" title="选为默认地址"><div class="de_select pointer" @click.stop="defaultAddress(item.default, item.id)" :class="{'act_def': item.default}"></div> <span v-if="item.default">(默认地址)</span></div>
+            <!-- <div class="default_change pointer" :style="{'background-image': `url(${require('../img/delete.svg')})`}"></div> -->
+            <div class="default_del pointer" @click.stop="deleteAddress(item.id)"  :style="{'background-image': `url(${require('../img/delete.svg')})`}"></div>
+          </div>
           <span v-if="index == 0" class="pointer pulldown" @click.stop="show = !show">更多地址<img :src="require('../img/download.svg')" width="10" alt="">
           </span>
         </div>
@@ -40,6 +45,18 @@ export default {
     },
     addAddress(){
       this.$bus.emit('showAddress', true)
+    },
+    // 设为默认地址
+    async defaultAddress(_default, id){
+      if(_default) return 
+      let res = await this.$apiFactory.getaddressApi().firstAddress(id)
+    },
+    // 删除地址
+    async deleteAddress(id){
+      let res = await this.$apiFactory.getaddressApi().cancleAddress(id)
+      if(res.status == 200){
+        this.$emit('originAddress')
+      }
     },
     getAddress(item){
       this.addressList.splice(0, 0, item)
@@ -124,6 +141,47 @@ export default {
   .hover-left{
     top: -6px;
     transform: translateX(316%)
+  }
+}
+.btns{
+  display: inline-block;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  .if-default{
+    .de_select{
+      width: 12px;
+      height: 12px;
+      border: 1px solid #e4e4e4;
+      position: relative;
+      border-radius: 50%;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    span{
+      color: #51c3ff;
+      font-size: 12px;
+      line-height: 18px;
+    }
+    .act_def{
+      &:before{
+        content: ' ';
+        width: 8px;
+        height: 8px;
+        background-color: #4fbef4;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        border-radius: 50%;
+      }
+    }
+  }
+  .default_del{
+    width: 18px;
+    height: 18px;
+    background-position: center;
+    background-size: cover;
+    margin-left: 15px;
   }
 }
 </style>

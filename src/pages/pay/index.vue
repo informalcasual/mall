@@ -3,7 +3,7 @@
     <div class="min-box mb92">
       <div class="page-title">订单结算</div>
       <div class="pay-box">
-        <selfaddress   @selectAddress="selectAddress" :addressList="addressList" :ifHave="ifaddress"></selfaddress>
+        <selfaddress @originAddress="originAddress"  @selectAddress="selectAddress" :addressList="addressList" :ifHave="ifaddress"></selfaddress>
         <div class="pay-detail">
           <div class="head">
             <div class="title1">商品详情</div>
@@ -100,10 +100,21 @@ export default {
     // 获取已有地址
     async originAddress() {
       let res = await this.$apiFactory.getaddressApi().getAddress()
+      this.addressList = []
       if(res.status == 200 && res.data.content.length >= 1) {
         this.ifaddress = true
-        this.addressList = res.data.content 
-        this.addressId = res.data.content[0].id
+        let _first = {}
+        res.data.content.forEach(ele => {
+          if(ele.default){
+            _first = ele
+          } else {
+            this.addressList.push(ele)
+          }
+        })
+        if(_first.id){
+          this.addressList.splice(0, 0, _first)
+        }
+        this.addressId = _first.id ? _first.id : res.data.content[0].id
       } 
     },
     // 下单
