@@ -24,7 +24,7 @@
           </div>
           <div class="nmuber">x{{item.count}}</div>
           <div class="total">¥{{(item.count*item.price).toFixed(2)}}</div>
-          <div class="refund-btn pointer" v-if="item.status !== 1 && item.status !== 3 && item.status !== 5 && item.status !== 7" @click.stop="openrefund(item.status, false);itemId = item.id">{{item.status|itemBtn}}</div>
+          <div class="refund-btn pointer" v-if="item.status !== 1 && item.status !== 3 && item.status !== 7" @click.stop="openrefund(item.status, false);itemId = item.id">{{item.status|itemBtn}}</div>
         </div>
       </div>
       <div class="user-info">
@@ -66,7 +66,7 @@ export default {
       if(res.status == 200) {
         this.content = res.data
         this.paidAt = res.data.paidAt? this.$utilHelper.specificTime(this.$utilHelper.safariTime(res.data.paidAt)) : null
-     }
+      }
     },
     // 退款
     openrefund(status,bol){
@@ -182,7 +182,7 @@ export default {
       if(m==2||m==4) {
         return '退款'
       } else if(m==6){
-        return '退款中'
+        return '取消退款'
       } 
       if(m == 5){
         return '申请售后'

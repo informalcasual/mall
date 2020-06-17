@@ -83,6 +83,7 @@
 </template>
 <script>
 import pagintaion from '@/components/pagination/index'
+var that
 export default {
   data: () => ({
     key: '',
@@ -157,6 +158,10 @@ export default {
   },
   filters: {
     status(n){
+      if(that._index === 6) {
+        return n === 1 ? '处理中' : n === 2 ? '拒绝退款' :
+               n === 3 ? '取消退款' : n === 4 ? '卖家同意退货' : '退款成功'
+      }
       return n === 1 ? '待付款': 
              n === 2 ? '代发货':
              n === 3 ? '已关闭':  
@@ -176,6 +181,9 @@ export default {
   },
   created(){
     this.getInfo(0)
+  },
+  beforeCreate(){
+    that = this
   }
 }
 </script>
@@ -189,7 +197,7 @@ export default {
       display: flex;
       align-items: center;
       border-radius: 6px;
-      width: 528px;
+      width: 526px;
       overflow: hidden;
       border:1px solid rgba(112,42,42,1);
       .tit{
