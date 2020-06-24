@@ -13,11 +13,11 @@
         @click.stop="index = i"
         >
           <div class="title">{{item.name}}</div>
-          <div class="intr">{{item.intr}}魅力主城，绽放光荣</div>
+          <div class="intr">魅力主城，绽放光荣</div>
         </div>
       </div>
       <div class="cont">
-        <div v-html="newsList[index].desc"></div>
+        <div id="plac" v-html="newsList[index].desc"></div>
       </div>
     </div>
   </div>
@@ -103,3 +103,14 @@ export default {
   }
 }
 </style>
+<style lang="scss">
+#plac{
+  font-size:16px;
+  color:rgba(51,51,51,1);
+  line-height:30px;
+  p{
+    padding-bottom: 20px;
+  }
+}
+</style>
+

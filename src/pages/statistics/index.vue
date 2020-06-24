@@ -18,7 +18,14 @@
         </div>
       </div>
       <div class="cont">
-        <div class="cont-box flex"  v-for="(item, index) in news" :key="index">
+        <div class="cont-box1"  v-if="index == 1 || index == 0" >
+         <div class="file-tit" v-for="(item, i) in news" :key="i">
+          <router-link  :to="item.url"  target="_blank" >
+          <div class="flex info"><div class="title">{{item.name}}</div><div class="time">{{item.createdAt}}</div></div>
+          </router-link>
+         </div>
+        </div>
+        <div class="cont-box flex" v-if="index == 3 || index == 2" v-for="(item, i) in news" :key="i">
           <div class="avatar" :style="{'background-image': `url(${item.url})`}"></div>
           <div class="company-info">
             <div class="title ell">{{item.name}}</div>
@@ -54,6 +61,9 @@ export default {
       this.index = index
       let res = await this.$apiFactory.getpageModel().news(this.newsList[index].id)
       if(res.status == 200) {
+        res.data.forEach((ele)=>{
+          ele.createdAt = this.$utilHelper.YMDTime(this.$utilHelper.safariTime(ele.createdAt))
+        })
         this.news = res.data
       }
     }
@@ -120,7 +130,6 @@ export default {
     flex-grow: 1;
     width: 50%;
     display: flex;
-    align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
     .cont-box{
@@ -130,6 +139,7 @@ export default {
       padding: 31px 20px 26px 17px;
       background-color: #fff;
       align-items: self-start;
+      margin-bottom: 10px;
       .avatar{
         flex-grow: 0;
         width:66px;
@@ -162,5 +172,40 @@ export default {
       }
     }
   }
+}
+.cont-box1{
+  background-color: #fff;
+  width: calc(100% - 72px);
+  padding: 24px 36px;
+  .file-tit{
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    .info{
+      .title{
+        flex-grow: 1;
+        width: 50%;
+        font-size:14px;
+        color:rgba(0,0,0,1);
+        line-height:20px;
+      }
+      .time{
+        flex-grow: 0;
+        font-size:14px;
+        color:rgba(102,102,102,1);
+        line-height:20px;
+      }
+    }
+  }
+  .file-tit:hover{
+    .info{
+      .title{
+        color: rgb(102, 192, 57);
+      }
+      .time{
+        color:rgba(102, 192, 57, 0.5);
+      }
+    }
+  }
+
 }
 </style>

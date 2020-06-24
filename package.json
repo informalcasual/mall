@@ -17,6 +17,7 @@
     "babel-polyfill": "^6.26.0",
     "js-base64": "^2.5.2",
     "qrcodejs2": "^0.0.2",
+    "v-distpicker": "^1.2.6",
     "vue-bus": "^1.2.1"
   },
   "devDependencies": {

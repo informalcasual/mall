@@ -37,7 +37,7 @@ import Qcode from "./qrcode";
 export default {
   data:() => ({
     show: false,
-    orderid: 0,
+    orderid: null,
     flag: false,
     timer: null,
     ifpay: false
@@ -61,14 +61,19 @@ export default {
     },
     toDetail(){
       this.show = false
-      this.$router.push(`/order_detail/${this.orderid}`)
+      if(typeof(this.orderid ) === 'number') {
+        this.$router.push(`/order_detail/${this.orderid}`)
+      } else {
+        this.$router.push(`/orders`)
+      }
+      
     },
     scan(Iflag){
       if(Iflag && !this.flag){
         this.flag = true
         this.timer = setInterval(async()=>{
-          let res = await this.$apiFactory.getpayApi().checkBuy({id: this.orderid})
-          if(res.status > 0 && res.data.paidAt) {
+          let res = await this.$apiFactory.getpayApi().checkBuy({ids: this.orderid})
+          if(res.status > 0 && res.data[0].paidAt) {
             clearInterval(this.timer)
             this.ifpay = true
           }

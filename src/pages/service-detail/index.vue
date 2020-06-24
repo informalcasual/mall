@@ -126,7 +126,7 @@ export default {
       img{
         vertical-align: middle;
       }
-      background-color: #702A2A;
+      background-color: #fff;
     }
     .addCart{
       margin-left: 18px;

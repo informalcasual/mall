@@ -17,7 +17,7 @@
       <div  v-else class="product" v-for="(item, index) in carts" :key="index">
         <div class="detail">
           <div class="select pointer" @click.stop="select(index)" :class="{'selected': selectedList.includes(index)}"></div>
-          <router-link to="/" target="_blank" 
+          <router-link  :to="{path: `/product/${item.productSku.productId}`}"  target="_blank" 
           class="pro-img"
           :style="{'background-image': `url(${item.productSku.pic})`}"
           ></router-link>
@@ -37,7 +37,8 @@
       
     </div>
   </div>
-  <div class="pay-box" :style="{'bottom':  windowHeight - scroll > 240 ? '240px' : '0px'}">
+
+  <div class="pay-box" :style="{'position': windowHeight - scroll < 250 ? 'absolute' : 'fixed' }">
     <div class="min-box pay">
       <div class="selected-all">
         <div class="select-all pointer" @click.stop="selectAll()">
@@ -65,7 +66,7 @@ export default {
     selectedAll: false,
     carts:[],
     total: 0,
-    windowHeight: document.documentElement.clientHeight || document.body.clientHeight,
+    windowHeight: 0,
   }),
   methods: {
     async getList() {
@@ -158,6 +159,9 @@ export default {
   created(){
     this.getList()
   },
+  mounted(){
+    this.windowHeight = document.getElementsByClassName('shop')[0].clientHeight
+  },
   computed: {
     ...mapState({
       scroll: state => state.scrolltop.scroll_top_score
@@ -168,7 +172,8 @@ export default {
 
 <style lang="scss" scoped>
 .shop{
-  height: calc(100% - 306px);
+  min-height: calc(100% - 306px);
+  position: relative;
 }
 .title{
   padding: 21px 0 16px;
@@ -234,6 +239,9 @@ export default {
         border-radius:6px;
         display: block;
         margin-left: 24px;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
       }
       .pro-info{
         margin-left: 18px;
@@ -308,6 +316,7 @@ export default {
   background-color: #fff;
   position: fixed;
   left: 0;
+  bottom: 0;
   .pay{
     height: 100%;
     display: flex;

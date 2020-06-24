@@ -95,7 +95,8 @@ export default {
     },
     // 买
     async toBuy(){
-      window.open('/pay?pcn='+(this.priceList.length > 0 ? this.priceList[this.actIndex].id : this.product.id)+',0,'+this.num, '_self')
+      window.open('/pay?pcn='+ this.product.id + ',' + this.actIndex + ','+this.num, '_self')
+  
       // let res = await this.$apiFactory.getOrderApi().addCart({
       //   count: this.num,
       //   productSkuId: this.priceList[this.actIndex].id
@@ -290,7 +291,7 @@ export default {
       font-weight:500;
       color:rgba(255,255,255,1);
       line-height:20px;
-      background-color:rgba(112,42,42,1);
+      background-color:#fff;
       border-radius:4px;
       text-align: center;
       img{

@@ -17,4 +17,8 @@ export default class SellApi {
     let url = `article/${id}`
     return axiosGet(url)
   }
+  getArticleCategory(categoryId) {
+    let url = `/article/category/${categoryId}?page=0&size=40`
+    return axiosGet(url)
+  }
 }

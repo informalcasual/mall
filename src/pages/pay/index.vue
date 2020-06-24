@@ -53,7 +53,7 @@ export default {
     ifaddress: false,
     totalCount: 0,
     totalPrice: 0,
-    orderId: 0,
+    orderId: null,
     flag: false,
     totalHeight: document.body.scrollHeight || document.documentElement.scrollHeight,
     windowHeight: document.documentElement.clientHeight || document.body.clientHeight,
@@ -61,6 +61,7 @@ export default {
   methods: {
     // 获取商品信息
     async getinfo() {
+      this.carts = []
       let res = null
       let pcn = this.$route.query.pcn.split(',') //[productid, productType ,productNumber]
       let cartsIds = pcn[0] == -1 ? this.$route.query.carts.split(',') : null //[cartsIds]
@@ -147,9 +148,14 @@ export default {
       if(res.status == 200) {
         this.flag = true
         this.orderId = []
-        res.data.forEach(ele => {
-          this.orderId.push(ele.id)
-        })
+        if(pcn[0] == -1){
+          res.data.forEach(ele => {
+            this.orderId.push(ele.id)
+          })
+        } else {
+          this.orderId.push(res.data.id)
+        }
+        
         return this.$bus.emit('showPayCode', {
           show: true,
           orderId: this.orderId
@@ -224,6 +230,9 @@ export default {
         background-color: #eee; 
         border-radius:6px;
         display: block;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
       }
       .pro-info{
         margin-left: 18px;

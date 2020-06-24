@@ -72,7 +72,7 @@ export default {
     openrefund(status,bol){
       this.allrefund = bol
       if(status == 6 && !bol){
-        return this.cancleRefund()
+        // return this.cancleRefund()
       } else if(status == 2 || (status == 4 && !bol)) {
         this.$bus.emit('showrefund', true)
       } else if(status == 4){
@@ -118,7 +118,7 @@ export default {
         
       } else {
         this.content.orderItemList.forEach(async element => {
-          data.orderItemId = element.itemId
+          data.orderItemId = element.orderId
           let res = await this.$apiFactory.getOrdersApi().refundOrder(data)
         });
         if(res.status == 409){
@@ -182,7 +182,7 @@ export default {
       if(m==2||m==4) {
         return '退款'
       } else if(m==6){
-        return '取消退款'
+        return '退款中'
       } 
       if(m == 5){
         return '申请售后'

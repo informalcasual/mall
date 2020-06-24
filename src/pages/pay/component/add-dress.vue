@@ -13,6 +13,12 @@
           </div>
         </div>
         <div class="address-item">
+          <p class="tit">省市区</p>
+          <div class="add-input" style="border: none;padding: 0;" >
+            <v-distpicker  @selected="onSelected"></v-distpicker>
+          </div>
+        </div>
+        <div class="address-item">
           <p class="tit">联系电话</p>
           <div class="add-input" :class="{'errorHover': iferror == 2}">
             <input type="text" v-model="phone" name="" placeholder="请输入联系电话">
@@ -33,12 +39,16 @@
   </div>
 </template>
 <script>
+import VDistpicker from 'v-distpicker'
 export default {
   data: () => ({
     show: false,
     phone:'',
     name: '',
     address: '',
+    province: '',
+    district: '',
+    city: '',
     iferror: 0,
   }),
   methods: {
@@ -50,16 +60,25 @@ export default {
     close(){
       this.show = false
     },
+    onSelected(data){
+      this.province = data.province.value
+      this.district = data.area.value
+      this.city = data.city.value
+    },
     async getAddress() {
       
-      this.iferror = !this.name ? 1 : !this.phone ? 2 : !this.address ? 3 : 0
+      this.iferror = !this.name ? 1 : !this.phone ? 2 : !this.address ? 3 : !this.province && this.province !='省' ? 4 :
+                     !this.city && this.city != "市" ? 5 : !this.district && this.district !="区" ? 6 : 0
       if(this.iferror !== 0) {
         return
       }
       let data = {
         address: this.address,
         phone: this.phone,
-        name: this.name
+        province: this.province,
+        city: this.city,
+        district: this.district,
+        name: this.name,
       }
       let res = await this.$apiFactory.getaddressApi().addAddress(data)
       if(res.status == 200) {
@@ -67,12 +86,18 @@ export default {
           name: this.name,
           phone: this.phone,
           address: this.address,
+          province: this.province,
+          city: this.city,
+          district: this.district,
           id: res.data.id
         })
         this.close()
       }
       
     }
+  },
+  components: { 
+    VDistpicker 
   },
   created(){
     this.ifShow()
@@ -108,7 +133,7 @@ export default {
     flex-grow: 1;
     width: 20%;
     border-radius:4px;
-    border:1px solid rgba(151,151,151,1);
+    border:1px solid rgba(0,0,0,0.15);
     input{
       width: 100%;
       font-size:14px;
@@ -149,4 +174,24 @@ export default {
     color: #fe2d44;
   }   
 }
+</style>
+<style lang="scss">
+.distpicker-address-wrapper{
+  display: flex;
+  select{
+    width: 100%;
+    padding: 8px 2px;
+    overflow: hidden;
+  }
+}
+
+  label{
+    flex-grow: 1;
+    width: 20%;
+    overflow: hidden;
+
+  }
+  label + label{
+    margin-left: 10px;
+  }
 </style>

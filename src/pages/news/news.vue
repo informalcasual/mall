@@ -10,13 +10,20 @@
         v-for="(item, i) in newsList"
         :key="i"
         :class="{'axt-tip': index === i}"
-        @click.stop="toDetail(item.id, i)"
+        @click.stop="changeType(item.id, i)"
         >
           <div class="title">{{item.title}}</div>
         </div>
       </div>
       <div class="cont">
-        <div v-html="news"></div>
+         <div class="info-tip flex pointer" 
+         v-for="(item, i) in news" :key="i"
+         @click.stop="toLink(item.id)"
+         >
+           <div class="dot"></div>
+           <div class="title">{{item.title}}</div>
+           <div class="time">{{item.createdAt}}</div>
+         </div>
       </div>
     </div>
   </div>
@@ -25,27 +32,36 @@
 export default {
   data:()=>({
     index: 0,
-    newsList: [],
-    news:"",
+    newsList: [{
+      title: '新闻资讯',
+      id: 1
+    }, {
+      title: '政策解读',
+      id: 2
+    }, {
+      title: '展会活动',
+      id: 3
+    }],
+    news:[],
   }),
   methods: {
-    async getList(){
-      let res = await this.$apiFactory.getpageModel().statistic()
-      if(res.status == 200) {
-        this.newsList = res.data.content
-        this.toDetail(this.newsList[0].id , 0)
-      }
-    },
-    async toDetail(id, i){
+    async changeType(id, i){
       this.index = i
-      let res = await this.$apiFactory.getpageModel().getStatisric(id)
+      let res = await this.$apiFactory.getpageModel().getArticleCategory(id)
       if(res.status == 200) {
+        res.data.content.forEach(ele => {
+          ele.createdAt = this.$utilHelper.YMDTime(this.$utilHelper.safariTime(ele.createdAt))
+        })
         this.news = res.data.content
       }
+    },
+    toLink(id){
+      window.open(`artical/${id}`,'_blank')
     }
+
   },
   created(){
-    this.getList()
+    this.changeType(1, 0)
   }
 }
 </script>
@@ -105,8 +121,50 @@ export default {
   .cont{
     flex-grow: 1;
     width: 50%;
-    padding: 32px 25px;
+    padding: 0px 52px 32px 25px;
     background-color: #fff;
   }
+}
+.info-tip{
+  margin-bottom: 16px;
+  .dot{
+    flex-grow: 0;
+    margin: 0 11px 0;
+    width:4px;
+    height:4px;
+    border-radius: 50%;
+    background:rgba(0,0,0,1);
+  }
+  .title{
+    width: 50%;
+    flex-grow: 1;
+    font-size:14px;
+    color:rgba(0,0,0,1);
+    line-height:20px;
+  }
+  .time{
+    flex-grow: 0;
+    font-size:14px;
+    color:rgba(102,102,102,1);
+    line-height:20px;
+  }
+}
+.info-tip:hover{
+  .dot{
+    background:#34759f;
+  }
+  .title{
+    color:#409eff;
+  }
+  .time{
+    color:#93c8ff;
+  }
+}
+.info-tip:nth-child(5n){
+  margin-bottom: 28px;
+  border-bottom: 1px solid #F3F3F3;
+}
+.info-tip:nth-child(5n+1){
+  margin-top: 26px;
 }
 </style>

@@ -24,7 +24,7 @@ export default class payApi {
   }
   // 核对支付
   checkBuy(data){
-    let url = `order/` + data.id + `/check`
-    return axiosGet(url)
+    let url = `order/check`
+    return axiosBase(url, data)
   }
 }
