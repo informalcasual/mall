@@ -42,11 +42,13 @@
       </div>
     </div>
     <refund @refund="refund"/>
-    <afterSale v-if="after_sale" :phone="content.shop.phone" @showSale="showsale()"/>
+    <afterSale v-if="after_sale" :itemId="itemId" @showSale="showsale()"/>
+    <!-- v-if="after_sale" -->
     <pay />
   </div>
 </template>
 <script>
+// 子订单 1待付款 2待发货 3已关闭 4待收货 5已完成 6退款相关 7结束退款（无论成功或拒绝）
 import afterSale from '@/components/successTip/afterSale'
 import refund from './components/refund'
 import pay from '@/pages/pay/component/pay'
@@ -81,7 +83,7 @@ export default {
         this.cancleOrder()
       } else if(status == 5){
         this.after_sale = true
-      } else if (status == 1 && bol) {
+      } else if (status == 1) {
         this.payOrder()
       }
       
@@ -118,18 +120,10 @@ export default {
         
       } else {
         this.content.orderItemList.forEach(async element => {
-          data.orderItemId = element.orderId
+          data.orderItemId = element.id
           let res = await this.$apiFactory.getOrdersApi().refundOrder(data)
         });
-        if(res.status == 409){
-          return this.$store.dispatch('toast', {
-            type: 'warn',
-            time: 1500,
-            msg: '已超过退款时间，无法退款，请联系商家'
-          })
-        }
       }
-    
       this.getInfo()
     },
     // 确认收货
@@ -153,6 +147,7 @@ export default {
           orderId: [parseInt(this.orderId)]
       })
     },
+    // 售后
     showsale() {
       this.after_sale = !this.after_sale
     }

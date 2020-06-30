@@ -12,7 +12,6 @@ export default class OrderApi {
     return axiosGet(url)
   }
   // 修改购物车商品数量
-
   changeNum(data){
     let url = 'cart'
     return axiosPut(url, data)

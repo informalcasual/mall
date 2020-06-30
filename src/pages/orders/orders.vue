@@ -110,10 +110,15 @@ export default {
       if(i == 6){
         res = await this.$apiFactory.getOrdersApi().getRefunds()
       } else {
-        res = await this.$apiFactory.getOrdersApi().getOrders({status:this._index,page: this.page})
+        res = await this.$apiFactory.getOrdersApi().getOrders({status: this._index, page: this.page})
       }
       
       if(res.status == 200){
+        if(i === 6) {
+          res.data.content.forEach(ele => {
+            ele.orderItemList = [ele.orderItem]
+          })
+        }
         this.lists = res.data.content
         this.page = res.data.number
         this.totalPage = res.data.totalPages
@@ -173,7 +178,6 @@ export default {
              n === 2 ? '取消订单':
              n === 3 ? '已关闭':  
              n === 4 ? '确认收货': '申请售后'
-      
     }
   },
   components: {

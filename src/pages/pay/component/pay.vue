@@ -50,7 +50,7 @@ export default {
       })
     },
     close(){
-      if(this.ifpay){
+      if(this.ifpay && this.$route.name !== 'productDetail'){
         this.$router.push('/orders')
       }
       if(this.timer){
