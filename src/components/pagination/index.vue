@@ -51,7 +51,7 @@ export default {
     //新页数
     getNewLine(num) {
       if (!(num * 1)) return 1
-      if (num == this.current) return
+      if (num == this.current-1) return
       if (num > this.max) return this.max
       if (num <= 1) return 1
       return num 
@@ -59,8 +59,9 @@ export default {
     toPage(num) {
       if (num >= this.max) num = this.max
       let nextLine = this.getNewLine(num)
+
       if (nextLine == undefined) return this.$store.dispatch('toast', { type: 'warn', msg: '页码错误' })
-      this.$emit('paginationToPage', nextLine) 
+      this.$emit('paginationToPage', nextLine-1) 
     }
   },
   created() {

@@ -6,9 +6,17 @@
         <div class="advisory pointer">立即了解</div>
       </router-link>
     </div>
+    <pagintaion  
+    :page="page"
+    :total="pages"
+    @paginationToPage="toPage"
+    style="margin: 0 auto;"
+    v-if="pages > 1"
+    />
   </div>
 </template>
 <script>
+import pagintaion from '@/components/pagination/index'
 export default {
   data: ()=>({
     service: [],
@@ -41,6 +49,11 @@ export default {
         this.pages = res.data.totalPages
       }
     },
+    toPage(m){
+      this.$router.push(`/culturaltrade/service?page=${m}`)
+      this.page = m
+      this.transfer()
+    },
     // 区别是否有分类
     transfer() {
 
@@ -55,6 +68,9 @@ export default {
     this.categoryId = this.$route.query.path ? parseInt(this.$route.query.path) : 0
     this.page = this.$route.query.page || 0
     this.transfer()
+  },
+  components: {
+    pagintaion
   },
   watch:{
     $route: {
@@ -76,6 +92,7 @@ export default {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  padding-bottom: 30px;
   .service-item{
     width: 277px;
     flex-grow: 0;

@@ -16,9 +16,18 @@
         <div class="pro-btn pointer" @click.stop="toDetail(item.id)">购买</div>
       </div>
     </div>
+    <pagintaion  
+    :page="page"
+    :total="pages"
+    @paginationToPage="toPage"
+    style="margin: 0 auto;"
+    v-if="pages > 1"
+    />   
+     
   </div>
 </template>
 <script>
+import pagintaion from '@/components/pagination/index'
 export default {
   data: () => ({
     products: [],
@@ -33,11 +42,13 @@ export default {
     },
     async getProducts() {
       let res = await this.$apiFactory.getTrademarkApi().getProduct({
-        page: 0,
+        page: this.page,
         size: 30,
       })
       if(res.status == 200) {
         this.products = res.data.content
+        this.page = res.data.number
+        this.pages = res.data.totalPages
       }
     },
     async getSearchs(){
@@ -50,6 +61,11 @@ export default {
         this.products = res.data.content
         this.pages = res.data.totalPages
       }
+    },
+    toPage(m){
+      this.page = m
+      this.$router.push(`/culturaltrade/product?page=${m}`)
+      this.transfer()
     },
     transfer() {
       if(this.categoryId){
@@ -64,14 +80,16 @@ export default {
     this.page = this.$route.query.page || 0
     this.transfer()
   },
+  components: {
+    pagintaion
+  },
   watch:{
     $route: {
-      handler(b) {
+      handler(b) {
         this.categoryId = b.query.path ? parseInt(b.query.path) : 0
         this.page = b.query.page || 0
-        this.transfer()
-         //深度监听，同时也可监听到param参数变化
-      },
+        this.transfer()//深度监听，同时也可监听到param参数变化
+      },
       deep: true,
     }
   }
@@ -84,6 +102,7 @@ export default {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  padding-bottom: 30px;
   .pro-item{
     width: 23%;
     margin-left: 30px;
