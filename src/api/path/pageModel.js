@@ -21,4 +21,8 @@ export default class SellApi {
     let url = `/article/category/${categoryId}?page=0&size=40`
     return axiosGet(url)
   }
+  getBanner(){
+    let url = `/common/banner`
+    return  axiosGet(url)
+  }
 }

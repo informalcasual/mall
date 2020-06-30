@@ -5,7 +5,7 @@
         {{title}}
       </div>
       <div class="pop-info1">{{info}}</div>
-      <div class="pop-btn">{{btn.tit}}</div>
+      <div class="pop-btn" v-if="btn">{{btn.tit}}</div>
     </div>
 </template>
 <script>

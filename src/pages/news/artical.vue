@@ -1,5 +1,6 @@
 <template>
-  <div class="artical box spread">
+  <div class="artical box spresd">
+    <crumbs :titleList="crumbsList"/>
     <div class="art-cont">
       <div class="title">{{title}}</div>
       <div class="author">{{time}}<span>{{auth}}发布</span></div>
@@ -8,12 +9,17 @@
   </div>
 </template>
 <script>
+import crumbs from '@/components/crumbs/index'
 export default {
   data: () => ({
     title: '',
     time: '',
     auth: '',
     content: '',
+    crumbsList:[{
+      name: '最新动态',
+      url: '/news'
+    }]
   }),
   methods: {
     async toDetail(){
@@ -23,8 +29,19 @@ export default {
         this.auth = res.data.author || res.data.platform
         this.content = res.data.content
         this.time = this.$utilHelper.YMDTime(this.$utilHelper.safariTime(res.data.createdAt))
-      }
+        this.crumbsList.push({
+          name: res.data.categoryId == 1 ? '新闻资讯' : res.data.categoryId == 2 ? '政策解读' : '展会活动',
+          url: `/news?categoryId=${res.data.categoryId}`
+        })
+        this.crumbsList.push({
+          name: res.data.title,
+          url: ``
+        })
+      } 
     }
+  },
+  components: {
+    crumbs
   },
   created() {
     this.toDetail()

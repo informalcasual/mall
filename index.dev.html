@@ -53,8 +53,35 @@
       qimoClientId.userId = user
     }
   </script>
-  <script type='text/javascript' src='https://webchat.7moor.com/javascripts/7moorInit.js?accessId=01c335a0-cb9b-11e8-9914-a9f2317a4f91&autoShow=false&language=ZHCN' async='async'>
+  <!-- <script type='text/javascript' src='https://webchat.7moor.com/javascripts/7moorInit.js?accessId=01c335a0-cb9b-11e8-9914-a9f2317a4f91&autoShow=false&language=ZHCN' async='async'> -->
   </script>
+      <script type="text/javascript">
+        var user = localStorage.getItem('user')
+        // 自定义用户的唯一id,由英文字母,数字,下划线组成
+        var qimoClientId = {
+          userId: ''
+        }
+        if (user) {
+          qimoClientId.userId = user
+        }
+      </script>
+      <script type="text/javascript">
+        function IsPC() {
+            var userAgentInfo = navigator.userAgent;
+            var Agents = ["Android", "iPhone", 
+                        "SymbianOS", "Windows Phone",
+                        "iPad", "iPod"];
+            for (var v = 0; v < Agents.length; v++) {
+                if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                  window.open('https://tbm.paixin.com', '_self')
+                  break;
+                }
+            }
+            return
+            // return window.open('https://tb.paixin.com', '_self')
+        }
+        IsPC()
+      </script>
 </body>
 
 </html>

@@ -123,7 +123,7 @@ export default {
       this.page = 0
       this.lists = []
       this.totalPage = 0
-      let res = await this.$apiFactory.getOrdersApi().getOrders({status:this.index,page: this.page, name: this.key})
+      let res = await this.$apiFactory.getOrdersApi().getOrders({status:this._index,page: this.page, name: this.key})
       if(res.status == 200) {
         this.lists = res.data.content
         this.page = res.data.number

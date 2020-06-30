@@ -27,13 +27,7 @@
 import crumbs from '@/components/crumbs/index'
 export default {
   data: () => ({
-    crumbsList: [{
-      name: '文化贸易',
-      url: ''
-    },{
-      name: '文化产品',
-      url: ''
-    }],
+    crumbsList: [],
     select_list: [],
     product: [],
     service: [],
@@ -63,8 +57,22 @@ export default {
     changeType (){
       if(this.$route.name == 'culturalproduct') {
         this.select_list = this.product
+        this.crumbsList = [{
+          name: '文化贸易',
+          url: ''
+        },{
+          name: '文化产品',
+          url: ''
+        }]
       } else {
         this.select_list = this.service
+        this.crumbsList = [{
+          name: '文化贸易',
+          url: ''
+        },{
+          name: '文化服务',
+          url: ''
+        }]
       }
       this.select_index = 0
       this.select_name = '全部'

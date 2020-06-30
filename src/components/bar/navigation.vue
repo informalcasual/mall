@@ -3,7 +3,11 @@
     <div class="topBox box">
       <div class="logo">
         <span class="logo-tip pointer">
-          <router-link to="/" target="_self">无锡文化贸易服务平台</router-link>
+          <router-link to="/" target="_self">
+          <img 
+          style="vertical-align: middle;margin-top: -6px;"
+          :src="require('@/assets/img/logo.png')" width="30" alt="">
+          无锡文化贸易服务平台</router-link>
         </span>
       </div>
       <div class="itemNav">

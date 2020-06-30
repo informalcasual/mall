@@ -15,6 +15,7 @@ export default {
     },
     loginOut(){
       this.$store.dispatch('signout')
+      this.$router.push('/')
     }
   }
 }

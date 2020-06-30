@@ -3,7 +3,7 @@
     <div class="service-item" v-for="(item, index) in service" :key="index">
       <router-link :to="'/serviceDetail/'+item.id" target="_self">
         <div class="show" :style="{'background-image': `url(${item.cover})`}"> <div class="item-title">{{item.name}}</div></div>
-        <div class="advisory pointer">立即咨询</div>
+        <div class="advisory pointer">立即了解</div>
       </router-link>
     </div>
   </div>

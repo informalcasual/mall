@@ -5,7 +5,9 @@
     v-for="(item, index) in products"
     :key="index"
     >
-      <img :src="item.cover" class="pro-img" alt="">
+      <router-link :to="'/product/'+item.id" target="_blank">
+        <img :src="item.cover" class="pro-img" alt="">
+      </router-link>
       <div class="pro-info">
         <div class="price-box">
           <div class="title">{{item.name}}</div>

@@ -57,11 +57,19 @@ export default {
     },
     toLink(id){
       window.open(`artical/${id}`,'_blank')
+    },
+    choseType(){
+      if(this.$route.query.categoryId) {
+        return this.$route.query.categoryId == 1 ? this.changeType(1, 0) :
+               this.$route.query.categoryId == 2 ? this.changeType(2, 1) : this.changeType(3, 2)
+      } else{
+        this.changeType(1, 0)
+      }
     }
 
   },
   created(){
-    this.changeType(1, 0)
+    this.choseType()
   }
 }
 </script>

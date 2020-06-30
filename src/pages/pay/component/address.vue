@@ -10,8 +10,11 @@
         <div class="address-info flex" v-for="(item, index) in addressList" :key="index">
           <span class="select pointer" @click.stop="changeAddress(index, item.id)" :class="{'act': actindex == index}"></span>
           <span>{{item.name}}</span><span>{{item.phone}}</span><span>{{item.province}} {{item.city}} {{item.district}} {{item.address}}</span>
-          <div class="btns">
-            <div class="if-default" title="选为默认地址"><div class="de_select pointer" @click.stop="defaultAddress(item.default, item.id, index)" :class="{'act_def': item.default}"></div> <span v-if="item.default">(默认地址)</span></div>
+          <div class="btns pointer" @click.stop="defaultAddress(item.default, item.id, index)">
+            <div class="if-default" title="选为默认地址"><div class="de_select pointer"  :class="{'act_def': item.default}"></div>
+            <span v-if="item.default">(默认地址)</span> 
+            <span v-else>设为默认</span>
+            </div>
             <!-- <div class="default_change pointer" :style="{'background-image': `url(${require('../img/delete.svg')})`}"></div> -->
             <div class="default_del pointer" @click.stop="deleteAddress(item.id)"  :style="{'background-image': `url(${require('../img/delete.svg')})`}"></div>
           </div>

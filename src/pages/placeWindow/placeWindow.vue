@@ -111,6 +111,9 @@ export default {
   p{
     padding-bottom: 20px;
   }
+  img{
+    width: 100%;
+  }
 }
 </style>
 

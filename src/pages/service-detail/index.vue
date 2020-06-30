@@ -26,12 +26,13 @@
       </div>
       <div class="product-box">
         <div class="title">商品详情</div>
-        <div v-html="serviceDetail.detail"></div>
+        <div v-html="serviceDetail.detail" id="product-box"></div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
   data: () => ({
     price: 289,
@@ -42,6 +43,10 @@ export default {
   }),
   methods:{
     addAdvisory(){
+      if(!this.loginUser.id){
+          this.$bus.emit('showLogin', true)
+          return
+      }
       this.$bus.emit('showAdvisory', true)
     },
     async getDetail(){
@@ -55,6 +60,11 @@ export default {
   },
   created(){
     this.getDetail()//商品详情
+  },
+  computed: {
+    ...mapState({
+      loginUser: state => state.user.loginUser,
+    }),
   },
 }
 </script>
@@ -179,6 +189,16 @@ export default {
       background-color: #eee;
       width: 100%;
     }
+  }
+}
+</style>
+<style lang="scss">
+#product-box{
+  font-size:16px;
+  color:rgba(51,51,51,1);
+  line-height:30px;
+  p{
+    padding-bottom: 20px;
   }
 }
 </style>

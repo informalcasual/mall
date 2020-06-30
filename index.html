@@ -120,10 +120,31 @@
         qimoClientId.userId = user
       }
     </script>
-    <script
+    <script type="text/javascript">
+      function IsPC() {
+          var userAgentInfo = navigator.userAgent;
+          var Agents = ["Android", "iPhone", 
+                      "SymbianOS", "Windows Phone",
+                      "iPad", "iPod"];
+          var flag = true;
+          for (var v = 0; v < Agents.length; v++) {
+              if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                window.open('https://tbm.paixin.com', '_self')
+                debugger
+                
+                break;
+              }
+          }
+          return
+          // return window.open('https://tb.paixin.com', '_self')
+      }
+      IsPC()
+    </script>
+    <!-- <script
+
       type="text/javascript"
       src="https://webchat.7moor.com/javascripts/7moorInit.js?accessId=01c335a0-cb9b-11e8-9914-a9f2317a4f91&autoShow=false&language=ZHCN"
       async="async"
-    ></script>
+    ></script> -->
   </body>
 </html>

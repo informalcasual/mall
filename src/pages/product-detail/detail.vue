@@ -36,19 +36,20 @@
         <div class="phone">电话：{{company.phone}}</div>
         <div class="detail"><p>地址：</p><p class="address">{{company.address}}</p>
          </div>
-        <div class="advisory pointer">
+        <!-- <div class="advisory pointer">
           <img :src="require('./img/advisory.svg')"  wisth="18" alt="">
           咨询客服
-        </div>
+        </div> -->
       </div>
       <div class="product-box">
         <div class="title">商品详情</div>
-        <div v-html="product.desc"></div>
+        <div v-html="product.desc" id="product-box"></div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
   data: () => ({
     price: 0,
@@ -67,14 +68,18 @@ export default {
   methods:{
     // 数量
     choseNum(num) {
-      if(num > 0 && num <= this.total) {
+      if(num > 0 && this.num < this.total) {
         this.num++
-      } else if(num > 1){
+      } else if(num < 0 && this.num > 1){
         this.num--
       }
     },
     // 加入购物车
     async addCart() {
+        if(!this.loginUser.id){
+          this.$bus.emit('showLogin', true)
+          return
+        }
         let res = await this.$apiFactory.getOrderApi().addCart({
           count: this.num,
           productSkuId: this.priceList.length > 0 ? this.priceList[this.actIndex].id : this.product.id
@@ -95,6 +100,10 @@ export default {
     },
     // 买
     async toBuy(){
+      if(!this.loginUser.id){
+        this.$bus.emit('showLogin', true)
+        return
+      }
       window.open('/pay?pcn='+ this.product.id + ',' + this.actIndex + ','+this.num, '_self')
   
       // let res = await this.$apiFactory.getOrderApi().addCart({
@@ -119,7 +128,12 @@ export default {
   },
   created(){
     this.getDetail()//商品详情
-  }
+  },
+  computed: {
+    ...mapState({
+      loginUser: state => state.user.loginUser,
+    }),
+  },
 }
 </script>
 
@@ -315,6 +329,16 @@ export default {
       background-color: #eee;
       width: 100%;
     }
+  }
+}
+</style>
+<style lang="scss">
+#product-box{
+  font-size:16px;
+  color:rgba(51,51,51,1);
+  line-height:30px;
+  p{
+    padding-bottom: 20px;
   }
 }
 </style>

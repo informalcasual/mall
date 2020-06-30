@@ -61,6 +61,7 @@ const mutations = {
     localStorage.setItem('userData', '{}')
     document.cookie = 'p-token=1; max-age=0; domain=.paixin.com;path=/'
     document.cookie = 'p-token=1; max-age=0; domain=localhost;path=/'
+    
   },
 
   UPDATE_AVATAR: (state, avatar) => {

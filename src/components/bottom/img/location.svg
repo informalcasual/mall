@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="52px" height="52px" viewBox="0 0 52 52" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 57 (83077) - https://sketch.com -->
+    <title>编组 5</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="首页" transform="translate(-938.000000, -2758.000000)">
+            <g id="编组-5" transform="translate(938.000000, 2758.000000)">
+                <circle id="椭圆形备份" fill="#2C353F" cx="26" cy="26" r="26"></circle>
+                <g id="lbs_fill" transform="translate(11.000000, 11.000000)" fill-rule="nonzero">
+                    <rect id="矩形" fill="#000000" opacity="0" x="0" y="0" width="30" height="30"></rect>
+                    <path d="M15.4375,4 C10.75,4 7,7.75 7,12.4375 C7,15.8125 9.0625,18.4375 11.6875,21.8125 C12.625,23.125 13.75,24.4375 14.6875,26.125 C14.875,26.3125 15.0625,26.5 15.4375,26.5 L15.4375,26.5 C15.8125,26.5 16,26.3125 16.1875,26.125 C17.125,24.625 18.25,23.3125 19.1875,22 C21.8125,18.4375 23.875,15.8125 23.875,12.4375 C23.875,7.75 20.125,4 15.4375,4 Z M15.4375,15.25 C13.9375,15.25 12.625,14.125 12.625,12.4375 C12.625,10.75 13.75,9.625 15.4375,9.625 C16.9375,9.625 18.25,10.75 18.25,12.4375 C18.25,13.9375 17.125,15.25 15.4375,15.25 Z" id="形状" fill="#FFFFFF"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

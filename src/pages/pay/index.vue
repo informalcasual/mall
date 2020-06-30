@@ -97,6 +97,7 @@ export default {
     },
     selectAddress(id){
       this.addressId = id
+      this.ifaddress = true
     },
     // 获取已有地址
     async originAddress() {

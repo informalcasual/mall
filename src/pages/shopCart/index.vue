@@ -34,11 +34,10 @@
         </div>
         <div class="total">￥{{(item.count*item.productSku.price).toFixed(2)}}</div>
       </div>
-      
     </div>
   </div>
-
-  <div class="pay-box" :style="{'position': windowHeight - scroll < 250 ? 'absolute' : 'fixed' }">
+ 
+  <div class="pay-box" :style="{'position':  scroll+totalHeight >= windowHeight || totalHeight - 240 >= windowHeight ? 'absolute' : 'fixed' }">
     <div class="min-box pay">
       <div class="selected-all">
         <div class="select-all pointer" @click.stop="selectAll()">
@@ -67,12 +66,15 @@ export default {
     carts:[],
     total: 0,
     windowHeight: 0,
+    totalHeight: 0
   }),
   methods: {
     async getList() {
       let res = await this.$apiFactory.getOrderApi().cartShop()
       if(res.status == 200) {
         this.carts = res.data.content
+        this.totalHeight = document.body.clientHeight
+        this.windowHeight = document.getElementsByClassName('shop')[0].clientHeight + 66
       }
     },
     //修改数量
@@ -160,7 +162,9 @@ export default {
     this.getList()
   },
   mounted(){
-    this.windowHeight = document.getElementsByClassName('shop')[0].clientHeight
+    this.totalHeight = document.body.clientHeight
+    setTimeout(() => {this.windowHeight = document.getElementsByClassName('shop')[0].clientHeight + 66}, 500)
+    
   },
   computed: {
     ...mapState({
