@@ -27,7 +27,7 @@
           <div class="subtotal">小计</div>
         </div>
         <div class="order-item" v-for="(item, index) in lists" :key="index">
-          <div class="order-num"><span>订单编号：{{item.sn}}</span></div>
+          <div class="order-num">{{item.createdAt}}<span>订单编号：{{item.sn}}</span></div>
           <div class="cont">
             <div class="detail-box"><div class="detail" v-for="(ele, i) in item.orderItemList" :key="i">
                <!-- <router-link class="link" :to="''+item" target="_self"> -->
@@ -60,11 +60,11 @@
                 </div>
                 <div 
                 class="operation pointer"
-                @click.stop="tofWindow(item.orderItemList[0].orderId)"
+                @click.stop="tofWindow(item.id)"
                 v-if="_index===6">
                   查看进度
                 </div>
-                <div class="more pointer" v-if="_index!=6" @click.stop="toWindow(item.id)">查看详情</div>
+                <div class="more pointer" v-if="_index !== 6" @click.stop="toWindow(item.id)">查看详情</div>
               </div>
             </div>
           </div>
@@ -99,12 +99,13 @@ export default {
       this.getInfo(this.index)
     },
     toWindow(id){
-      window.open(`/order_detail/${id}`,'_self')
+      window.open(`/order_detail/${id}?category=${this._index}`,'_self')
     },
     tofWindow(id){
-      window.open(`/order_detail/${id}?fedund=true`,'_self')
+      window.open(`/order_detail/${id}?fedund=true&category=${this._index}`,'_self')
     },
     async getInfo(i){
+      this.lists = []
       this._index = i
       let res = null
       if(i == 6){
@@ -112,13 +113,14 @@ export default {
       } else {
         res = await this.$apiFactory.getOrdersApi().getOrders({status: this._index, page: this.page})
       }
-      
+      history.pushState({}, '', `?category=${i}`)
       if(res.status == 200){
-        if(i === 6) {
-          res.data.content.forEach(ele => {
+        res.data.content.forEach(ele => {
+          if(i === 6) {
             ele.orderItemList = [ele.orderItem]
-          })
-        }
+          }
+          ele.createdAt = this.$utilHelper.specificTime(this.$utilHelper.safariTime(ele.createdAt))
+        })
         this.lists = res.data.content
         this.page = res.data.number
         this.totalPage = res.data.totalPages
@@ -184,7 +186,8 @@ export default {
     pagintaion
   },
   created(){
-    this.getInfo(0)
+    this._index = parseInt(this.$route.query.category || 0)
+    this.getInfo(this._index)
   },
   beforeCreate(){
     that = this

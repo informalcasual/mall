@@ -20,6 +20,11 @@ export default class ordersApi {
       let url = `order/refund`
       return axiosBase(url, data)
     }
+    // 退款详情
+    refundInfo(refundId) {
+      let url = `/order/refund/${refundId}`
+      return axiosGet(url)
+    }
     // 确认收货
     sureOrder(id){
       let url = `order/${id}`

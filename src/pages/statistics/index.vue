@@ -18,14 +18,14 @@
         </div>
       </div>
       <div class="cont">
-        <div class="cont-box1"  v-if="index == 1 || index == 0" >
+        <div class="cont-box1"  v-if="index == 3 || index == 2" >
          <div class="file-tit" v-for="(item, i) in news" :key="i">
           <router-link  :to="item.url"  target="_blank" >
           <div class="flex info"><div class="title">{{item.name}}</div><div class="time">{{item.createdAt}}</div></div>
           </router-link>
          </div>
         </div>
-        <div class="cont-box flex" v-if="index == 3 || index == 2" v-for="(item, i) in news" :key="i">
+        <div class="cont-box flex" v-if="index == 1 || index == 0" v-for="(item, i) in news" :key="i">
           <div class="avatar" :style="{'background-image': `url(${item.url})`}"></div>
           <div class="company-info">
             <div class="title ell">{{item.name}}</div>
@@ -41,17 +41,19 @@
 export default {
   data:()=>({
     index: 0,
-    newsList: [{
-      title:'历年数据查询下线',
-      id: 1,
-    },{
-      title:'文化出口材料',
-      id: 2,
-    },{
-      title:'文化出口重点企业',
+    newsList: [
+    // {
+    //   title:'历年数据查询下线',
+    //   id: 1,
+    // },{
+    //   title:'文化出口材料',
+    //   id: 2,
+    // },
+    {
+      title:'国家重点文化出口企业',
       id: 3,
     },{
-      title:'文化出口重点项目',
+      title:'国家重点文化出口项目',
       id: 4,
     }],
     news:[],
@@ -104,7 +106,7 @@ export default {
   .news-tip{
     margin-right: 16px;
     padding: 11px 8px;
-    width: 189px;
+    width: 205px;
     background-color: #fff;
     .tip{
       padding: 13px 21px 9px;
@@ -166,7 +168,7 @@ export default {
           overflow: hidden;
           text-overflow: ellipsis;
           display: -webkit-box;
-          -webkit-line-clamp: 3;
+          -webkit-line-clamp: 5;
           -webkit-box-orient: vertical;
         }
       }

@@ -52,7 +52,6 @@ export default {
         this.service = _res.data
       }
       this.changeType()
-
     },
     changeType (){
       if(this.$route.name == 'culturalproduct') {
@@ -86,11 +85,11 @@ export default {
       let name = ''
       this.select_index = type == 0 ? 0 : type
       if(this.$route.name == 'culturalproduct') {
-
         name = 'culturalproduct'
       } else {
         name = 'culturalservice'
       }
+
       this.select_name = this.select_index == 0 ? '全部' : this.select_list[this.select_index-1].name
      
       if(type == 0) {
@@ -180,6 +179,7 @@ export default {
     display: inline-block;
     float: right;
     position: relative;
+    z-index: 1000;
     .pointer-box{
       position: absolute;
       padding: 12px 10px;

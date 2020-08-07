@@ -43,7 +43,7 @@
       </div>
       <div class="product-box">
         <div class="title">商品详情</div>
-        <div v-html="product.desc" id="product-box"></div>
+        <div v-html="product.detail" id="product-box"></div>
       </div>
     </div>
   </div>
@@ -116,7 +116,7 @@ export default {
      let res = await this.$apiFactory.getTrademarkApi().ProductDetail(productId)
      if(res.status == 200) {
        this.product.id = res.data.product.id
-       this.product.desc = res.data.product.desc
+       this.product.detail = res.data.product.detail
        this.product.name = res.data.product.name
        this.company = res.data.shop ? res.data.shop : this.company
        this.priceList = res.data.productSku
@@ -339,6 +339,11 @@ export default {
   line-height:30px;
   p{
     padding-bottom: 20px;
+  }
+  img{
+    display: block;
+    width: 460px;
+    margin: 0 auto;
   }
 }
 </style>

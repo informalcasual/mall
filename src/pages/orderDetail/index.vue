@@ -1,14 +1,14 @@
 <template>
   <div class="box spread">
-    <div class="page-title">订单详情</div>
+    <div class="page-title">订单详情<div class="back pointer" @click.stop="goBack()">返回上一页</div></div>
     <div class="detail">
       <div class="top-bar">
-        <div class="status">订单状态：<span>{{content.status|status}}</span></div>
+        <div class="status">订单状态：<span>{{content.status|status}}</span><span v-if="refusedReason">({{refusedReason}})</span></div>
         <div class="btns">
-          <div class="btn pointer main-brown" v-if="content.status !== 5 && content.status !== 7" @click.stop="openrefund(content.status, true)">
+          <div class="btn pointer main-brown" v-if="!ifrefund && content.status !== 2 && content.status !== 5 && content.status !== 7" @click.stop="openrefund(content.status, true)">
             {{content.status|btnName}}
           </div>
-          <div class="btn pointer grey-btn" v-if="content.status == 1" @click.stop="cancleOrder()">取消订单</div>
+          <div class="btn pointer grey-btn" v-if="!ifrefund && content.status == 1" @click.stop="cancleOrder()">取消订单</div>
           <!-- <div class="btn pointer grey-btn" @click.stop="showsale()" v-if="content.status == 5 || content.status == 7 || content.status == 4">售后服务</div> -->
         </div>
       </div>
@@ -30,13 +30,13 @@
       <div class="user-info">
         <div class="user">
           <div class="info-tit">收货人信息</div>
-          <div class="info-detail">姓名：{{content.receiver}}</div>
-          <div class="info-detail">联系方式：{{content.phone}}</div>
-          <div class="info-detail">收货地址：{{content.address}}</div>
+          <div class="info-detail">姓名：{{receiver}}</div>
+          <div class="info-detail">联系方式：{{phone}}</div>
+          <div class="info-detail">收货地址：{{address}}</div>
         </div>
         <div class="user" v-if="paidAt">
           <div class="info-tit">付款信息：</div>
-          <div class="info-detail">支付方式：{{content.outTradeNo|TradeNo}}支付</div>
+          <div class="info-detail">支付方式：{{outTradeNo|TradeNo}}支付</div>
           <div class="info-detail">付款时间：{{paidAt}}</div>
         </div>
       </div>
@@ -52,27 +52,43 @@
 import afterSale from '@/components/successTip/afterSale'
 import refund from './components/refund'
 import pay from '@/pages/pay/component/pay'
+var that
 export default {
   data: ()=> ({
     orderId: 0,
     content: {},
+    receiver: '',
+    phone: '',
+    address: '',
+    outTradeNo: '',
     paidAt: null,
     allrefund: false,
     itemId: 0,
     after_sale: false,
+    ifrefund: false,
+    refusedReason: null,
   }),
   methods: {
     async getInfo(){
       this.orderId = this.$route.params.orederId
-      let res = await this.$apiFactory.getOrdersApi().orderDetail(this.orderId)
+      this.ifrefund = JSON.parse(this.$route.query.fedund||false)
+      let res = !this.ifrefund ? await this.$apiFactory.getOrdersApi().orderDetail(this.orderId) :
+                                await this.$apiFactory.getOrdersApi().refundInfo(this.orderId)
       if(res.status == 200) {
+        this.ifrefund ? res.data.orderItemList = [res.data.orderItem] : null
         this.content = res.data
-        this.paidAt = res.data.paidAt? this.$utilHelper.specificTime(this.$utilHelper.safariTime(res.data.paidAt)) : null
+        this.outTradeNo = this.ifrefund ? res.data.order.outTradeNo : res.data.outTradeNo
+        let paidAt = !this.ifrefund ? res.data.paidAt : res.data.order.paidAt
+        this.receiver = this.ifrefund ? this.content.order.receiver : this.content.receiver
+        this.phone = this.ifrefund ? this.content.order.phone : this.content.phone
+        this.address = this.ifrefund ? this.content.order.address : this.content.address
+        this.paidAt = paidAt ? this.$utilHelper.specificTime(this.$utilHelper.safariTime(paidAt)) : null
+        this.refusedReason = this.ifrefund && res.data.refusedReason ?  res.data.refusedReason : null
       }
     },
     // 退款
-    openrefund(status,bol){
-      this.allrefund = bol
+    openrefund(status){
+     
       if(status == 6 && !bol){
         // return this.cancleRefund()
       } else if(status == 2 || (status == 4 && !bol)) {
@@ -107,7 +123,6 @@ export default {
     },
     // t退款
     async refund(data){
-      if(!this.allrefund) {
         data.orderItemId = this.itemId
         let res = await this.$apiFactory.getOrdersApi().refundOrder(data)
         if(res.status == 409){
@@ -117,13 +132,6 @@ export default {
             msg: '已超过退款时间，无法退款，请联系商家'
           })
         }
-        
-      } else {
-        this.content.orderItemList.forEach(async element => {
-          data.orderItemId = element.id
-          let res = await this.$apiFactory.getOrdersApi().refundOrder(data)
-        });
-      }
       this.getInfo()
     },
     // 确认收货
@@ -150,6 +158,14 @@ export default {
     // 售后
     showsale() {
       this.after_sale = !this.after_sale
+    },
+    goBack(){
+      if(this.$route.query.category){
+        this.$router.push('/orders?category='+this.$route.query.category)
+      } else {
+        history.go(-1)
+      }
+
     }
   },
   filters: {
@@ -161,6 +177,12 @@ export default {
       }
     },
     status(m){
+      if(that && that.ifrefund) {
+        return m == 1 ? '处理中' :
+           m == 2 ? '拒绝退款' :
+           m == 3 ? '取消退款' :
+           m == 4 ? '卖家同意退货' : '退款成功'
+      }
       return m == 1 ? '待付款' :
              m == 2 ? '待发货' :
              m == 3 ? '已关闭' :
@@ -169,7 +191,6 @@ export default {
     },
     btnName(m) {
       return m == 1 ? '订单支付' :
-             m == 2 ? '申请退款' :
              m == 3 ? '删除订单' : '确认收货' 
     },
     itemBtn(m) {
@@ -191,6 +212,9 @@ export default {
   },
   created(){
     this.getInfo()
+  },
+  mounted(){
+    that = this
   }
 }
 </script>
@@ -317,6 +341,21 @@ export default {
      font-size:14px;
      color:rgba(0,0,0,1);
      line-height:20px;
+   }
+ }
+ .page-title{
+   position: relative;
+   .back{
+     position: absolute;
+     right: 0;
+     top: 21px;
+     color: #666666;
+     font-size: 14px;
+     line-height: 20px;
+     &:hover{
+       color: #702a2a;
+       text-decoration: underline;
+     }
    }
  }
 </style>

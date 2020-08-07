@@ -612,6 +612,7 @@ export default {
           }
           .el-input__inner {
             height: 20px;
+            line-height: 20px;
             border: none;
             padding: 0;
             padding-left: 34px;

@@ -5,8 +5,8 @@
       <div class="img" :style="{'background-image': `url(${serviceDetail.cover})`}"></div>
       <div class="select-buy">
         <div class="title">{{serviceDetail.name}}</div>
-        <div class="service-tip">服务类别：<span>{{serviceDetail.type}}</span></div>
-        <div class="service-tip">所在区域：<span>{{serviceDetail.location}}</span></div>
+        <div class="service-tip">服务类别：<span>{{serviceDetail.categories}}</span></div>
+        <div class="service-tip">所在区域：<span>{{serviceDetail.location|location}}</span></div>
         <div class="service-tip">服务时间：<span>{{serviceDetail.time}}</span></div>
         <div class="service-tip">详细地址：<span>{{serviceDetail.address}}</span></div>
         <div class="btns">
@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="product-info min-box">
-      <div class="compony-info">
+      <div class="compony-info" v-if="compay">
         <div class="title">{{compay.name}}</div>
         <div class="phone">电话：{{compay.phone}}</div>
         <div class="detail"><p>地址：</p><p class="address">{{compay.address}}</p>
@@ -54,6 +54,7 @@ export default {
      let res = await this.$apiFactory.getTrademarkApi().ServiceDetail(productId)
      if(res.status == 200) {
        this.serviceDetail = res.data.service
+       this.serviceDetail.categories = res.data.categories.toString()
        this.compay = res.data.shop
      }
     }
@@ -61,11 +62,24 @@ export default {
   created(){
     this.getDetail()//商品详情
   },
+  mounted(){
+    window.scrollTo(0, 0)
+  },
   computed: {
     ...mapState({
       loginUser: state => state.user.loginUser,
     }),
   },
+  filters: {
+    location(m) {
+        return m === 1 ? '梁溪区' : 
+               m === 2 ? '滨湖区' : 
+               m === 3 ? '新吴区' :
+               m === 4 ? '惠山区' :
+               m === 5 ? '锡山区' :
+               m === 6 ? '江阴市' : '宜兴市'
+    }
+  }
 }
 </script>
 
@@ -199,6 +213,11 @@ export default {
   line-height:30px;
   p{
     padding-bottom: 20px;
+  }
+  img{
+    width: 80%;
+    margin: 0 auto;
+    display: block;
   }
 }
 </style>

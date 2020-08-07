@@ -4,8 +4,13 @@
       <div class="title">无锡文化出口基地</div>
       <p class="tip">吴文化江南文化</p>
     </div>
+    <div class="title-classify">
+      <div class="title-tip pointer" @click.stop="change(1)" :class="{'act': type === 1}">重要区域</div><!-- 
+
+       --><div class="title-tip pointer" @click.stop="change(2)" :class="{'act': type === 2}">重点企业</div>
+    </div>
     <div class="news-cont">
-      <div class="news-tip">
+      <div class="news-tip" v-if="newsList.length > 0">
         <div class="tip pointer"
         v-for="(item, i) in newsList"
         :key="i"
@@ -13,11 +18,11 @@
         @click.stop="index = i"
         >
           <div class="title">{{item.name}}</div>
-          <div class="intr">魅力主城，绽放光荣</div>
+          <div class="intr" v-if="type === 1">魅力主城，绽放光荣</div>
         </div>
       </div>
       <div class="cont">
-        <div id="plac" v-html="newsList[index].desc"></div>
+        <div id="plac" v-if="newsList[index]" v-html="newsList[index].desc"></div>
       </div>
     </div>
   </div>
@@ -27,14 +32,20 @@ export default {
   data:()=>({
     index: 0,
     newsList: [],
+    type: 1,
   }),
   methods: {
     async getWindows() {
-      let res = await this.$apiFactory.getpageModel().window()
+      
+      let res = await this.$apiFactory.getpageModel().window(this.type)
       if(res.status == 200) {
         this.newsList = res.data
       }
       // console.log(res)
+    },
+    change(type){
+      this.type = type
+      this.getWindows()
     }
   },
   created() {
@@ -100,6 +111,22 @@ export default {
     width: 50%;
     padding: 32px 25px;
     background-color: #fff;
+  }
+}
+.title-classify {
+  margin: 20px 0 10px;
+  border: 1px solid #702a2a;
+  display: inline-block;
+  .title-tip{
+    display: inline-block;
+    padding: 10px 30px;
+    font-size: 18px;
+    line-height: 22px;
+    color: #702a2a;
+  }
+  .act{
+    color: #fff;
+    background-color: #702a2a;
   }
 }
 </style>

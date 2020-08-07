@@ -8,7 +8,7 @@
       :class="{'act': item.id == actId}" 
       @click.stop="changeType(item.id)"
       class="tip-box pointer">
-       {{item.name}}{{item.id}}
+       {{item.name}}
       </div>
     </div>
     <div class="more pointer" @click.stop="toLink(url)">{{btnTitle}}</div>

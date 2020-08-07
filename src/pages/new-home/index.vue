@@ -31,7 +31,7 @@
           <div class="pro-info">
             <div class="price-box">
               <div class="title">{{item.name}}</div>
-              <div class="price">售价：<span>￥{{item.initialSale.toFixed(2)}}</span></div>
+              <div class="price">售价：<span>￥{{item.price.toFixed(2)}}</span></div>
             </div>
             <div class="pro-btn pointer" @click.stop="toBuy(item.id)">购买</div>
           </div>
@@ -241,11 +241,11 @@ export default {
   .service-box{
     display: flex;
     align-items: center;
-    justify-content: space-between;
   }
   .service-item{
     width: 227px;
     flex-grow: 0;
+    margin-left: 30px;
     .show{
       height: 216px;
       background-color: #000;
