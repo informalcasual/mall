@@ -26,26 +26,35 @@
           </router-link>
          </div>
         </div>
-        <div class="ab-box" v-if="index == 1 || index == 0" v-for="(item, i) in news" :key="i">
-          <div class="cont-box flex"
-           :class="{'act-box': act_index === i}"
-          >
-            <div class="avatar" :style="{'background-image': `url(${item.url})`}"></div>
-            <div class="company-info">
-              <div class="title ell">{{item.name}}</div>
-              <div class="area">所在区域：{{item.location}}</div>
-              <div class="summary">{{item.desc}}</div>
-              <div class="more pointer" @click.stop="changeIndex(i)" v-if="act_index !== i">查看更多</div>
-              <div class="less pointer" @click.stop="changeIndex(-1)" v-if="act_index === i">收起内容</div>
-            </div>
+        <div class="cont-box flex"
+        v-if="index == 1 || index == 0" v-for="(item, i) in news" :key="i"
+        >
+          <div class="avatar" :style="{'background-image': `url(${item.url})`}"></div>
+          <div class="company-info">
+            <div class="title ell">{{item.name}}</div>
+            <div class="area">所在区域：{{item.location}}</div>
+            <div class="summary">{{item.desc}}</div>
+            <div class="more pointer" @click.stop="watchMore(item)">查看更多</div>
           </div>
+        </div>
+  
+      </div>
+    </div>
+    <div class="detail-box flex" v-if="show">
+      <div class="box flex">
+        <div 
+        class="close pointer"
+        :style="{'background-image': `url(${require('./img/close.svg')})`}"
+        @click.stop="show = false"
+        ></div>
+        <div class="avatar" :style="{'background-image': `url(${detail.url})`}"></div>
+        <div class="company-info">
+          <div class="title ell">{{detail.name}}</div>
+          <div class="area">所在区域：{{detail.location}}</div>
+          <div class="summary">{{detail.desc}}</div>
         </div>
       </div>
     </div>
-    <!-- <div class="detail-box">
-      <div class="close"></div>
-      <div class="more-detail" v-html="detail"></div>
-    </div> -->
   </div>
 </template>
 <script>
@@ -68,7 +77,8 @@ export default {
       id: 4,
     }],
     news:[],
-    act_index: -1
+    detail: {},
+    show: false
   }),
   methods: {
     async choseId(index){
@@ -84,6 +94,10 @@ export default {
     },
     changeIndex(index) {
       this.act_index = index
+    },
+    watchMore(item) {
+      this.detail = item
+      this.show = true
     }
   },
   created(){
@@ -150,27 +164,14 @@ export default {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    .ab-box{
-      width: 375px;
-      height: 221px;
-      flex-grow: 0;
-      margin-bottom: 20px;
-      .act-box{
-        z-index: 10;
-        box-shadow: 2px 3px 8px 1px #ddd;
-        .company-info{
-          .summary{
-            display: block;
-          }
-        }
-      }
-    }
     .cont-box{
+      width: 338px;
+      height: 164px;
       padding: 31px 20px 26px 17px;
       background-color: #fff;
       align-items: self-start;
       position: relative;
-      min-height: calc(100% - 57px);
+      margin-bottom: 20px;
       .avatar{
         flex-grow: 0;
         width:66px;
@@ -209,13 +210,6 @@ export default {
           font-size:14px;
           color:rgba(146,146,146,1);
           line-height:20px;
-        }
-        .less{
-          font-size:14px;
-          color:rgba(146,146,146,1);
-          line-height:20px;
-          padding: 10px 0;
-          text-align: right;
         }
       }
     }
@@ -256,7 +250,68 @@ export default {
   }
 
 }
-.spread{
-  overflow: initial;
+.detail-box{
+  position: fixed;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  .close{
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    background-position: center;
+    background-size: cover;
+  }
+  .box{
+    width: 500px;
+    background-color: #fff;
+    padding: 31px 30px 26px 17px;
+    align-items: self-start;
+    position: relative;
+    border-radius: 6px;
+    .avatar{
+      flex-grow: 0;
+      width:70px;
+      height:70px;
+      margin: 5px 10px 0 10px;
+      border-radius: 50%;
+      background-color: #e5e5e5;
+      background-position: center;
+      background-size: cover;
+    }
+    .company-info{
+      width: calc(100% - 103px);
+      display: inline-block;
+      padding-left: 17px;
+      font-size:14px;
+      color:rgba(0,0,0,1);
+      line-height:20px;
+      .title{
+        font-size:20px;
+        font-weight:600;
+        color:rgba(0,0,0,1);
+        line-height:25px;
+        padding-bottom: 10px;
+      }
+      .area{
+        font-size:14px;
+        color:rgba(0,0,0,0.5);
+        line-height:25px;
+        padding-bottom: 8px;
+      }
+      .summary{
+        font-size:16px;
+        color:rgba(0,0,0,0.8);
+        line-height:25px;
+        padding-bottom: 20px;
+      }
+    }
+  }
 }
 </style>
