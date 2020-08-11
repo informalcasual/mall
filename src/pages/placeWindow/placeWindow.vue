@@ -81,11 +81,15 @@ export default {
 .news-cont{
   margin-top: 31px;
   display: flex;
+  align-items: flex-start;
   .news-tip{
     margin-right: 16px;
     padding: 11px 8px;
     width: 189px;
     background-color: #fff;
+    max-height: 512px;
+    overflow: hidden;
+    overflow-y: scroll;
     .tip{
       padding: 13px 21px 9px;
       .title{
@@ -106,6 +110,22 @@ export default {
       border-radius:8px;
     }
   }
+  /*滚动条样式*/
+  .news-tip::-webkit-scrollbar {/*滚动条整体样式*/
+      width: 0px;     /*高宽分别对应横竖滚动条的尺寸*/
+      height: 0px;
+  }
+  .news-tip::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+      border-radius: 5px;
+      -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+      background: rgba(0,0,0,0.2);
+  }
+  .news-tip::-webkit-scrollbar-track {/*滚动条里面轨道*/
+      -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+      border-radius: 0;
+      background: rgba(0,0,0,0.1);
+  }
+ 
   .cont{
     flex-grow: 1;
     width: 50%;

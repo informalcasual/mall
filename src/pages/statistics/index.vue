@@ -18,6 +18,7 @@
         </div>
       </div>
       <div class="cont">
+      
         <div class="cont-box1"  v-if="index == 3 || index == 2" >
          <div class="file-tit" v-for="(item, i) in news" :key="i">
           <router-link  :to="item.url"  target="_blank" >
@@ -25,16 +26,26 @@
           </router-link>
          </div>
         </div>
-        <div class="cont-box flex" v-if="index == 1 || index == 0" v-for="(item, i) in news" :key="i">
-          <div class="avatar" :style="{'background-image': `url(${item.url})`}"></div>
-          <div class="company-info">
-            <div class="title ell">{{item.name}}</div>
-            <div class="area">所在区域：{{item.location}}</div>
-            <div class="summary">{{item.desc}}</div>
+        <div class="ab-box" v-if="index == 1 || index == 0" v-for="(item, i) in news" :key="i">
+          <div class="cont-box flex"
+           :class="{'act-box': act_index === i}"
+          >
+            <div class="avatar" :style="{'background-image': `url(${item.url})`}"></div>
+            <div class="company-info">
+              <div class="title ell">{{item.name}}</div>
+              <div class="area">所在区域：{{item.location}}</div>
+              <div class="summary">{{item.desc}}</div>
+              <div class="more pointer" @click.stop="changeIndex(i)" v-if="act_index !== i">查看更多</div>
+              <div class="less pointer" @click.stop="changeIndex(-1)" v-if="act_index === i">收起内容</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <!-- <div class="detail-box">
+      <div class="close"></div>
+      <div class="more-detail" v-html="detail"></div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -57,10 +68,12 @@ export default {
       id: 4,
     }],
     news:[],
+    act_index: -1
   }),
   methods: {
     async choseId(index){
       this.index = index
+      this.act_index = -1
       let res = await this.$apiFactory.getpageModel().news(this.newsList[index].id)
       if(res.status == 200) {
         res.data.forEach((ele)=>{
@@ -68,6 +81,9 @@ export default {
         })
         this.news = res.data
       }
+    },
+    changeIndex(index) {
+      this.act_index = index
     }
   },
   created(){
@@ -134,14 +150,27 @@ export default {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    .cont-box{
-      width: 348px;
-      height: 164px;
+    .ab-box{
+      width: 375px;
+      height: 221px;
       flex-grow: 0;
+      margin-bottom: 20px;
+      .act-box{
+        z-index: 10;
+        box-shadow: 2px 3px 8px 1px #ddd;
+        .company-info{
+          .summary{
+            display: block;
+          }
+        }
+      }
+    }
+    .cont-box{
       padding: 31px 20px 26px 17px;
       background-color: #fff;
       align-items: self-start;
-      margin-bottom: 10px;
+      position: relative;
+      min-height: calc(100% - 57px);
       .avatar{
         flex-grow: 0;
         width:66px;
@@ -149,6 +178,8 @@ export default {
         margin-top: 5px;
         border-radius: 50%;
         background-color: #e5e5e5;
+        background-position: center;
+        background-size: cover;
       }
       .company-info{
         width: calc(100% - 83px);
@@ -168,8 +199,23 @@ export default {
           overflow: hidden;
           text-overflow: ellipsis;
           display: -webkit-box;
-          -webkit-line-clamp: 5;
+          -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
+        }
+        .more {
+          position: absolute;
+          right: 31px;
+          bottom: 26px;
+          font-size:14px;
+          color:rgba(146,146,146,1);
+          line-height:20px;
+        }
+        .less{
+          font-size:14px;
+          color:rgba(146,146,146,1);
+          line-height:20px;
+          padding: 10px 0;
+          text-align: right;
         }
       }
     }
@@ -209,5 +255,8 @@ export default {
     }
   }
 
+}
+.spread{
+  overflow: initial;
 }
 </style>
