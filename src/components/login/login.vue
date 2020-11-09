@@ -7,13 +7,6 @@
     >
       <transition name="fade_login">
         <div class="signin" v-if="show" @click.stop>
-          <div 
-          class="slide" 
-          :style="{'backgroundImage': `url(${require('./img/act_login.png')})`}"
-          >
-            <a href="https://v.paixin.com/newMedia/mediaMeal" target="_blank"></a>
-            <!-- <Slide :slideSetting="bannerSlideSetting" :banners="banners"></Slide> -->
-          </div>
           <el-form ref="form" :model="form" :rules="rules">
             <div class="types">
               <div
@@ -41,7 +34,7 @@
                     alt=""
                     width="20"
                   >
-                  <span>{{item.name}}</span>
+                  <span>{{ifEn ? item.e_name : item.name}}</span>
                 </div>
               </div>
             </div>
@@ -52,6 +45,7 @@
                 @get-code="handleClickOnGetCode"
                 @submit-form="handleSubmitForm"
                 @changetype="changetype(0)"
+                :ifEn="ifEn"
               ></CodeType>
               <PwdType
                 v-else
@@ -59,6 +53,7 @@
                 @get-code="handleClickOnGetCode"
                 @submit-form="handleSubmitForm"
                 @forgot-pwd="headToForgot"
+                :ifEn="ifEn"
                 @changetype="changetype(0)"
               ></PwdType>
               <el-form-item>
@@ -66,29 +61,29 @@
                   type="button"
                   class="button-submit pointer"
                   @click="handleSubmitForm"
-                >立即登录</button>
+                >{{ifEn ? 'sigin in' : '立即登录'}}</button>
               </el-form-item>
               <!-- 注册 -->
               <div class="footer">
-                <span class="changetype" @click="changemethod()" v-if="Ptype == 'password'">手机验证码登录</span>
-                <span class="changetype" @click="changemethod()" v-else>账号密码登录</span>
+                <span class="changetype" @click="changemethod()" v-if="Ptype == 'password'">{{ifEn ? 'Mobile phone verification code login' : '手机验证码登录'}}</span>
+                <span class="changetype" @click="changemethod()" v-else>{{ifEn ? 'Account password login' : '账号密码登录'}}</span>
                 <span class="register">
-                  还没有账号?
-                  <a class="pointer" @click="headToSignup">立即注册</a>
+                  {{ifEn ? "I don't have an account yet" : '还没有账号'}}?
+                  <a class="pointer" @click="headToSignup">{{ifEn ? 'Sign Up' : '立即注册'}}</a>
                 </span>
               </div>
             </template>
             <template v-else>
               <QRcode @ifshow="hideDialog('success')"/>
               <p class="login-tip">
-                使用微信扫码关注公众号「拍信创意」即可
-                <span v-if="!ifCode">登录</span>
-                <span v-else>一键注册</span>
+                {{ifEn ? 'Use WeChat scan code to pay attention to the official account "creative idea"' : '使用微信扫码关注公众号「拍信创意」即可'}}
+                <span v-if="!ifCode">{{ifEn ? 'sigin in' : '登录'}}</span>
+                <span v-else>{{ifEn ? 'sigin up' : '一键注册'}}</span>
               </p>
               <div class="footer">
                 <span class="register" style="text-align: center;float: none;">
-                  还没有账号?
-                  <a class="pointer" @click="headToSignup">立即注册</a>
+                  {{ifEn ? "don't have an account yet" : '还没有账号'}}?
+                  <a class="pointer" @click="headToSignup">{{ifEn ? 'sigin up' : '立即注册'}}</a>
                 </span>
               </div>
             </template>
@@ -145,14 +140,16 @@ export default {
         // 登录模式
         // types: ['验证码登录', '密码登录'],
         types: [
-          [{ name: '微信扫码登录' }],
+          [{ name: '微信扫码登录' , e_name: 'VX code scanning login'}],
           [
             {
               name: '账号密码登录',
+              e_name: 'Password login',
               status: 'password'
             },
             {
               name: '验证码登录',
+              e_name: 'verification code login',
               status: 'code'
             }
           ]
@@ -458,7 +455,9 @@ export default {
   },
 
   computed: {
- 
+    ...mapState({
+      ifEn: state => state.user.ifEn
+    })
   }
 }
 </script>
@@ -484,7 +483,7 @@ export default {
   background: rgba(0, 0, 0, 0.6);
   .signin {
     background-color: #fff;
-    width: 1000px;
+    width: 500px;
     height: 600px;
     display: flex;
     border-radius: 10px;
@@ -505,19 +504,6 @@ export default {
     }
     @media screen and (max-width: 1400px) {
       font-size: 14px;
-    }
-    .slide {
-      width: 500px;
-      height: 600px;
-      display: inline-block;
-      background-position: 50% 0%;
-      background-size: cover;
-      background-repeat: no-repeat;
-      a{
-        display: block;
-        width: 100%;
-        height: 100%;
-      }
     }
     .el-form {
       width: 500px;
@@ -616,7 +602,7 @@ export default {
             border: none;
             padding: 0;
             padding-left: 34px;
-            padding-right: 60px;
+            padding-right: 100px;
             background-color: rgba(0, 0, 0, 0);
             text-indent: 0;
             color: #000;

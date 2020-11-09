@@ -2,22 +2,41 @@
   <div class="bottom">
     <div class="box bottom-box">
       <div class="info">
-        <div class="tit">联系我们</div>
+        <div class="tit">{{ifEn ? 'CONTACT US' : '联系我们'}}</div>
         <div class="info-box flex">
-          <div class="tip"><img :src="require('./img/phone.svg')" width="52" alt=""><p class="tip-tit">电话<br/>0510-89329849</p></div>
-          <div class="tip"><img :src="require('./img/email.svg')" width="52" alt=""><p class="tip-tit">邮箱<br/>8368457368@ipark.com</p></div>
-          <div class="tip"><img :src="require('./img/location.svg')" width="52" alt=""><p class="tip-tit">地址<br/>江苏省无锡市滨湖区XXXXXXXXX</p></div>
+          <div class="tip"><img :src="require('./img/phone.svg')" width="52" alt=""><p class="tip-tit">{{ifEn ? 'PHONE' : '电话'}}<br/>0510-81823031</p></div>
+          <div class="tip"><img :src="require('./img/email.svg')" width="52" alt=""><p class="tip-tit">{{ifEn ? 'EMAIL' : '邮箱'}}<br/>wxgjwhckjd@163.com</p></div>
+          <div class="tip"><img :src="require('./img/location.svg')" width="52" alt=""><p class="tip-tit">{{ifEn ? 'ADDRESS' : '地址'}}<br/>
+          {{ifEn ? 'Building 5, Civic Center, No. 1 Xinjingui Road' : '新金匮路1号市民中心5号楼'}}
+          </p></div>
         </div>
+      </div>
+      <div class="img">
+        <div class="code-box">
+          <img :src="require('./img/logo.png')" style="padding-bottom: 3px;" width="125" alt="">
+        </div>
+        <p>{{ifEn ? 'Xiyun Culture' : '锡云文化'}}</p>
       </div>
       <div class="img">
         <div class="code-box">
           <img :src="require('@/assets/img/code.jpg')" width="121" alt="">
         </div>
-        <p>官方公众号</p>
+        <p>{{ifEn ? 'Official account' : '官方公众号'}}</p>
       </div>
     </div>
   </div>
 </template>
+<script>
+import { mapState } from 'vuex'
+export default {
+  computed: {
+    ...mapState({
+      ifEn: state => state.user.ifEn
+    }),
+  },
+}
+</script>
+
 <style lang="scss" scoped>
 .bottom{
   padding: 36px 0 55px;

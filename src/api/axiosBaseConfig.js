@@ -68,7 +68,7 @@ export const axiosBase = (url, data = {}, params = {}, method = 'POST') => {
   let config = {
     baseURL: baseURL,
     method: method,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Is_En':  localStorage.getItem('ifEn') && JSON.parse(localStorage.getItem('ifEn')) ? true : false},
     withCredentials: true,
     responseType: 'text'
   }
@@ -82,7 +82,7 @@ export const axiosGet = (url, data = {}, params = {}, method = 'GET') => {
   let config = {
     baseURL: baseURL,
     method: method,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Is_En': localStorage.getItem('ifEn') && JSON.parse(localStorage.getItem('ifEn')) ? true : false},
     withCredentials: true,
     responseType: 'text'
   }
@@ -98,7 +98,7 @@ export const axiosPut = (url, data = {}, params = {}, method = 'PUT') => {
   let config = {
     baseURL: baseURL,
     method: method,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Is_En': localStorage.getItem('ifEn') && JSON.parse(localStorage.getItem('ifEn')) ? true : false},
     withCredentials: true,
     responseType: 'text'
   }
@@ -115,7 +115,7 @@ export const axiosDelete = (url, data = {}, params = {}, method = 'DELETE') => {
   let config = {
     baseURL: baseURL,
     method: method,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Is_En': localStorage.getItem('ifEn') && JSON.parse(localStorage.getItem('ifEn')) ? true : false},
     withCredentials: true,
     responseType: 'text'
   }

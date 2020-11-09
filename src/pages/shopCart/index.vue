@@ -1,13 +1,13 @@
 <template>
   <div class="shop">
   <div class="min-box">
-    <div class="title">购物车</div>
+    <div class="title">{{ifEn ? 'shopping cart' : '购物车'}}</div>
     <div class="shop-cart">
       <div class="head">
-        <div class="title1">商品详情</div>
-        <div class="title2">商品单价</div>
-        <div class="title2">数量</div>
-        <div class="title2">小计</div>
+        <div class="title1">{{ifEn ? 'Commodity details' : '商品详情'}}</div>
+        <div class="title2">{{ifEn ? 'item pricing' : '商品单价'}}</div>
+        <div class="title2">{{ifEn ? 'number' : '数量'}}</div>
+        <div class="title2">{{ifEn ? 'Subtotal' : '小计'}}</div>
       </div>
       <div class="carts-empty" v-if="carts.length <= 0" >
         <p> 
@@ -19,7 +19,7 @@
           <div class="select pointer" @click.stop="select(index)" :class="{'selected': selectedList.includes(index)}"></div>
           <router-link  :to="{path: `/product/${item.productSku.productId}`}"  target="_blank" 
           class="pro-img"
-          :style="{'background-image': `url(${item.productSku.pic})`}"
+          :style="{'background-image': `url(${ item.productSku ? item.productSku.pic : './img/pic.svg'})`}"
           ></router-link>
           <div class="pro-info">
             <div class="name">{{item.name}}</div>
@@ -42,15 +42,15 @@
       <div class="selected-all">
         <div class="select-all pointer" @click.stop="selectAll()">
           <div class="select" :class="{'selected': selectedAll}"></div>
-          全选
+          {{ifEn ? 'selected all' : '全选'}}
         </div>
-        <div class="cancle pointer" @click.stop="cancle()">删除选种商品</div>
+        <div class="cancle pointer" @click.stop="cancle()">{{ifEn ? 'Delete selected product' : '删除选种商品'}}</div>
       </div>
       <div class="bill">
-        <div class="bill-num">已选<span>{{selectedList.length}}</span>个商品</div>
-        <div class="bill-total"><span>总价：</span>
+        <div class="bill-num">{{ifEn ? 'selected' : '已选'}}<span>{{selectedList.length}}</span>{{ifEn ? 'products' : '个商品'}}</div>
+        <div class="bill-total"><span>{{ifEn ? 'total' : '总价'}}：</span>
           <span class="total">￥{{total.toFixed(2)}}</span></div>
-        <div class="carts pointer main-brown" @click.stop="toBuy()">立即下单</div>
+        <div class="carts pointer main-brown" @click.stop="toBuy()">{{ifEn ? 'buy now' : '立即下单'}}</div>
       </div>
     </div>
   </div>
@@ -168,6 +168,7 @@ export default {
   },
   computed: {
     ...mapState({
+      ifEn: state => state.user.ifEn,
       scroll: state => state.scrolltop.scroll_top_score
     }),
   },

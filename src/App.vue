@@ -10,16 +10,18 @@
     <signup />
     <fullPhone />
     <advisory />
+    <!-- 免责声明 -->
+    <statement />
     <!-- <backTop v-if='scroll > 1000'/> -->
-      <bottom/>
+    <bottom/>
   </div>
 </template>
 
 <script>
+import statement from '@/components/state/state'
 import bottom from '@/components/bottom/bottom'
 import toast from '@/components/toast/index'
 import navBar from '@/components/bar/navigation.vue'
-import SearchConfirm from '@/components/search/confirm.vue'
 import login from '@/components/login/login.vue'
 import signup from '@/components/login/signup'
 import fullPhone from '@/components/bindPhone/bindPhone'
@@ -41,42 +43,20 @@ export default {
     }
   },
   created() {
-    this.statistics()
+   
   },
   methods: {
-    // 获取推广统计（只限未注册）
-    async statistics() {
-      let qs = queryString.parse(window.location.href.split('?')[1]) 
-      if (qs.utm_source) {
-        let date = new Date().toISOString()
-        let newDate = date.replace('Z', '+0000')
-        let popularize = {
-          createdAt: newDate,
-          source: typeof qs.utm_source === 'object' ? qs.utm_source[0] : qs.utm_source,
-          channel: typeof qs.utm_campaign === 'object' ? qs.utm_campaign[0] : qs.utm_campaign,
-          url: window.location.href.split('?')[0],
-          unit:typeof qs.utm_unit === 'object' ? qs.utm_unit[0] : qs.utm_unit,
-        }
-        if (window.localStorage.spreads) {
-          let spreads = JSON.parse(window.localStorage.spreads)
-          spreads.push(popularize)
-          window.localStorage.spreads = JSON.stringify(spreads)
-        } else {
-          window.localStorage.spreads = JSON.stringify([popularize])
-        }
-        let res = await this.$apiFactory.getUserApi().statisticsIP(popularize)
-      }
-    },
+
   },
   components: {
     navBar,
     bottom,
     toast,
-    SearchConfirm,
     login,
     signup,
     fullPhone,
-    advisory
+    advisory,
+    statement
   },
   computed: {
     ...mapState({

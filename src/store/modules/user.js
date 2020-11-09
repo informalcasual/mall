@@ -14,7 +14,8 @@ const state = {
   loginUser: userDataStore,
   loginStatus: userDataStore.id ? true : false,
   dialogState: false,
-  searchDialog: ''
+  searchDialog: '',
+  ifEn: localStorage.getItem('ifEn') && JSON.parse(localStorage.getItem('ifEn')) ? true : false
 }
 
 // actions
@@ -27,6 +28,9 @@ const actions = {
   },
   updateAvatar({ commit }, avatar) {
     commit('UPDATE_AVATAR', avatar)
+  },
+  changeEn ({ commit }) {
+    commit('changeCommit')
   }
 }
 
@@ -74,6 +78,11 @@ const mutations = {
 
   setSearchDialog: (state, info) => {
     state.searchDialog = info
+  },
+
+  changeCommit: (state) => {
+    state.ifEn = !state.ifEn
+    localStorage.setItem('ifEn', state.ifEn)
   }
 }
 

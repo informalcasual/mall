@@ -1,13 +1,14 @@
 <template>
   <div class="userNav pointer">
     <div class="navBox">
-      <div class="nav" @click.stop="toOrders()">订单管理</div>
-      <div class="nav" @click.stop="loginOut()">退出</div>
+      <div class="nav" @click.stop="toOrders()">{{ifEn ? 'ORDERS' : '订单管理'}}</div>
+      <div class="nav" @click.stop="loginOut()">{{ifEn ? 'EXIT' : '退出'}}</div>
     </div>
  
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
   methods:{
     toOrders(){
@@ -17,6 +18,11 @@ export default {
       this.$store.dispatch('signout')
       this.$router.push('/')
     }
+  },
+  computed: {
+    ...mapState({
+      ifEn: state => state.user.ifEn
+    })
   }
 }
 </script>

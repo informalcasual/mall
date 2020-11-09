@@ -12,27 +12,20 @@
           v-if="show"
           class="register flex flex-wrap justify-center relative mx-auto"
         >
-          <div 
-          class="slide" 
-          :style="{'backgroundImage': `url(${require('./img/act_regest.png')})`}"
-          >
-            <!-- <a href="https://v.paixin.com/newMedia/mediaMeal" target="_blank"></a> -->
-            <!-- <Slide :slideSetting="bannerSlideSetting" :banners="banners"></Slide> -->
-          </div>
           <div class="register_wrap">
             <div class="title" v-if="ifCode">
               <img :src="require('./img/VX.svg')" alt width="20" />
-              微信扫码注册
+              {{ifEn ? 'Wechat code scanning registration' : '微信扫码注册'}}
             </div>
-            <div class="title" v-else>注册拍信</div>
+            <div class="title" v-else>{{ifEn ? 'sigin up' : '注册拍信'}}</div>
             <div class="register-code" v-if="ifCode">
               <QRcode @ifshow="hide('success')"></QRcode>
               <p class="login-tip">
-                使用微信扫码关注公众号「拍信创意」即可
-                <span v-if="!ifCode">登录</span>
-                <span v-else>一键注册</span>
+                {{ifEn ? 'Use WeChat scan code to pay attention to the official account "creative idea"' : '使用微信扫码关注公众号「拍信创意」即可'}}
+                <span v-if="!ifCode">{{ifEn ? 'Sigin in' : '登录'}}</span>
+                <span v-else>{{ifEn ? 'Sigin up' : '一键注册'}}</span>
               </p>
-              <div class="Pregister" @click="changeToPhone()">手机注册</div>
+              <div class="Pregister" @click="changeToPhone()">{{ifEn ? 'Mobile phone registration' : '手机注册'}}</div>
             </div>
             <el-form
               v-else
@@ -61,9 +54,9 @@
                     :class="cursor"
                     v-if="!isReset"
                     @click="getCode"
-                  >获取验证码</span>
+                  >{{ifEn ? 'get code' : '获取验证码'}}</span>
                   <!-- 60s后重发 -->
-                  <span class="register__resetCode absolute not-allowed" v-else>{{ resetTime }}秒后重发</span>
+                  <span class="register__resetCode absolute not-allowed" v-else>{{ resetTime }}s</span>
                 </div>
               </el-form-item>
               <!-- 密码 -->
@@ -77,9 +70,9 @@
               </el-form-item>
               <!-- 文本 -->
               <div class="agreement">
-                <span>点击确定代表您已同意</span>
-                <a target="_blank" href="/static/agreement2.pdf">《网站服务条款》</a>、
-                <a target="_blank" href="/static/privacy.pdf">《网站隐私政策》</a>
+                <span>{{ifEn ? 'i agreed' : '点击确定代表您已同意'}}</span>
+                <a target="_blank" href="/static/agreement2.pdf">《{{ifEn ? 'Website terms of service' : '网站服务条款'}}》</a>、
+                <a target="_blank" href="/static/privacy.pdf">《{{ifEn ? 'Website privacy policy' : '网站隐私政策'}}》</a>
               </div>
               <!-- 确定 -->
               <el-form-item class="col-12">
@@ -87,16 +80,16 @@
                   class="col-12"
                   @click="register('registerForm')"
                   id="register_button"
-                >立即注册</el-button>
+                >{{ifEn ? 'sigin up' : '立即注册'}}</el-button>
                 <el-button class="col-12" @click="changeToCode()" id="QRcode_button">
                   <img :src="require('./img/icons/WX.svg')" alt width="16" />
-                  微信扫码一键注册
+                  {{ifEn ? 'Wechat code scanning one click registration' : '微信扫码一键注册'}}
                 </el-button>
               </el-form-item>
             </el-form>
             <div class="toLogin" @click="toLogin()">
-              已有账号？
-              <span>立即登录</span>
+              {{ifEn ? 'Existing account number' : '已有账号'}}？
+              <span>{{ifEn ? 'Sigin in' : '立即登录'}}</span>
             </div>
           </div>
         </div>
@@ -321,6 +314,7 @@ export default {
     },
     ...mapState({
       difference: state => state.login.difference,
+      ifEn: state => state.user.ifEn,
       specialReginster: state => state.login.specialReginster
     })
   },
@@ -408,19 +402,6 @@ export default {
   transform: translate3d(0, -10%, 0) !important;
 }
 
-.slide {
-  width: 500px;
-  height: 600px;
-  background-position: 50% 0%;
-  background-size: cover;
-  background-repeat: no-repeat;
-  a{
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-}
-
 .absolute {
   position: absolute;
 }
@@ -453,7 +434,7 @@ export default {
 }
 
 .register {
-  min-width: 1000px;
+  min-width: 500px;
   display: flex;
   background: #fff;
   border-radius: 10px;

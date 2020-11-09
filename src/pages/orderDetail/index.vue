@@ -1,19 +1,19 @@
 <template>
   <div class="box spread">
-    <div class="page-title">订单详情<div class="back pointer" @click.stop="goBack()">返回上一页</div></div>
+    <div class="page-title">{{ifEn ? 'Order details' : '订单详情'}}<div class="back pointer" @click.stop="goBack()">{{ifEn ? 'Back to previous page' : '返回上一页'}}</div></div>
     <div class="detail">
       <div class="top-bar">
-        <div class="status">订单状态：<span>{{content.status|status}}</span><span v-if="refusedReason">({{refusedReason}})</span></div>
+        <div class="status">{{ifEn ? 'Order status' : '订单状态'}}：<span>{{content.status|status}}</span><span v-if="refusedReason">({{refusedReason}})</span></div>
         <div class="btns">
           <div class="btn pointer main-brown" v-if="!ifrefund && content.status !== 2 && content.status !== 5 && content.status !== 7" @click.stop="openrefund(content.status, true)">
             {{content.status|btnName}}
           </div>
-          <div class="btn pointer grey-btn" v-if="!ifrefund && content.status == 1" @click.stop="cancleOrder()">取消订单</div>
+          <div class="btn pointer grey-btn" v-if="!ifrefund && content.status == 1" @click.stop="cancleOrder()">{{ifEn ? 'cancle' : '取消订单'}}</div>
           <!-- <div class="btn pointer grey-btn" @click.stop="showsale()" v-if="content.status == 5 || content.status == 7 || content.status == 4">售后服务</div> -->
         </div>
       </div>
       <div class="detail-order">
-        <div class="order-number">订单编号：{{content.sn}}</div>
+        <div class="order-number">{{ifEn ? 'Order Id' : '订单编号'}}：{{content.sn}}</div>
         <div class="order-item" v-for="(item, index) in content.orderItemList" :key="index">
           <router-link class="link" :to="'/product/'+item.productId"  target="_blank">
             <div class="img" :style="{'background-image': `url(${item.cover})`}"></div>
@@ -29,15 +29,15 @@
       </div>
       <div class="user-info">
         <div class="user">
-          <div class="info-tit">收货人信息</div>
-          <div class="info-detail">姓名：{{receiver}}</div>
-          <div class="info-detail">联系方式：{{phone}}</div>
-          <div class="info-detail">收货地址：{{address}}</div>
+          <div class="info-tit">{{ifEn ? 'Consignee Information' : '收货人信息'}}</div>
+          <div class="info-detail">{{ifEn ? 'name' : '姓名'}}：{{receiver}}</div>
+          <div class="info-detail">{{ifEn ? 'contact information' : '联系方式'}}：{{phone}}</div>
+          <div class="info-detail">{{ifEn ? 'Shipping address' : '收货地址'}}：{{address}}</div>
         </div>
         <div class="user" v-if="paidAt">
-          <div class="info-tit">付款信息：</div>
-          <div class="info-detail">支付方式：{{outTradeNo|TradeNo}}支付</div>
-          <div class="info-detail">付款时间：{{paidAt}}</div>
+          <div class="info-tit">{{ifEn ? 'Payment information' : '付款信息'}}：</div>
+          <div class="info-detail">{{ifEn ? 'Payment method' : '支付方式'}}：{{outTradeNo|TradeNo}}{{ifEn ? 'Payment' : '支付'}}</div>
+          <div class="info-detail">{{ifEn ? 'Payment time' : '付款时间'}}：{{paidAt}}</div>
         </div>
       </div>
     </div>
@@ -52,6 +52,7 @@
 import afterSale from '@/components/successTip/afterSale'
 import refund from './components/refund'
 import pay from '@/pages/pay/component/pay'
+import { mapState } from 'vuex'
 var that
 export default {
   data: ()=> ({
@@ -178,30 +179,33 @@ export default {
     },
     status(m){
       if(that && that.ifrefund) {
-        return m == 1 ? '处理中' :
-           m == 2 ? '拒绝退款' :
-           m == 3 ? '取消退款' :
-           m == 4 ? '卖家同意退货' : '退款成功'
+        return m == 1 ? that.ifEn ? 'processing' : '处理中' :
+               m == 2 ? that.ifEn ? 'no refund' : '拒绝退款' :
+               m == 3 ? that.ifEn ? 'Cancel refund' : '取消退款' :
+               m == 4 ? that.ifEn ? 'seller agrees to return' : '卖家同意退货' : 
+                        that.ifEn ? 'refund succeeded ' : '退款成功'
       }
-      return m == 1 ? '待付款' :
-             m == 2 ? '待发货' :
-             m == 3 ? '已关闭' :
-             m == 4 ? '待收货' : 
-             m == 6 ? '待退款' : '已完成'
+      return m == 1 ? that.ifEn ? 'To be paid' : '待付款' :
+             m == 2 ? that.ifEn ? 'To be delivered' : '待发货' :
+             m == 3 ? that.ifEn ? 'Closed' : '已关闭' :
+             m == 4 ? that.ifEn ? 'to be received' : '待收货' : 
+             m == 6 ? that.ifEn ? 'To be refunded' : '待退款' : 
+                      that.ifEn ? 'Completed' : '已完成'
     },
     btnName(m) {
-      return m == 1 ? '订单支付' :
-             m == 3 ? '删除订单' : '确认收货' 
+      return m == 1 ? that.ifEn ? 'Order payment' : '订单支付' :
+             m == 3 ? that.ifEn ? 'Delete order' : '删除订单' : 
+                      that.ifEn ? 'Confirm receipt' : '确认收货' 
     },
     itemBtn(m) {
       //  1待付款 2待发货 3已关闭 4待收货 5已完成 6退款相关 7结束退款（无论成功或拒绝）
       if(m==2||m==4) {
-        return '退款'
+        return that.ifEn ? 'refund' : '退款'
       } else if(m==6){
-        return '退款中'
+        return that.ifEn ? 'Refund in progress' : '退款中'
       } 
       if(m == 5){
-        return '申请售后'
+        return that.ifEn ? 'Apply for after sale' : '申请售后'
       }
     }
   },
@@ -212,6 +216,11 @@ export default {
   },
   created(){
     this.getInfo()
+  },
+  computed: {
+    ...mapState({
+      ifEn: state => state.user.ifEn
+    }),
   },
   mounted(){
     that = this

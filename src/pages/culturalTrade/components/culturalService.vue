@@ -3,20 +3,23 @@
     <div class="service-item" v-for="(item, index) in service" :key="index">
       <router-link :to="'/serviceDetail/'+item.id" target="_self">
         <div class="show" :style="{'background-image': `url(${item.cover})`}"> <div class="item-title">{{item.name}}</div></div>
-        <div class="advisory pointer">立即了解</div>
+        <div class="advisory pointer">{{ifEn ? 'Get It' : '立即了解'}}</div>
       </router-link>
     </div>
+    <loading :List="service"/>
     <pagintaion  
     :page="page"
     :total="pages"
     @paginationToPage="toPage"
-    style="margin: 0 auto;"
+    style="margin: 0 auto"
     v-if="pages > 1"
     />
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import pagintaion from '@/components/pagination/index'
+import loading from '@/components/transitionTip/index'
 export default {
   data: ()=>({
     service: [],
@@ -25,18 +28,23 @@ export default {
     loading: false,
     categoryId: 0,
   }),
+  computed: {
+    ...mapState({
+      ifEn: state => state.user.ifEn
+    }),
+  },
   methods: {
     // 全部
-    async getProducts() {
-      let res = await this.$apiFactory.getTrademarkApi().getService({
-        page: this.page,
-        size: 30,
-      })
-      if(res.status == 200) {
-        this.service = res.data.content
-        this.pages = res.data.totalPages
-      }
-    },
+    // async getProducts() {
+    //   let res = await this.$apiFactory.getTrademarkApi().getService({
+    //     page: this.page,
+    //     size: 30,
+    //   })
+    //   if(res.status == 200) {
+    //     this.service = res.data.content
+    //     this.pages = res.data.totalPages
+    //   }
+    // },
     // 分类
     async getSearchs(){
       let res = await this.$apiFactory.getTrademarkApi().getServiceType({
@@ -56,12 +64,7 @@ export default {
     },
     // 区别是否有分类
     transfer() {
-
-      if(this.categoryId){
-        this.getSearchs()
-      } else {
-        this.getProducts()
-      }
+      this.getSearchs()
     }
   },
   created(){
@@ -70,7 +73,8 @@ export default {
     this.transfer()
   },
   components: {
-    pagintaion
+    pagintaion,
+    loading
   },
   watch:{
     $route: {
@@ -109,12 +113,19 @@ export default {
       }
       .item-title{
         position: absolute;
-        bottom: 15px;
-        left: 21px;
+        bottom: 0px;
+        left: 0px;
         font-size:16px;
         font-weight:400;
+        padding: 0 21px;
+        width: calc(100% - 42px); 
         color:rgba(255,255,255,1);
-        line-height:22px;
+        line-height:37px;
+        background-color: rgba(0,0,0,0.3);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-break: break-all;
       }
     }
     .advisory{

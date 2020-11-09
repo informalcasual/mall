@@ -7,7 +7,7 @@
           <img 
           style="vertical-align: middle;margin-top: -6px;"
           :src="require('@/assets/img/logo.png')" width="30" alt="">
-          无锡文化贸易服务平台</router-link>
+          <span v-if="!ifEn">文化锡云---无锡文化贸易服务平台</span><span v-if="ifEn">Cultural Xiyun---Wuxi Cultural Trade Service Platform</span></router-link>
         </span>
       </div>
       <div class="itemNav">
@@ -17,7 +17,7 @@
         :key="index"
         @click.stop="toLiink(item.link)"
         >
-        {{item.title}}
+        {{ifEn ? item.en_title : item.title}}
         </div>
         <div 
           class="shopCart pointer"
@@ -36,8 +36,9 @@
           <userNav v-show="showNav" />
         </div>
         <div class="userItem" v-else>        
-           <div class="register" ><span @click.stop="register">注册</span>/<span  @click.stop="login">登录</span></div>
+           <div class="register" ><span @click.stop="register">{{ifEn ? 'register' : '注册'}}</span>/<span  @click.stop="login">{{ifEn ? 'login' : '登录'}}</span></div>
         </div>
+        <div class="lange pointer" @click.stop="changeLan()"><span v-if="ifEn">English</span><span v-else>中文</span></div>
       </div>
     </div>
   </div>
@@ -49,25 +50,33 @@ export default {
   data: () => ({
     itemList: [{
      link: '/',
+     en_title: 'HOME',
      title: '首页', 
     },{
      link: '/news',
+     en_title: 'LATEST NEWS',
      title: '最新动态', 
     },{
-     link: '/culturalTrade/product',
+     link: '/culturaltrade/product',
+     en_title: 'CULTURAL TRADE',
      title: '文化贸易', 
     },{
      link: '/placeWindow',
+     en_title: 'WINDOW OF PLACE',
      title: '地方之窗', 
     },{
      link: '/statistics',
+     en_title: 'STATISTICS AND INQUIRE',
      title: '统计查询', 
     }],
     showNav: false,
   }),
   methods: {
     toLiink(url){
-       this.$router.push(url)
+      if(this.$route.path.includes('culturaltrade') && url === '/culturaltrade/product'){
+        return
+      }
+      this.$router.push(url)
     },
     toCart(){
       if(!this.loginUser.id){
@@ -82,11 +91,16 @@ export default {
     login() {
       this.$bus.emit('showLogin', true)
     },
+    changeLan() {
+      this.$store.dispatch('changeEn')
+      this.$router.go(0)
+    }
   },
   computed: {
     ...mapState({
       loginUser: state => state.user.loginUser,
       loginStatus: state => state.user.loginStatus,
+      ifEn: state => state.user.ifEn
     }),
   },
   components:{
@@ -108,6 +122,7 @@ export default {
   height: 100%;
   display: flex;
   align-items: center;
+  // width: 1500px;
 }
 .logo{
   flex-grow: 1;
@@ -159,6 +174,11 @@ export default {
   width: 34px;
   height: 34px;
   border-radius: 50%;
+}
+.lange {
+  margin-left: 15px;
+  font-size: 14px;
+  color: #702a2a;
 }
 </style>
 

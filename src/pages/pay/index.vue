@@ -1,15 +1,15 @@
 <template>
   <div class="spread">
     <div class="min-box mb92">
-      <div class="page-title">订单结算</div>
+      <div class="page-title">{{ifEn ? 'Order Settlement' : '订单结算'}}</div>
       <div class="pay-box">
         <selfaddress @originAddress="originAddress"  @selectAddress="selectAddress" :addressList="addressList" :ifHave="ifaddress"></selfaddress>
         <div class="pay-detail">
           <div class="head">
-            <div class="title1">商品详情</div>
-            <div class="title2">商品单价</div>
-            <div class="title2">数量</div>
-            <div class="title2">小计</div>
+            <div class="title1">{{ifEn ? 'Commodity Details' : '商品详情'}}</div>
+            <div class="title2">{{ifEn ? 'Item Pricing' : '商品单价'}}</div>
+            <div class="title2">{{ifEn ? 'Number' : '数量'}}</div>
+            <div class="title2">{{ifEn ? 'Subtotal' : '小计'}}</div>
           </div>
           <div class="product" v-for="(item, index) in carts" :key="index">
             <div class="detail">
@@ -33,9 +33,13 @@
     </div>
     <div class="pay-line" :class="{'fixed': totalHeight - scroll < 240}">
       <div class="min-box"> 
-         <div class="product-num">共<span>{{totalCount}}</span>个商品</div>
-         <div class="total">总价：<span>￥{{totalPrice.toFixed(2)}}</span></div>
-         <div class="pay-btn pointer" @click.stop="BuyNow()">立即付款</div>
+         <div class="state">
+           <input id="take-sure" type="checkbox" v-model="ifsure"><label class="pointer" for="take-sure"></label>
+           {{ifEn ? 'I read and agree' : '我已阅读并同意'}}<span class="pointer" @click.stop="openState()">《{{ifEn ? 'Cultural tin cloud —— Platform Disclaimer' : '文化锡云---无锡文化贸易服务平台免责声明'}}》</span>
+         </div>
+         <div class="product-num">{{ifEn ? 'total' : '共'}}<span>{{totalCount}}</span>{{ifEn ? '' : '个商品'}}</div>
+         <div class="total">{{ifEn ? 'price' : '总价'}}：<span>￥{{totalPrice.toFixed(2)}}</span></div>
+         <div class="pay-btn pointer" @click.stop="BuyNow()">{{ifEn ? 'Buy Now' : '立即付款'}}</div>
       </div>
     </div>
     <pay />
@@ -55,6 +59,7 @@ export default {
     totalPrice: 0,
     orderId: null,
     flag: false,
+    ifsure: false,
     totalHeight: document.body.scrollHeight || document.documentElement.scrollHeight,
     windowHeight: document.documentElement.clientHeight || document.body.clientHeight,
   }),
@@ -75,7 +80,6 @@ export default {
         if(res.status == 200) {
           let data = {
             productSku:{
-
             }
           }
           data.name = res.data.product.name
@@ -93,7 +97,6 @@ export default {
         this.totalCount += parseInt(ele.count) 
         this.totalPrice += parseFloat((ele.productSku.price*ele.count))
       });
-
     },
     selectAddress(id){
       this.addressId = id
@@ -121,6 +124,20 @@ export default {
     },
     // 下单
     async BuyNow(){
+      if(!this.ifsure) {
+        return this.$notify({
+          title: '提示',
+          message: '您还没有勾选同意本平台的免责声明',
+          type: 'succes'
+        })
+      }
+      if(this.addressId <= 0) {
+        return this.$notify({
+          title: '提示',
+          message: '请选择收货地址',
+          type: 'warn'
+        })
+      }
       if(this.flag && this.orderId){
         return this.$bus.emit('showPayCode', {
           show: true,
@@ -162,6 +179,9 @@ export default {
           orderId: this.orderId
         })
       }
+    },
+    openState() {
+      this.$bus.emit('statementShow', true)
     }
   },
   created() {
@@ -174,6 +194,7 @@ export default {
   },
   computed: {
     ...mapState({
+      ifEn: state => state.user.ifEn,
       scroll: state => state.scrolltop.scroll_top_score
     }),
   },
@@ -291,12 +312,51 @@ export default {
     height: 100%;;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    // justify-content: flex-end;
+  }
+  .state{
+    flex-grow: 1;
+    font-size:14px;
+    color:rgba(0,0,0,1);
+    line-height:20px;
+    input[type="checkbox"]{
+      display: none;
+    }
+    
+    #take-sure +label{
+      display: inline-block;
+      width:16px;
+      height:16px;
+      background:rgba(255,255,255,1);
+      border-radius:3px;
+      border:1px solid rgba(74,74,74,1);
+      vertical-align: middle;
+      margin-right: 9px;
+      margin-bottom: 1px;
+      position: relative;
+    }
+    #take-sure:checked +label::before{
+      content: ' ';
+      position: absolute;
+      left: 2px;
+      top: 3px;
+      display: block;
+      width: 12px;
+      height: 12px;
+      background-image: url('./img/sure.svg');
+      background-position: center;
+      background-size: 12px;
+      background-repeat: no-repeat;
+    }
+    span{
+      color: #702A2A;
+    }
   }
   .product-num{
     font-size:14px;
     color:rgba(0,0,0,1);
     line-height:20px;
+    flex-grow: 0;
     span{
       font-weight: 500;
       padding: 0 3px;
@@ -305,6 +365,7 @@ export default {
   }
   .total{
     height: 33px;
+    flex-grow: 0;
     span{
       font-size:24px;
       font-weight:600;
@@ -317,6 +378,7 @@ export default {
     line-height:33px;
   }
   .pay-btn{
+    flex-grow: 0;
     width:208px;
     height:50px;
     background:rgba(112,42,42,1);

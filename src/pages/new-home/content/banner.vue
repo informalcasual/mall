@@ -3,7 +3,6 @@
     <div class="banner"  
      :style="[{'background-image': `url(${item.url})`},{'opacity': actIndex == index ? 1 : 0}]"
      v-for="(item, index) in banner"
-
      :key="index"
     ></div>
   </div>

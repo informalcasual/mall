@@ -1,17 +1,17 @@
 <template>
   <div class="order box spread">
-    <div class="page-title">订单管理</div>
+    <div class="page-title">{{ifEn ? 'Order management' : '订单管理'}}</div>
     <div class="order-box">
       <div class="order-top">
         <div class="selection pointer">
-          <div class="tit" @click.stop="getInfo(0)" :class="{'act-tit': _index === 0}">全部订单</div>
-          <div class="tit" @click.stop="getInfo(2)" :class="{'act-tit': _index === 2}">已支付</div>
-          <div class="tit" @click.stop="getInfo(4)" :class="{'act-tit': _index === 4}">待收货</div>
-          <div class="tit" @click.stop="getInfo(5)" :class="{'act-tit': _index === 5}">已完成</div>
-          <div class="tit" @click.stop="getInfo(6)" :class="{'act-tit': _index === 6}">售后订单</div>
+          <div class="tit" @click.stop="getInfo(0)" :class="{'act-tit': _index === 0}">{{ifEn ? 'All orders' : '全部订单'}}</div>
+          <div class="tit" @click.stop="getInfo(2)" :class="{'act-tit': _index === 2}">{{ifEn ? 'Paid' : '已支付'}}</div>
+          <div class="tit" @click.stop="getInfo(4)" :class="{'act-tit': _index === 4}">{{ifEn ? 'to be received' : '待收货'}}</div>
+          <div class="tit" @click.stop="getInfo(5)" :class="{'act-tit': _index === 5}">{{ifEn ? 'Completed' : '已完成'}}</div>
+          <div class="tit" @click.stop="getInfo(6)" :class="{'act-tit': _index === 6}">{{ifEn ? 'After sale order' : '售后订单'}}</div>
         </div>
         <div class="search">
-          <input type="text" @keyup.enter="importkey()" v-model="key" placeholder="请输入您要搜索的商品">
+          <input type="text" @keyup.enter="importkey()" v-model="key" :placeholder="ifEn ? 'Enter the product you want to search for' : '请输入您要搜索的商品'">
           <img :src="require('@/assets/img/search.svg')" 
           class="search-btn pointer" 
           width="14" 
@@ -21,13 +21,13 @@
       </div>
       <div class="order-cont">
         <div class="head cont">
-          <div class="detail">商品详情</div>
-          <div class="address">收货人信息</div>
-          <div class="total">金额</div>
-          <div class="subtotal">小计</div>
+          <div class="detail">{{ifEn ? 'Commodity details' : '商品详情'}}</div>
+          <div class="address">{{ifEn ? 'Consignee information' : '收货人信息'}}</div>
+          <div class="total">{{ifEn ? 'amount of money' : '金额'}}</div>
+          <div class="subtotal">{{ifEn ? 'total' : '小计'}}</div>
         </div>
         <div class="order-item" v-for="(item, index) in lists" :key="index">
-          <div class="order-num">{{item.createdAt}}<span>订单编号：{{item.sn}}</span></div>
+          <div class="order-num">{{item.createdAt}}<span>{{ifEn ? 'order Id' : '订单编号'}}：{{item.sn}}</span></div>
           <div class="cont">
             <div class="detail-box"><div class="detail" v-for="(ele, i) in item.orderItemList" :key="i">
                <!-- <router-link class="link" :to="''+item" target="_self"> -->
@@ -46,8 +46,8 @@
               <p>{{item.address}}</p>
             </div>
             <div class="total">
-              <p>应付金额：¥{{item.amount}}</p>
-              <p>实付金额：¥{{item.amount}}</p>
+              <p>{{ifEn ? 'Amount due' : '应付金额'}}：¥{{item.amount}}</p>
+              <p>{{ifEn ? 'actually paid' : '实付金额'}}：¥{{item.amount}}</p>
             </div>
             <div class="subtotal">
               <div class="status">{{item.status|status}}</div>
@@ -62,13 +62,14 @@
                 class="operation pointer"
                 @click.stop="tofWindow(item.id)"
                 v-if="_index===6">
-                  查看进度
+                  {{ifEn ? 'progress' : '查看进度'}}
                 </div>
-                <div class="more pointer" v-if="_index !== 6" @click.stop="toWindow(item.id)">查看详情</div>
+                <div class="more pointer" v-if="_index !== 6" @click.stop="toWindow(item.id)">{{ifEn ? 'View details' : '查看详情'}}</div>
               </div>
             </div>
           </div>
         </div>
+        <loading :List="lists"/>
       </div>
     </div>
     <div class="pagintaion">
@@ -83,6 +84,8 @@
 </template>
 <script>
 import pagintaion from '@/components/pagination/index'
+import { mapState } from 'vuex'
+import loading from '@/components/transitionTip/index'
 var that
 export default {
   data: () => ({
@@ -166,24 +169,35 @@ export default {
   filters: {
     status(n){
       if(that._index === 6) {
-        return n === 1 ? '处理中' : n === 2 ? '拒绝退款' :
-               n === 3 ? '取消退款' : n === 4 ? '卖家同意退货' : '退款成功'
+        return n === 1 ? that.ifEn ? 'Processing' : '处理中' : 
+               n === 2 ? that.ifEn ? 'No refund ' : '拒绝退款' :
+               n === 3 ? that.ifEn ? 'Refund cancellation' : '取消退款' : 
+               n === 4 ? that.ifEn ? 'Seller agrees to return' : '卖家同意退货' : 
+                         that.ifEn ? 'Refund successful' : '退款成功'
       }
-      return n === 1 ? '待付款': 
-             n === 2 ? '待发货':
-             n === 3 ? '已关闭':  
-             n === 4 ? '待收货': '已完成'
+      return n === 1 ? that.ifEn ? 'to be paid' : '待付款': 
+             n === 2 ? that.ifEn ? 'to be delivered' : '待发货':
+             n === 3 ? that.ifEn ? 'closed' : '已关闭':  
+             n === 4 ? that.ifEn ? 'to be received' : '待收货': 
+                       that.ifEn ? 'completed' : '已完成'
       
     },
     status_btn(n){
-      return n === 1 ? '支付订单': 
-             n === 2 ? '取消订单':
-             n === 3 ? '已关闭':  
-             n === 4 ? '确认收货': '申请售后'
+      return n === 1 ? that.ifEn ? 'Payment order' : '支付订单': 
+             n === 2 ? that.ifEn ? 'Cancel order' : '取消订单':
+             n === 3 ? that.ifEn ? 'Closed ' : '已关闭':  
+             n === 4 ? that.ifEn ? 'Confirm receipt' : '确认收货': 
+                       that.ifEn ? 'apply for after sales' : '申请售后'
     }
   },
   components: {
-    pagintaion
+    pagintaion,
+    loading
+  },
+  computed: {
+    ...mapState({
+      ifEn: state => state.user.ifEn
+    })
   },
   created(){
     this._index = parseInt(this.$route.query.category || 0)

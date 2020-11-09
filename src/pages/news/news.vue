@@ -1,8 +1,8 @@
 <template>
   <div class="news box spread">
     <div class="bus-show" :style="{'background-image': `url(${require('./img/topBanner.png')})`}">
-      <div class="title">无锡文化出口基地</div>
-      <p class="tip">吴文化江南文化</p>
+      <div class="title">{{ifEn ? 'Wuxi Cultural Export Base' : '无锡文化出口基地'}}</div>
+      <p class="tip">{{ifEn ? 'Wu Culture Jiangnan Culture' : '吴文化江南文化'}}</p>
     </div>
     <div class="news-cont">
       <div class="news-tip">
@@ -12,7 +12,7 @@
         :class="{'axt-tip': index === i}"
         @click.stop="changeType(item.id, i)"
         >
-          <div class="title">{{item.title}}</div>
+          <div class="title">{{ifEn ? item.en_title : item.title}}</div>
         </div>
       </div>
       <div class="cont">
@@ -29,17 +29,21 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
   data:()=>({
     index: 0,
     newsList: [{
       title: '新闻资讯',
+      en_title: 'news',
       id: 1
     }, {
       title: '政策解读',
+      en_title: 'policy analyzing',
       id: 2
     }, {
       title: '展会活动',
+      en_title: 'Exhibition activities',
       id: 3
     }],
     news:[],
@@ -67,6 +71,11 @@ export default {
       }
     }
 
+  },
+  computed: {
+    ...mapState({
+      ifEn: state => state.user.ifEn
+    }),
   },
   created(){
     this.choseType()
@@ -129,6 +138,7 @@ export default {
   .cont{
     flex-grow: 1;
     width: 50%;
+    min-height: 500px;
     padding: 0px 52px 32px 25px;
     background-color: #fff;
   }

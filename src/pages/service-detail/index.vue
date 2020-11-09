@@ -1,37 +1,39 @@
 <template>
   <div class="product min-box">
-    <div class="title-tip "><router-link to="/culturaltrade/service" class="tip-link pointer" target="_blank">文化贸易</router-link>>文化产品</div>
+    <div class="title-tip "><router-link to="/culturaltrade/service" class="tip-link pointer" target="_blank">{{ifEn ? 'Cultural trade' : '文化贸易'}}</router-link>
+    >{{ifEn ? 'Cultural products' : '文化产品'}}</div>
     <div class="product-show">
       <div class="img" :style="{'background-image': `url(${serviceDetail.cover})`}"></div>
       <div class="select-buy">
         <div class="title">{{serviceDetail.name}}</div>
-        <div class="service-tip">服务类别：<span>{{serviceDetail.categories}}</span></div>
-        <div class="service-tip">所在区域：<span>{{serviceDetail.location|location}}</span></div>
-        <div class="service-tip">服务时间：<span>{{serviceDetail.time}}</span></div>
-        <div class="service-tip">详细地址：<span>{{serviceDetail.address}}</span></div>
+        <div class="service-tip">{{ifEn ? 'Category' : '服务类别'}}：<span>{{serviceDetail.categories}}</span></div>
+        <div class="service-tip">{{ifEn ? 'Area' : '所在区域'}}：<span>{{serviceDetail.location|location}}</span></div>
+        <div class="service-tip">{{ifEn ? 'Service Time' : '服务时间'}}：<span>{{serviceDetail.time}}</span></div>
+        <div class="service-tip">{{ifEn ? 'Detail Adress' : '详细地址'}}：<span>{{serviceDetail.address}}</span></div>
         <div class="btns">
           <div class="advisory pointer" @click.stop="">
             <img :src="require('./img/advisory.svg')"  wisth="18" alt="">
-          咨询客服</div>
-          <div @click.stop="addAdvisory()" class="addCart pointer">留下联系方式</div>
+          {{ifEn ? 'Consulting customer service' : '咨询客服'}}</div>
+          <div @click.stop="addAdvisory()" class="addCart pointer">{{ifEn ? 'Leave contact information' : '留下联系方式'}}</div>
         </div>
       </div>
     </div>
     <div class="product-info min-box">
       <div class="compony-info" v-if="compay">
         <div class="title">{{compay.name}}</div>
-        <div class="phone">电话：{{compay.phone}}</div>
-        <div class="detail"><p>地址：</p><p class="address">{{compay.address}}</p>
+        <div class="phone">{{ifEn ? 'phone' : '电话'}}：{{compay.phone}}</div>
+        <div class="detail"><p>{{ifEn ? 'address' : '地址'}}：</p><p class="address">{{compay.address}}</p>
          </div>
       </div>
       <div class="product-box">
-        <div class="title">商品详情</div>
+        <div class="title">{{ifEn ? 'Service details' : '商品详情'}}</div>
         <div v-html="serviceDetail.detail" id="product-box"></div>
       </div>
     </div>
   </div>
 </template>
 <script>
+var that
 import { mapState } from 'vuex'
 export default {
   data: () => ({
@@ -60,24 +62,27 @@ export default {
     }
   },
   created(){
-    this.getDetail()//商品详情
+    this.getDetail() // 商品详情
   },
-  mounted(){
+  mounted() {
+    that = this
     window.scrollTo(0, 0)
   },
   computed: {
     ...mapState({
-      loginUser: state => state.user.loginUser,
-    }),
+      ifEn: state => state.user.ifEn,
+      loginUser: state => state.user.loginUser
+    })
   },
   filters: {
     location(m) {
-        return m === 1 ? '梁溪区' : 
-               m === 2 ? '滨湖区' : 
-               m === 3 ? '新吴区' :
-               m === 4 ? '惠山区' :
-               m === 5 ? '锡山区' :
-               m === 6 ? '江阴市' : '宜兴市'
+        return m === 1 ?  that.ifEn ? 'Liangxi District' : '梁溪区' : 
+               m === 2 ?  that.ifEn ? 'Lake District' : '滨湖区' : 
+               m === 3 ?  that.ifEn ? 'Xinwu District' : '新吴区' :
+               m === 4 ?  that.ifEn ? 'Huishan District' : '惠山区' :
+               m === 5 ?  that.ifEn ? 'Xishan District' : '锡山区' :
+               m === 6 ?  that.ifEn ? 'Jiangyin City' : '江阴市' : 
+                          that.ifEn ? 'Yixing City' : '宜兴市'
     }
   }
 }
@@ -107,6 +112,7 @@ export default {
     flex-grow: 0;
     background-color: #eee;
     background-position: center;
+    background-size: cover;
     background-repeat: no-repeat;
   }
   .select-buy{

@@ -2,10 +2,10 @@
   <div class="address">
     <div class="no-address pointer" :class="{'hover-left': ifHave}" @click.stop="addAddress()">
       <img :src="require('@/assets/img/plus.svg')"  width="26" alt="">
-      <span class="text">新增收货地址</span>
+      <span class="text">{{ifEn ? 'Add New Address' : '新增收货地址'}}</span>
     </div>
     <div class="have-address" v-if="ifHave" :class="{'limit-height': !show}">
-        <div class="address-title">收货人信息</div>
+        <div class="address-title">{{ifEn ? 'Consignee information' : '收货人信息'}}</div>
 
         <div class="address-info flex" v-for="(item, index) in addressList" :key="index">
           <span class="select pointer" @click.stop="changeAddress(index, item.id)" :class="{'act': actindex == index}"></span>
@@ -13,12 +13,12 @@
           <div class="btns pointer" @click.stop="defaultAddress(item.default, item.id, index)">
             <div class="if-default" title="选为默认地址"><div class="de_select pointer"  :class="{'act_def': item.default}"></div>
             <span v-if="item.default">(默认地址)</span> 
-            <span v-else>设为默认</span>
+            <span v-else>{{ifEn ? 'Set as default' : '设为默认'}}</span>
             </div>
             <!-- <div class="default_change pointer" :style="{'background-image': `url(${require('../img/delete.svg')})`}"></div> -->
             <div class="default_del pointer" @click.stop="deleteAddress(item.id)"  :style="{'background-image': `url(${require('../img/delete.svg')})`}"></div>
           </div>
-          <span v-if="index == 0 && addressList.length > 1" class="pointer pulldown" @click.stop="show = !show">更多地址<img :src="require('../img/download.svg')" width="10" alt="">
+          <span v-if="index == 0 && addressList.length > 1" class="pointer pulldown" @click.stop="show = !show">{{ifEn ? 'more address' : '更多地址'}}<img :src="require('../img/download.svg')" width="10" alt="">
           </span>
         </div>
     </div>
@@ -27,6 +27,7 @@
 </template>
 <script>
 import ADDaddress from './add-dress'
+import { mapState } from 'vuex'
 export default {
   data: ()=>({
     show: false,
@@ -69,6 +70,11 @@ export default {
       this.addressList.splice(0, 0, item)
       this.changeAddress(0, item.id)
     },
+  },
+  computed: {
+    ...mapState({
+      ifEn: state => state.user.ifEn
+    })
   },
   components: {
     ADDaddress

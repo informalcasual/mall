@@ -5,22 +5,23 @@
       <div class="display-cont box">
         <div
          class="display-item"
-         v-for="(item, index) in display"
+         v-for="(item, index) in ifVhang"
          :key="index"
         >
           <img :src="require(`./img/display/icon${index+1}.svg`)" alt="">
-          <img class="logo" :src="require(`./img/display/logo${index+1}.svg`)" alt="">
+          <img class="logo" :src="require(`./img/display/logo${ ifEn ? index + 5 : index+1}.svg`)" alt="">
           <p class="title">{{item}}</p>
         </div>
       </div>
     </div>
-    <div class="product box">
-      <contNav :title="'文化产品'" :actid="productTipsId" 
-        :btnTitle="'更多产品'" :tipList="productTips" :url="'/culturaltrade/product'"
-        @typeSeach="getSearchsP"
-        />
-      <div class="product-box">
-        <div 
+    <div class="service">
+      <div class="box">
+        <contNav :title="ifEn ? 'PROFUCT' : '文化产品'" :actid="productTipsId" 
+          :btnTitle="ifEn ? 'more' : '更多产品'" :tipList="productTips" :url="'/culturaltrade/product'"
+          @typeSeach="getSearchsP"
+          />
+        <div class="service-box">
+        <!-- <div 
         class="pro-item"
         v-for="(item, index) in products"
         :key="index"
@@ -31,10 +32,25 @@
           <div class="pro-info">
             <div class="price-box">
               <div class="title">{{item.name}}</div>
-              <div class="price">售价：<span>￥{{item.price.toFixed(2)}}</span></div>
+              <div class="price">售价：<span>￥{{item.price.toFixed(2)}}</span></div> 
             </div>
-            <div class="pro-btn pointer" @click.stop="toBuy(item.id)">购买</div>
+            <div class="pro-btn pointer" @click.stop="toBuy(item.id)">查看详情</div>
           </div>
+        </div> -->
+        <div class="service-item" v-for="(item, index) in products" :key="index">
+          <router-link :to='`/product/${item.id}`' target="_blank">
+            <div class="show" :style="{'background-image': `url(${item.cover})`}">
+              <div class="item-title">{{item.name}}</div>
+            </div>
+          </router-link>
+          <div class="advisory pointer" @click.stop="toBuy(item.id)">
+            <span v-if="!ifEn">查看详情 </span>
+            <span v-else>view details</span>
+            </div>
+        </div>
+        <div v-if="products.length < 1" style="width: 100%;height: 100%">
+          <loading :loading="p_loading" :List="products"/>
+        </div>
         </div>
       </div>
     </div>
@@ -42,8 +58,8 @@
       <div class="box">
         <contNav 
         @typeSeach="getSearchsS"
-        :title="'文化服务'" :actid="serviceTipsId" 
-          :btnTitle="'更服务产品'"  :tipList="serviceTips" :url="'/culturaltrade/service'"></contNav>
+        :title="ifEn ? 'SERVICE' : '文化服务'" :actid="serviceTipsId" 
+          :btnTitle="ifEn ? 'more' : '更多服务'"  :tipList="serviceTips" :url="'/culturaltrade/service'"></contNav>
         <div class="service-box">
           <div class="service-item" v-for="(item, index) in service" :key="index">
             <router-link :to='`/serviceDetail/${item.id}`' target="_blank">
@@ -53,18 +69,28 @@
             </router-link>
             <div class="advisory pointer" @click.stop="toService(item.id)" >立即咨询</div>
           </div>
+          <div v-if="service.length < 1" style="width: 100%;height: 100%">
+            <loading :loading="s_loading" :List="service"/>
+          </div>
         </div>
       </div>
     </div>
     <div class="about">
       <div class="box about-instr">
         <div class="instroduct">
-          <div class="title">关于我们 <span>ABOUT US</span></div>
-          <div class="info">文化贸易服务平台是依托于无锡国家文化出口基地的全国文化产品跨境电商综合平台。
+          <div class="title">{{ifEn ? 'ABOUT US' : '关于我们'}} <span>ABOUT US</span></div>
+          <div class="info">
+            <span v-if="!ifEn">文化锡云---无锡文化贸易服务平台是依托于无锡国家文化出口基地的全国文化产品跨境电商综合平台。
             全力打造文化产品展示交易、文化服务定制开发、文化政策法规宣传、文化跨界发展升级的融合性平台  
             致力于成为个多样化、便利化、全球化的创新型文化产品跨境电子商务平台                
             满足国内外众多文化企业、艺术家及消费者的文化需求
-            助力本土文化产业高质量发展，让世界了解无锡，将中国文化产品推向世界</div>
+            助力本土文化产业高质量发展，让世界了解无锡，将中国文化产品推向世界</span>
+            <span v-else>Cultural Xiyun---Wuxi Cultural Trade Service Platform is a comprehensive cross-border e-commerce platform for national cultural products based on Wuxi National Cultural Export Base.
+           Efforts to build an integrated platform for cultural product display and transaction, cultural service customization development, cultural policy and regulation promotion, and cultural cross-border development and upgrading
+           Committed to becoming a diversified, convenient and globalized cross-border e-commerce platform for innovative cultural products
+           Meet the cultural needs of many domestic and foreign cultural enterprises, artists and consumers
+           Assist the high-quality development of the local cultural industry, let the world know Wuxi, and promote Chinese cultural products to the world</span>
+            </div>
         </div>
         <img :src="require('./img/about.png')" width="558" class="about-img" alt="">
       </div>
@@ -74,6 +100,8 @@
 <script>
 import contNav from './content/contNav'
 import banner from './content/banner'
+import loading from '@/components/transitionTip/index'
+import { mapState } from 'vuex'
 export default {
   data: () => ({
     products: [],
@@ -82,10 +110,14 @@ export default {
     serviceTips: [],
     productTipsId: 0,
     serviceTipsId: 0,
+    p_loading: false,
+    s_loading: false,
+    En_display: ['Focus on industrial development','Promote industry','Enhance influence and cohesion','Push Chinese culture to the world'],
     display: ['着重文化产业创新发展', '推动文化产业综合实力', '提升国际影响力和聚合力', '将中国文化产品推向世界']
   }),
   methods: {
     async getProduct(){
+      this.p_loading = true
       let _res = await this.$apiFactory.getTrademarkApi().getCategoray(1)
       if(_res.status == 200){
         this.productTips = _res.data
@@ -93,10 +125,11 @@ export default {
           this.productTipsId = this.productTips[0].id
           this.getSearchsP(this.productTipsId)
         }
+        this.p_loading = false
       }
-    
     },
     async getService(){
+      this.s_loading = true
       let _res = await this.$apiFactory.getTrademarkApi().getCategoray(2)
       if(_res.status == 200){
         this.serviceTips = _res.data
@@ -104,6 +137,7 @@ export default {
           this.serviceTipsId = this.serviceTips[0].id
           this.getSearchsS(this.serviceTipsId)
         }
+        this.s_loading = false
       }
     },
     async getSearchsP(id){
@@ -133,13 +167,22 @@ export default {
       window.open(`/serviceDetail/${id}`, '_blank')
     }
   },
+  computed: {
+    ...mapState({
+      ifEn: state => state.user.ifEn
+    }),
+    ifVhang() {
+      return this.ifEn ? this.En_display : this.display 
+    }
+  },
   created(){
     this.getProduct()//产品
     this.getService()//文化
   },
   components: {
     banner,
-    contNav
+    contNav,
+    loading
   }
 }
 </script>
@@ -200,11 +243,17 @@ export default {
         padding-top: 15px;
         .price-box{
           flex-grow: 1;
+          width: 20%;
           .title{
             font-size:16px;
             color:rgba(0,0,0,1);
             line-height:22px;
             padding-bottom: 6px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            word-break: break-all;
           }
           .price{
             font-size:14px;
@@ -241,11 +290,14 @@ export default {
   .service-box{
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
   }
   .service-item{
-    width: 227px;
+    // width: 270px;
+    width: 23.5%;
     flex-grow: 0;
-    margin-left: 30px;
+    margin-left: 2%;
+    margin-bottom: 20px;
     .show{
       height: 216px;
       background-color: #000;
@@ -257,12 +309,16 @@ export default {
       }
       .item-title{
         position: absolute;
-        bottom: 15px;
-        left: 21px;
+        width: calc(100% - 21px);
+        height: 37px;
+        bottom: 0px;
+        left: 0px;
+        padding: 0 0 0 21px;
         font-size:16px;
         font-weight:400;
-        color:rgba(255,255,255,1);
-        line-height:22px;
+        color: #fff;
+        background-color:rgba(0,0,0,0.3);
+        line-height:37px;
       }
     }
     .advisory{
@@ -276,6 +332,9 @@ export default {
       text-align: center;
       color:rgba(255,255,255,1);
       line-height:44px;
+    }
+    &:nth-child(4n+1) {
+      margin-left: 0px;
     }
   }
 }
@@ -313,4 +372,5 @@ export default {
     flex-grow: 0;
   }
 }
+
 </style>

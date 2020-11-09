@@ -3,12 +3,13 @@
     <crumbs :titleList="crumbsList"/>
     <div class="art-cont">
       <div class="title">{{title}}</div>
-      <div class="author">{{time}}<span>{{auth}}发布</span></div>
+      <div class="author">{{time}}<span>{{ifEn ? 'by' : ''}}{{auth}}{{ifEn ? '' : '发布'}}</span></div>
       <div id="art" v-html="content"></div>
     </div>
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import crumbs from '@/components/crumbs/index'
 export default {
   data: () => ({
@@ -18,6 +19,7 @@ export default {
     content: '',
     crumbsList:[{
       name: '最新动态',
+      e_name: 'latest news',
       url: '/news'
     }]
   }),
@@ -30,7 +32,9 @@ export default {
         this.content = res.data.content
         this.time = this.$utilHelper.YMDTime(this.$utilHelper.safariTime(res.data.createdAt))
         this.crumbsList.push({
-          name: res.data.categoryId == 1 ? '新闻资讯' : res.data.categoryId == 2 ? '政策解读' : '展会活动',
+          name: res.data.categoryId == 1 ? this.ifEn ? 'News and information' : '新闻资讯' : 
+          res.data.categoryId == 2 ? this.ifEn ? 'Policy interpretation' : '政策解读' : 
+          this.ifEn ? 'Exhibition activities' : '展会活动',
           url: `/news?categoryId=${res.data.categoryId}`
         })
         this.crumbsList.push({
@@ -42,6 +46,11 @@ export default {
   },
   components: {
     crumbs
+  },
+  computed: {
+    ...mapState({
+      ifEn: state => state.user.ifEn
+    }),
   },
   created() {
     this.toDetail()

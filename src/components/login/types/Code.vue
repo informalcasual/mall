@@ -4,7 +4,7 @@
     <el-form-item class="relative" prop="user">
       <img class="code" :src="require('../img/icons/icon-code.svg')" alt="" @click.stop="$emit('changetype')">
       <div class="icon" :style="{'background-image': `url(${require('../img/icons/phone.svg')})`}"></div>
-      <el-input type="tel" class="phone" placeholder="手机号" v-model="form.user" @keyup.enter.native="$emit('get-code')"></el-input>
+      <el-input type="tel" class="phone" :placeholder="ifEn ? 'phone' : '手机号'" v-model="form.user" @keyup.enter.native="$emit('get-code')"></el-input>
       <!-- 验证码按钮 -->
 
     </el-form-item>
@@ -12,10 +12,10 @@
     <!-- 验证码输入框 -->
     <el-form-item class="ver-code" prop="verCode">
       <div class="icon" style="width: 16px;" :style="{'background-image': `url(${require('../img/icons/password.svg')})`}"  @click.stop="()=>{console.log(34) ;$emit('changetype')}"></div>
-      <el-input type="number" placeholder="输入 4 位短信验证码" v-model="form.verCode" @keyup.enter.native="$emit('submit-form')"></el-input>
+      <el-input type="number" :placeholder="ifEn ? 'Enter the 4-digit SMS verification code' : '输入 4 位短信验证码'" v-model="form.verCode" @keyup.enter.native="$emit('submit-form')"></el-input>
       <div class="button-wrapper">
-        <button type="button" v-if="!form.hasReset" class="btn btn-getCode absolute pointer" :class="{'not-allowed' : !form.getCode}" @click="$emit('get-code')">获取验证码</button>
-        <button type="button" v-else class="btn btn-resetCode absolute not-allowed">{{ form.resetTime }} 秒后重发</button>
+        <button type="button" v-if="!form.hasReset" class="btn btn-getCode absolute pointer" :class="{'not-allowed' : !form.getCode}" @click="$emit('get-code')">{{ifEn ? 'verification code' : '获取验证码'}}</button>
+        <button type="button" v-else class="btn btn-resetCode absolute not-allowed">{{ form.resetTime }} {{ifEn ? 's': '秒后重发'}}</button>
       </div>
     </el-form-item>
   </div>
@@ -27,6 +27,9 @@ export default {
     form: {
       type: Object,
       required: true
+    },
+    ifEn : {
+      type: Boolean
     }
   }
 }

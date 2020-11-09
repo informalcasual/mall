@@ -1,21 +1,13 @@
+
 <template>
-  <div class="product">
-    <div 
-    class="pro-item"
-    v-for="(item, index) in products"
-    :key="index"
-    >
+  <div class="service">
+    <div class="service-item" v-for="(item, index) in products" :key="index">
       <router-link :to="'/product/'+item.id" target="_blank">
-        <img :src="item.cover" class="pro-img" alt="">
+        <div class="show" :style="{'background-image': `url(${item.cover})`}"> <div class="item-title">{{item.name}}</div></div>
+        <div class="advisory pointer">{{ifEn ? 'Watch More' : '查看详情'}}</div>
       </router-link>
-      <div class="pro-info">
-        <div class="price-box">
-          <div class="title">{{item.name}}</div>
-          <div class="price">售价：<span>￥{{item.price}}</span></div>
-        </div>
-        <div class="pro-btn pointer" @click.stop="toDetail(item.id)">购买</div>
-      </div>
     </div>
+    <loading :List="products"/>
     <pagintaion  
     :page="page"
     :total="pages"
@@ -23,11 +15,12 @@
     style="margin: 0 auto;"
     v-if="pages > 1"
     />   
-     
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import pagintaion from '@/components/pagination/index'
+import loading from '@/components/transitionTip/index'
 export default {
   data: () => ({
     products: [],
@@ -39,17 +32,6 @@ export default {
   methods:{
     toDetail(id){
        window.open(`/product/${id}`, '_blank')
-    },
-    async getProducts() {
-      let res = await this.$apiFactory.getTrademarkApi().getProduct({
-        page: this.page,
-        size: 30,
-      })
-      if(res.status == 200) {
-        this.products = res.data.content
-        this.page = res.data.number
-        this.pages = res.data.totalPages
-      }
     },
     async getSearchs(){
       let res = await this.$apiFactory.getTrademarkApi().getProductType({
@@ -68,11 +50,7 @@ export default {
       this.transfer()
     },
     transfer() {
-      if(this.categoryId){
-        this.getSearchs()
-      } else {
-        this.getProducts()
-      }
+      this.getSearchs()
     }
   },
   created(){
@@ -81,8 +59,15 @@ export default {
     this.transfer()
   },
   components: {
-    pagintaion
+    pagintaion,
+    loading
   },
+  computed: {
+    ...mapState({
+      ifEn: state => state.user.ifEn
+    }),
+  },
+
   watch:{
     $route: {
       handler(b) {
@@ -122,11 +107,16 @@ export default {
       padding-top: 15px;
       .price-box{
         flex-grow: 1;
+        width: 20%;
         .title{
           font-size:16px;
           color:rgba(0,0,0,1);
           line-height:22px;
           padding-bottom: 6px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          word-break: break-all;
         }
         .price{
           font-size:14px;
@@ -153,6 +143,60 @@ export default {
       }
     }
 
+  }
+}
+.service{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-bottom: 30px;
+  .service-item{
+    width: 277px;
+    flex-grow: 0;
+    margin-bottom: 50px;
+    margin-left: 30px;
+    .show{
+      height: 216px;
+      background-color: #000;
+      position: relative;
+      background-position: center;
+      background-size: cover;
+      &:hover{
+        opacity: 0.8;
+      }
+      .item-title{
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        font-size:16px;
+        font-weight:400;
+        padding: 0 21px;
+        width: calc(100% - 42px); 
+        color:rgba(255,255,255,1);
+        line-height:37px;
+        background-color: rgba(0,0,0,0.3);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-break: break-all;
+      }
+    }
+    .advisory{
+      width:132px;
+      height:44px;
+      background:#f96925;
+      border-radius:22px;
+      margin: 32px auto 0;
+      font-size:14px;
+      font-weight:500;
+      text-align: center;
+      color:rgba(255,255,255,1);
+      line-height:44px;
+    }
+  }
+  .service-item:nth-child(4n+1){
+    margin-left: 0px
   }
 }
 </style>

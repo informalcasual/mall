@@ -4,41 +4,42 @@
       <div class="pop-close">
         <img class="pointer"  @click.stop="close()" :src="require('@/assets/img/pop-close.svg')" width="23" alt="">
       </div>
-      <div class="pop-title">新增收货地址</div>
+      <div class="pop-title">{{ifEn ? 'Add shipping address' : '新增收货地址'}}</div>
       <div class="pop-box">
         <div class="address-item">
-          <p class="tit">收件人</p>
+          <p class="tit">{{ifEn ? 'addressee' : '收件人'}}</p>
           <div class="add-input" :class="{'errorHover': iferror == 1}" >
-            <input type="text" v-model="name" name="" placeholder="请输入收件人姓名">
+            <input type="text" v-model="name" name="" :placeholder="ifEn ? 'Please enter the name of the recipient' : '请输入收件人姓名'">
           </div>
         </div>
         <div class="address-item">
-          <p class="tit">省市区</p>
+          <p class="tit">{{ifEn ? 'province and city' : '省市区'}}</p>
           <div class="add-input" style="border: none;padding: 0;" >
             <v-distpicker  @selected="onSelected"></v-distpicker>
           </div>
         </div>
         <div class="address-item">
-          <p class="tit">联系电话</p>
+          <p class="tit">{{ifEn ? 'contact number' : '联系电话'}}</p>
           <div class="add-input" :class="{'errorHover': iferror == 2}">
-            <input type="text" v-model="phone" name="" placeholder="请输入联系电话">
+            <input type="text" v-model="phone" name="" :placeholder="ifEn ? 'Please enter the contact number' : '请输入联系电话'">
           </div>
         </div>
         <div class="address-item">
-          <p class="tit">详细地址</p>
+          <p class="tit">{{ifEn ? 'detailed address' : '详细地址'}}</p>
           <div class="add-input" :class="{'errorHover': iferror == 3}">
-            <textarea  v-model="address" placeholder="请输入详细地址"></textarea>
+            <textarea  v-model="address" :placeholder="ifEn ? 'Please enter the detailed address' : '请输入详细地址'"></textarea>
           </div>
         </div>
         <div class="address-item">
           <p class="tit"></p>
-          <div @click.stop="getAddress()" class="add-btn main-brown pointer">确定</div>
+          <div @click.stop="getAddress()" class="add-btn main-brown pointer">{{ifEn ? 'sure' : '确定'}}</div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import VDistpicker from 'v-distpicker'
 export default {
   data: () => ({
@@ -98,6 +99,11 @@ export default {
   },
   components: { 
     VDistpicker 
+  },
+  computed: {
+    ...mapState({
+      ifEn: state => state.user.ifEn
+    })
   },
   created(){
     this.ifShow()

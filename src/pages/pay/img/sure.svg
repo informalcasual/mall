@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="10px" height="8px" viewBox="0 0 10 8" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 57 (83077) - https://sketch.com -->
+    <title>对号</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="订单结算备份" transform="translate(-463.000000, -721.000000)" fill="#000000" fill-rule="nonzero">
+            <g id="对号" transform="translate(462.000000, 719.000000)">
+                <rect id="矩形" opacity="0" x="0" y="0" width="12" height="12"></rect>
+                <path d="M4.88475,9.3525 C4.695,9.3525 4.506,9.27975 4.36125,9.135 L1.3995,6.16125 C1.11075,5.871 1.11075,5.4 1.3995,5.10975 C1.689,4.8195 2.15775,4.8195 2.4465,5.10975 L4.88475,7.55775 L9.54375,2.88 C9.8325,2.589 10.30125,2.589 10.59075,2.88 C10.8795,3.17025 10.8795,3.6405 10.59075,3.93075 L5.40825,9.135 C5.2635,9.27975 5.07375,9.3525 4.88475,9.3525 Z" id="路径"></path>
+            </g>
+        </g>
+    </g>
+</svg>

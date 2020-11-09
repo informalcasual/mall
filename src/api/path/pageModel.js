@@ -1,8 +1,8 @@
 import { axiosBase, axiosGet } from '../axiosBaseConfig'
 
 export default class SellApi {
-  window(type = 1) { //type  1 重要区域   2  重要企业
-    let url = `window?type=${type}`
+  window(type = 1, categoryId) { //type  1 重要区域   2  重要企业     2有categoryId
+    let url = `window?type=${type}${categoryId === 0 ? '' : '&categoryId='+categoryId}`
     return axiosGet(url)
   }
   news(id) {

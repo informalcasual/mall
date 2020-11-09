@@ -1,11 +1,11 @@
 <template>
   <div class="product min-box">
-    <div class="title-tip "><router-link to="/culturalTrade/product" class="tip-link pointer" target="_blank">文化贸易</router-link>>文化产品</div>
+    <div class="title-tip "><router-link to="/culturalTrade/product" class="tip-link pointer" target="_blank">{{ifEn ? 'Cultural Trade' : '文化贸易'}}</router-link>>{{ifEn ? 'Cultural products' : '文化产品'}}</div>
     <div class="product-show">
       <div class="img" :style="{'background-image': `url(${img})`}"></div>
       <div class="select-buy">
         <div class="title">{{product.name}}</div>
-        <div class="peice">售价:<span>￥{{price.toFixed(2)}}</span></div>
+        <div class="peice">{{ifEn ? 'Price' : '售价'}}:<span>￥{{price.toFixed(2)}}</span></div>
         <div class="chose">
           <div 
           class="chose-item pointer"
@@ -16,25 +16,25 @@
           >{{item.specs}}</div>
         </div>
         <div class="number">
-          <div class="num-chose">数量:</div>
+          <div class="num-chose">{{ifEn ? 'Number' : '数量'}}:</div>
           <div class="chose">
             <img  @click.stop="choseNum(-1)" :src="require('./img/reduce.svg')" alt="">
             <div   class="num">{{num}}</div>
             <img  @click.stop="choseNum(1)" :src="require('./img/plus.svg')" alt="">
           </div>
-          <div class="tip">7天无理由退货</div>
+          <div class="tip">{{ifEn ? 'No reason to return within 7 days' : '7天无理由退货'}}</div>
         </div>
         <div class="btns">
-          <div class="buy pointer" @click.stop="toBuy()" >立即购买</div><!-- 
-          --><div @click.stop="addCart()" class="addCart pointer">加入购物车</div>
+          <div class="buy pointer" @click.stop="toBuy()">{{ifEn ? 'Buy Now' : '立即购买'}}</div><!-- 
+          --><div @click.stop="addCart()" class="addCart pointer">{{ifEn ? 'Add to Cart' : '加入购物车'}}</div>
         </div>
       </div>
     </div>
     <div class="product-info min-box">
       <div class="compony-info">
         <div class="title">{{company.name}}</div>
-        <div class="phone">电话：{{company.phone}}</div>
-        <div class="detail"><p>地址：</p><p class="address">{{company.address}}</p>
+        <div class="phone">{{ifEn ? 'Phone' : '电话'}}：{{company.phone}}</div>
+        <div class="detail"><p>{{ifEn ? 'Address' : '地址'}}：</p><p class="address">{{company.address}}</p>
          </div>
         <!-- <div class="advisory pointer">
           <img :src="require('./img/advisory.svg')"  wisth="18" alt="">
@@ -42,7 +42,7 @@
         </div> -->
       </div>
       <div class="product-box">
-        <div class="title">商品详情</div>
+        <div class="title">{{ifEn ? 'Commodity details' : '商品详情'}}</div>
         <div v-html="product.detail" id="product-box"></div>
       </div>
     </div>
@@ -131,7 +131,8 @@ export default {
   },
   computed: {
     ...mapState({
-      loginUser: state => state.user.loginUser,
+      ifEn: state => state.user.ifEn,
+      loginUser: state => state.user.loginUser
     }),
   },
 }
@@ -216,7 +217,8 @@ export default {
     align-items: center;
     .num-chose{
       flex-grow: 0;
-      width:42px;
+      // width:42px;
+      padding-right: 15px;
       font-size:14px;
       color:rgba(102,102,102,1);
       line-height:20px;

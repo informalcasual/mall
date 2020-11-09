@@ -1,16 +1,18 @@
 <template>
   <div class="crumbs">
-    当前位置：
+    {{ifEn ? 'current location：' : '当前位置：'}}
     <span 
     class="pointer"
     :class="{'act-item': item.url}"
     v-for="(item,index) in titleList"
     :key="index"
     @click.stop="toLink(item.url)"
-    >{{item.name}}</span>
+    >{{ifEn && item.e_name ? item.e_name : item.name}}</span>
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
+
 export default {
   props: {
     titleList: {
@@ -23,7 +25,12 @@ export default {
         window.open(url, '_self')
       }
     }
-  }
+  },
+  computed: {
+    ...mapState({
+      ifEn: state => state.user.ifEn
+    }),
+  },
 }
 </script>
 <style lang="scss" scoped>

@@ -1,14 +1,25 @@
 <template>
   <div class="news min-box spread">
     <div class="bus-show" :style="{'background-image': `url(${require('./img/topBanner.png')})`}">
-      <div class="title">无锡文化出口基地</div>
-      <p class="tip">吴文化江南文化</p>
+      <div class="title">{{ifEn ? 'Wuxi Cultural Export Base' : '无锡文化出口基地'}}</div>
+      <p class="tip">{{ifEn ? 'Wu Culture Jiangnan Culture' : '吴文化江南文化'}}</p>
     </div>
-    <div class="title-classify">
-      <div class="title-tip pointer" @click.stop="change(1)" :class="{'act': type === 1}">重要区域</div><!-- 
-
-       --><div class="title-tip pointer" @click.stop="change(2)" :class="{'act': type === 2}">重点企业</div>
+    <div class="nav">
+      <div class="title-classify">
+      <div class="title-tip pointer" @click.stop="change(1)" :class="{'act': type === 1}">{{ifEn ? 'REGION' : '重要区域'}}</div><!-- 
+       --><div class="title-tip pointer" @click.stop="change(2)" :class="{'act': type === 2}">{{ifEn ? 'ENTERPRISE' : '重点企业'}}</div>
+      </div>  
+       <div class="select-box pointer" v-if="type === 2" @click.stop="show = !show">
+          {{select_name === '全部' && ifEn ? 'ALL' : select_name}}
+        <div class="pointer-box" v-show="show">
+          <p @click.stop="changeAttr(0)">{{ifEn ? 'ALL' : '全部'}}</p>
+          <p @click.stop="changeAttr(index+1)"  v-for="(item, index) in select_list" :key="index">
+            {{item.name}}
+          </p>
+        </div>
+       </div>
     </div>
+  
     <div class="news-cont">
       <div class="news-tip" v-if="newsList.length > 0">
         <div class="tip pointer"
@@ -18,7 +29,7 @@
         @click.stop="index = i"
         >
           <div class="title">{{item.name}}</div>
-          <div class="intr" v-if="type === 1">魅力主城，绽放光荣</div>
+          <div class="intr" v-if="type === 1">{{ifEn ? 'Special Charm' : '魅力主城，绽放光荣'}}</div>
         </div>
       </div>
       <div class="cont">
@@ -28,16 +39,20 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
   data:()=>({
     index: 0,
     newsList: [],
     type: 1,
+    select_name: '全部',
+    select_id: 0,
+    select_list: [],
+    show: false
   }),
   methods: {
     async getWindows() {
-      
-      let res = await this.$apiFactory.getpageModel().window(this.type)
+      let res = await this.$apiFactory.getpageModel().window(this.type, this.type === 1 ? 0 : this.select_id)
       if(res.status == 200) {
         this.newsList = res.data
       }
@@ -46,11 +61,39 @@ export default {
     change(type){
       this.type = type
       this.getWindows()
+    },
+    async getList() {
+      let res = await this.$apiFactory.getTrademarkApi().getCategoray(3)
+      if(res.status == 200){
+        this.select_list = res.data
+      }
+    },
+    changeAttr(index) {
+      if(index === 0 && this.select_id === 0) return this.show = false
+      if(index === 0) {
+        this.select_id = 0 
+        this.select_name = this.ifEn ? 'ALL' : '全部'
+      }
+
+      if(index !== 0) {
+        if(this.select_id === this.select_list[index-1].id) return this.show = false
+        this.select_id = this.select_list[index-1].id
+        this.select_name = this.select_list[index-1].name
+      }
+      this.show = false
+      this.index = 0
+      this.getWindows()
     }
   },
   created() {
     this.getWindows()
-  }
+    this.getList()
+  },
+  computed: {
+    ...mapState({
+      ifEn: state => state.user.ifEn
+    }),
+  },
 } 
 </script>
 
@@ -112,8 +155,8 @@ export default {
   }
   /*滚动条样式*/
   .news-tip::-webkit-scrollbar {/*滚动条整体样式*/
-      width: 0px;     /*高宽分别对应横竖滚动条的尺寸*/
-      height: 0px;
+      width: 2px;     /*高宽分别对应横竖滚动条的尺寸*/
+      height: 5px;
   }
   .news-tip::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
       border-radius: 5px;
@@ -130,6 +173,7 @@ export default {
     flex-grow: 1;
     width: 50%;
     padding: 32px 25px;
+    min-height: 470px;
     background-color: #fff;
   }
 }
@@ -149,6 +193,45 @@ export default {
     background-color: #702a2a;
   }
 }
+.nav{
+  position: relative;
+}
+.select-box{
+  right: 0;
+  top: 20px;
+  width:130px;
+  height:42px;
+  border-radius:4px;
+  border:1px solid rgba(0,0,0,1);
+  font-size:14px;
+  font-weight:500;
+  color:rgba(0,0,0,1);
+  text-align: center;
+  line-height:42px;
+  display: inline-block;
+  float: right;
+  position: relative;
+  z-index: 1000;
+  .pointer-box{
+    position: absolute;
+    padding: 12px 10px;
+    top: 48px;
+    left: -1px;
+    background-color: #f4f6f9;
+    width: calc(100% - 20px);
+    border: 1px solid;
+    border-radius: 4px;
+    p{
+      &:hover{
+        background-color: #e9f0fc;
+        color: #82adf6;
+      }
+    }
+  }
+}
+.spread{
+  overflow: initial;
+}
 </style>
 <style lang="scss">
 #plac{
@@ -160,6 +243,12 @@ export default {
   }
   img{
     width: 100%;
+  }
+  h2, h1{
+    text-align: center;
+    padding-bottom: 20px;
+    letter-spacing: 2px;
+    font-size: 24px;
   }
 }
 </style>

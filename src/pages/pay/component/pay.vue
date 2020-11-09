@@ -4,15 +4,15 @@
       <div class="pop-close">
         <img class="pointer"  @click.stop="close()" :src="require('@/assets/img/pop-close.svg')" width="23" alt="">
       </div>
-      <div class="pop-title">打开微信或支付宝扫一扫付款</div>
+      <div class="pop-title">{{ifEn ? 'Open WeChat or Alipay to sweep up payment' : '打开微信或支付宝扫一扫付款'}}</div>
       <div class="pop-info">
         <div class="api-box" :style="{'background-image': `url(${require('../img/apiBG.svg')})`}">
          <Qcode :id="'wx'" style="height:100%;" :orderId='orderid' @scan="scan"/>
-         <p> <img :src="require('../img/wx.svg')" width="17" alt="">微信支付</p>
+         <p> <img :src="require('../img/wx.svg')" width="17" alt="">{{ifEn ? 'Wechat payment' : '微信支付'}}</p>
         </div>
         <div class="api-box" :style="{'background-image': `url(${require('../img/apiBG.svg')})`}">
            <Qcode :id="'ali'" style="height:100%;" :orderId="orderid" @scan="scan"/>
-           <p><img :src="require('../img/ali.svg')" width="17" alt="">支付宝支付</p>
+           <p><img :src="require('../img/ali.svg')" width="17" alt="">{{ifEn ? 'Alipay payment' : '支付宝支付'}}</p>
         </div>
       </div>
     </div>
@@ -23,16 +23,17 @@
       <div class="box-pop1">
         <div class="pop-title1">
           <img :src="require('@/assets/img/success.svg')" width="32" alt="">
-         支付成功
+         {{ifEn ? 'success' : '支付成功'}}
         </div>
-        <div class="pop-info1">我们将在第一时间为您安排发货</div>
-        <div class="pop-btn pointer" @click.stop="toDetail()">查看订单详情</div>
+        <div class="pop-info1">{{ifEn ? 'We will arrange delivery for you as soon as possible' : '我们将在第一时间为您安排发货'}}</div>
+        <div class="pop-btn pointer" @click.stop="toDetail()">{{ifEn ? 'View order details' : '查看订单详情'}}</div>
       </div>
      </div>
 
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import Qcode from "./qrcode";
 export default {
   data:() => ({
@@ -86,6 +87,11 @@ export default {
   },
   created(){
     this.createdPay()
+  },
+  computed: {
+    ...mapState({
+      ifEn: state => state.user.ifEn
+    }),
   },
   beforeDestory(){
     if(this.timer){

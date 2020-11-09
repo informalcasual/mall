@@ -6,38 +6,38 @@
       </div>
       <div class="box-pop2">
         <template v-if="!success">
-          <div class="pop-title">申请售后原因</div>
+          <div class="pop-title">{{ifEn ? 'Apply for after sale' : '申请售后原因'}}</div>
           <div class="pop-box2">
             <div class="address-item">
               <div class="add-input">
                 <label for="type1">
                   <div class="select" :class="{'select-act': reason== 1}"></div>
-                  <input type="radio" value="1" id="type1" v-model="reason" > 不想要了
+                  <input type="radio" value="1" id="type1" v-model="reason" > {{ifEn ? 'No more' : '不想要了'}}
                 </label>
                 <label for="type2">
                   <div class="select"  :class="{'select-act': reason==2}"></div>
-                  <input type="radio" value="2" id="type2" v-model="reason" > 多拍/拍错
+                  <input type="radio" value="2" id="type2" v-model="reason" > {{ifEn ? 'Multiple / wrong shots' : '多拍/拍错'}}
                 </label>
                 <label for="type3">
                   <div class="select"  :class="{'select-act': reason==3}"></div>
-                  <input type="radio" value="3" id="type3" v-model="reason" > 商品存在质量问题
+                  <input type="radio" value="3" id="type3" v-model="reason" > {{ifEn ? 'quality problems in the goods' : '商品存在质量问题'}}
                 </label>
                 <label for="type4">
                   <div class="select" :class="{'select-act': reason==4}"></div>
-                  <input type="radio" value="4" id="type4" v-model="reason" > 其他原因
+                  <input type="radio" value="4" id="type4" v-model="reason" > {{ifEn ? 'Other reasons' : '其他原因'}}
                 </label>
               </div>
             </div>
             <div class="address-item">
-              <textarea  v-model="remark" placeholder="补充"></textarea>
+              <textarea  v-model="remark" :placeholder="ifEn ? 'supplement' : '补充'"></textarea>
             </div>
             <div class="address-item btn">
-              <div @click.stop="refund()" class="add-btn main-brown">立即申请</div>
+              <div @click.stop="refund()" class="add-btn main-brown">{{ifEn ? 'Apply now' : '立即申请'}}</div>
             </div>
           </div>
         </template>
         <template v-else>
-          <tip :title="'申请成功'" :info="'我们将在第一时间联系您，为您服务'" />
+          <tip :title="ifEn ? 'success' : '申请成功'" :info="ifEn ? 'We will contact you as soon as possible to serve you' : '我们将在第一时间联系您，为您服务'" />
         </template>
       </div>
     </div>
@@ -45,6 +45,7 @@
 </template>
 <script>
 import tip from '@/components/successTip/tip1'
+import { mapState } from 'vuex'
 export default {
   data: () => ({
     reason: 1,
@@ -71,6 +72,11 @@ export default {
     itemId: {
       type: Number,
     }
+  },
+  computed: {
+    ...mapState({
+      ifEn: state => state.user.ifEn
+    })
   },
   components: {
     tip

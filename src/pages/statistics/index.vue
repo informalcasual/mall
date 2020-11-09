@@ -2,8 +2,8 @@
 <template>
   <div class="news min-box spread">
     <div class="bus-show" :style="{'background-image': `url(${require('./img/topBanner.png')})`}">
-      <div class="title">无锡文化出口基地</div>
-      <p class="tip">吴文化江南文化</p>
+      <div class="title">{{ifEn ? 'Wuxi Cultural Export Base' : '无锡文化出口基地'}}</div>
+      <p class="tip">{{ifEn ? 'Wu Culture Jiangnan Culture' : '吴文化江南文化'}}</p>
     </div>
     <div class="news-cont">
       <div class="news-tip">
@@ -13,7 +13,7 @@
         :class="{'axt-tip': index === i}"
         @click.stop="choseId(i)"
         >
-          <div class="title">{{item.title}}</div>
+          <div class="title">{{ifEn ? item.e_title : item.title}}</div>
           <div class="intr">{{item.intr}}</div>
         </div>
       </div>
@@ -32,9 +32,9 @@
           <div class="avatar" :style="{'background-image': `url(${item.url})`}"></div>
           <div class="company-info">
             <div class="title ell">{{item.name}}</div>
-            <div class="area">所在区域：{{item.location}}</div>
+            <div class="area">{{ifEn ? 'REGION' : '所在区域：'}}{{item.location}}</div>
             <div class="summary">{{item.desc}}</div>
-            <div class="more pointer" @click.stop="watchMore(item)">查看更多</div>
+            <div class="more pointer" @click.stop="watchMore(item)">{{ifEn ? 'MORE' : '查看更多'}}</div>
           </div>
         </div>
   
@@ -50,7 +50,7 @@
         <div class="avatar" :style="{'background-image': `url(${detail.url})`}"></div>
         <div class="company-info">
           <div class="title ell">{{detail.name}}</div>
-          <div class="area">所在区域：{{detail.location}}</div>
+          <div class="area">{{ifEn ? 'REGION' : '所在区域：'}}{{detail.location}}</div>
           <div class="summary">{{detail.desc}}</div>
         </div>
       </div>
@@ -58,6 +58,7 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
   data:()=>({
     index: 0,
@@ -71,9 +72,11 @@ export default {
     // },
     {
       title:'国家重点文化出口企业',
+      e_title: 'Cultural Exports Enterprises',
       id: 3,
     },{
       title:'国家重点文化出口项目',
+      e_title: 'Cultural Exports Projects',
       id: 4,
     }],
     news:[],
@@ -102,7 +105,12 @@ export default {
   },
   created(){
     this.choseId(0)
-  }
+  },
+  computed: {
+    ...mapState({
+      ifEn: state => state.user.ifEn
+    }),
+  },
 }
 </script>
 
@@ -291,6 +299,9 @@ export default {
       padding-left: 17px;
       font-size:14px;
       color:rgba(0,0,0,1);
+      height: 500px;
+      overflow: hidden;
+      overflow-y: scroll;
       line-height:20px;
       .title{
         font-size:20px;
